@@ -1,76 +1,75 @@
 <template>
-<div class="colunm-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="听到栏目"  >
-        <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="colunm-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="听到栏目">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="content">
+    <div class="content">
 
-<pull-to :top-load-method="refresh" >
+      <pull-to :top-load-method="refresh">
 
-  <div class="hot-column" v-show="listen">
-		<div class="title">
-		  最近收听
-		</div>
-    
-		<swiper  :options="swiperOption" class="hot-column-swiper" >
-			<swiper-slide v-for="l in listenList">
-					<div class="aui-card-list" @click="programList(l)">
-							 <div class="aui-card-list-content">
-							     <img :src="src + l.img1"  class="img">
-							 </div>
-							 <div class="swiper-title">
+        <div class="hot-column" v-show="listen">
+          <div class="title">
+            最近收听
+          </div>
+
+          <swiper :options="swiperOption" class="hot-column-swiper">
+            <swiper-slide v-for="l in listenList">
+              <div class="aui-card-list" @click="programList(l)">
+                <div class="aui-card-list-content">
+                  <img :src="src + l.img1" class="img">
+                </div>
+                <div class="swiper-title">
                   {{l.name}}
-               </div>
-             
-							 <div class="swiper-cont">
-                  <img v-for="h in l.headList" img :src="src + h"  class="aui-img-round aui-list-img-sm img-head"/>
-                 <span> {{l.listenCount}}人在听</span>
-              </div>
-					 </div>
-			</swiper-slide>
-		</swiper>
-	
-  </div>
+                </div>
 
-<div class="all-column">
-		<div class="title">
-		  所有栏目
-		</div>
-    
-  <div class="aui-content aui-margin-b-15" >
-  <ul class="aui-list aui-media-list ad_list" v-for="(d,index) in data" :key="index" >
-  <li class="aui-list-item" @click="programList(d)">
-              <div class="aui-media-list-item-inner ad-list-cont">
+                <div class="swiper-cont">
+                  <img v-for="h in l.headList" img :src="src + h" class="aui-img-round aui-list-img-sm img-head" />
+                  <span> {{l.listenCount}}人在听</span>
+                </div>
+              </div>
+            </swiper-slide>
+          </swiper>
+
+        </div>
+
+        <div class="all-column">
+          <div class="title">
+            所有栏目
+          </div>
+
+          <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-media-list ad_list" v-for="(d,index) in data" :key="index">
+              <li class="aui-list-item" @click="programList(d)">
+                <div class="aui-media-list-item-inner ad-list-cont">
                   <div class="aui-list-item-media">
-                      <img :src="src + d.img" class="aui-list-img-sm anchor-head" >
+                    <img :src="src + d.img" class="aui-list-img-sm anchor-head">
                   </div>
                   <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title ad_title">{{d.name}}</div>
-                      </div>
-                      <div class="aui-list-item-text  ad_cont">
-                       {{d.brief}}
-                      </div>
-                      <div class="aui-list-item-text  ad_anchor">
-                       主播：{{d.compereName}}     {{d.listenCount}}在听
-                      </div>
-                        <!-- <img src="../../../../assets/images/radio/enroll.png"  style="width:50px;"/>
+                    <div class="aui-list-item-text">
+                      <div class="aui-list-item-title ad_title">{{d.name}}</div>
+                    </div>
+                    <div class="aui-list-item-text  ad_cont">
+                      {{d.brief}}
+                    </div>
+                    <div class="aui-list-item-text  ad_anchor">
+                      主播：{{d.compereName}} {{d.listenCount}}在听
+                    </div>
+                    <!-- <img src="../../../../assets/images/radio/enroll.png"  style="width:50px;"/>
                         <img src="../../../../assets/images/radio/ad_ing.png"  style="width:80px;"/> -->
                   </div>
-              </div>
-          </li>
-      </ul>
-   </div> 
-</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-</pull-to>
+      </pull-to>
 
-</div>
+    </div>
 
-</div>
-  
+  </div>
+
 </template>
 
 <script>
@@ -91,6 +90,7 @@ export default {
         spaceBetween: 100,
       },
       query: {
+        token: '',
         page: 1,
         size: 10,
         id: 1
@@ -99,6 +99,7 @@ export default {
   },
   methods: {
     render(loaded) {
+      this.query.token = this.$ls.get('token')
       getColumn(this.query).then(rep => {
         this.data = rep.data;
 
@@ -135,6 +136,7 @@ export default {
       if (data.length === 0) {
 
       } else {
+        this.$ls.set("column", data);
         this.$router.push({ path: '/program/list', query: { column: data } })
       }
     }
@@ -198,6 +200,7 @@ export default {
         height: px2rem(40);
       }
       .swiper-title {
+        padding-top: px2rem(10);
         font-size: px2rem(28);
         font-weight: bold;
       }
@@ -232,7 +235,7 @@ export default {
       .ad-list-cont {
         padding-top: px2rem(10);
         padding-bottom: px2rem(10);
-        .ad-img {
+        .anchor-head {
           width: px2rem(160);
           height: px2rem(160);
         }

@@ -1,21 +1,20 @@
 <template>
-<div class="view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="编辑资料"  >
-        <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="view-edit">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="编辑资料">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="content">
-<div class="reg">
+    <div class="content">
+      <div class="reg">
 
-<div class="aui-content aui-margin-b-15">
-    <ul class="aui-list aui-list-in">
-        <li class="aui-list-item">
-            <div class="aui-list-item-inner aui-list-item-arrow">
-                <div class="aui-list-item-title reg-title" >头像</div>
+        <div class="aui-content aui-margin-b-15">
+          <ul class="aui-list aui-list-in">
+            <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-arrow">
+                <div class="aui-list-item-title reg-title">头像</div>
                 <div class="aui-list-item-right">
 
-                            <!-- <van-uploader  accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
+                  <!-- <van-uploader  accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
                 <div class=" t-cell van-cell-group van-hairline--bottom"><div class="van-cell van-hairline">
                    
                     <div class="van-cell__value van-cell__value--link">
@@ -25,35 +24,33 @@
                     </div>
                 </div>
                 </van-uploader> -->
-                    <img :src="src+compere.head" class="aui-img-round aui-list-img-sm anchor-head"  style="position:relative;top:0; right:0">
-                 
+                  <img :src="src+compere.head" class="aui-img-round aui-list-img-sm anchor-head" style="position:relative;top:0; right:0">
+
                 </div>
-            </div>
-        </li>
-        <li class="aui-list-item">
-            <div class="aui-list-item-inner aui-list-item-arrow">
+              </div>
+            </li>
+            <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-arrow">
                 <div class="aui-list-item-title reg-title">用户名</div>
                 <div class="aui-list-item-right">
-                    <div>{{compere.name}}</div>
+                  <div>{{compere.name}}</div>
                 </div>
-            </div>
-        </li>
+              </div>
+            </li>
 
-                <li class="aui-list-item">
-            <div class="aui-list-item-inner aui-list-item-arrow">
+            <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-arrow">
                 <div class="aui-list-item-title reg-title">个人简介</div>
                 <div class="aui-list-item-right">
 
-                    <div v-if="introduce">向大家介绍一下自己吧~</div>
-                      <div v-esle>{{compere.introduce}}</div>
+                  <div>{{compere.introduce}}</div>
                 </div>
-            </div>
-        </li>
-        </ul>
-    </div>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-
-<!-- <van-cell-group >
+        <!-- <van-cell-group >
   <van-field
     v-model="mobile"
     label="用户名"
@@ -69,17 +66,16 @@
 
 </van-cell-group> -->
 
-
-<div class="aui-content aui-text-center aui-margin-t-15" >
-      <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
-          <span>提交</span>
+        <div class="aui-content aui-text-center aui-margin-t-15">
+          <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
+            <span>提交</span>
+          </div>
+        </div>
       </div>
-  </div>
-</div>
 
-</div>
-</div>
-  
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -142,7 +138,6 @@ export default {
   },
   mounted() {
     this.compere = this.$route.query.compere
-
   }
 
 }
@@ -151,7 +146,7 @@ export default {
 
 <style lang="scss" type="text/scss">
 @import "../../../../public/px2rem.scss";
-.view {
+.view-edit {
   height: 100%;
   overflow-y: hidden;
   background-color: #fff;

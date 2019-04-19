@@ -1,6 +1,6 @@
 <template>
     <div class="my-fm-list">
-        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft"  @click-right="onClickRight" left-arrow title="播放列表"  >
+        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" @click-right="onClickRight" left-arrow title="播放列表">
             <a v-show="!editable" class="header-button" slot="right">编辑</a>
 
             <a href="javascript:;" class="header-button2" slot="right" v-show="editable">
@@ -14,7 +14,7 @@
             </div>
             <div class="btns">
                 <a href="javascript:;" class="btn-remove" @click="onRemove">
-                        <van-icon name="delete"></van-icon>
+                    <van-icon name="delete"></van-icon>
                     删除</a>
                 <a href="javascript:;" @click="onSave" class="btn-ok">完成</a>
             </div>
@@ -38,36 +38,38 @@
                 </ul>
         </div> -->
 
-<pull-to :top-load-method="refresh" >
- <div class="aui-content aui-margin-b-15 ">
-     <ul class="aui-list aui-media-list follow-list" v-for="(l,index) in fm_list" @click="onSelect(l.id)">
+        <!-- <pull-to :top-load-method="refresh"> -->
+        <div class="aui-content aui-margin-b-15 ">
+            <ul class="aui-list aui-media-list follow-list" v-for="(l,index) in fm_list" @click="onSelect(l.id)">
 
-         <li class="aui-list-item aui-list-item-middle">
-             <div class="aui-media-list-item-inner">
-                   <span v-show="!editable">{{index +1}}</span>
-                            <van-icon v-show="editable" :name="hasSelect(l.id)?'checked':'check'"></van-icon>
-                 <div class="aui-list-item-media" style="width: 4rem;">
-                      <img :src="src + l.img" class="aui-img-round aui-list-img-sm anchor-head">
-                 </div>
-                 <div class="aui-list-item-inner all-ancho-list-inner">
-                     <div class="aui-list-item-text">
-                         <div class="aui-list-item-title aui-font-size-14 name">{{l.name}}</div>
-                         <div class="aui-list-item-right">
-                           <div v-if="l.free===1" class="btn-follow">￥{{l.price}}</div>
-                            <div v-else class=" btn" @click="compereFollow(d.id)"><span>免费</span></div> 
-                         </div>
-                     </div>
-                     <div class="aui-list-item-text cont">
-                       {{l.brief}}
-                     </div>
-                 </div>
-             </div>
-         </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner">
+                        <span v-show="!editable">{{index +1}}</span>
+                        <van-icon v-show="editable" :name="hasSelect(l.id)?'checked':'check'"></van-icon>
+                        <div class="aui-list-item-media" style="width: 4rem;">
+                            <img :src="src + l.img" class="aui-img-round aui-list-img-sm anchor-head">
+                        </div>
+                        <div class="aui-list-item-inner all-ancho-list-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-14 name">{{l.name}}</div>
+                                <div class="aui-list-item-right">
+                                    <div v-if="l.free===1" class="btn-follow">￥{{l.price}}</div>
+                                    <div v-else class=" btn" @click="compereFollow(d.id)">
+                                        <span>免费</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-text cont">
+                                {{l.brief}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
 
-     </ul>
+            </ul>
 
-   </div>
-</pull-to>
+        </div>
+        <!-- </pull-to> -->
     </div>
 </template>
 <style lang="scss" type="text/scss" >
@@ -280,7 +282,7 @@
 }
 </style>
 <script>
-import { getVideo, src, delPrograms, getColumn } from '../index/services';
+import { getVideo, src, delPrograms, getColumn, postcolumnDel, getColumnDel } from '../index/services';
 import { Toast, Dialog } from 'vant';
 import PullTo from 'vue-pull-to';
 export default {
@@ -293,6 +295,7 @@ export default {
             selectAll: false,
             token: '',
             query: {
+                token: "",
                 page: 1,
                 size: 10,
                 id: 1
@@ -339,16 +342,17 @@ export default {
             //     this.fm_list = rep;
             //     Toast.clear();
             // })
-            getColumn(this.query).then(rep => {
+            this.query.token = this.$ls.get('token')
+            getColumnDel(this.query).then(rep => {
                 this.fm_list = rep.data;
                 Toast.clear();
             })
 
 
         },
-        getColumn() {
-            getColumn(this.query).then(rep => {
-                alert(JSON.stringify(rep))
+        getColumnDel() {
+            getColumnDel(this.query).then(rep => {
+                // alert(JSON.stringify(rep))
             })
         },
         getTime(time) {
@@ -361,7 +365,10 @@ export default {
             if (!this.editable) {
                 this.editable = true;
             } else {
-                this.$router.push('/openfm?type=select');
+                // this.$router.push('/openfm?type=select');
+
+                this.$router.push('/radio/tag');
+
             }
         },
         onRemove() {
@@ -374,12 +381,21 @@ export default {
                     Dialog.close();
                     Toast.loading();
 
-                    delPrograms({ token: this.token, programIds: this.select }).then(rep => {
+                    // delPrograms({ token: this.token, programIds: this.select }).then(rep => {
+                    //     Toast.clear();
+                    //     api.toast({ msg: "删除成功~" });
+                    //     this.render();
+                    //     this.$ls.set("refresh", new Date().valueOf());
+                    // })
+
+
+                    postcolumnDel({ token: this.$ls.get('token'), coumnIds: this.select }).then(rep => {
                         Toast.clear();
                         api.toast({ msg: "删除成功~" });
                         this.render();
                         this.$ls.set("refresh", new Date().valueOf());
                     })
+
 
 
                 }).catch(() => {

@@ -35,6 +35,7 @@ import my_subscribe from '../views/my/subscribe.vue'
 import my_msg from '../views/my/msg.vue'
 import my_msg_detail from '../views/my/msg_detail.vue'
 import my_wallet from '../views/my/wallet.vue'
+import my_buy from '../views/my/buy.vue'
 
 import radio_list from '../views/radio/radio_list.vue'
 import radio_select from '../views/radio/radio_select.vue'
@@ -170,6 +171,10 @@ export default [{
     {
         path: '/my/wallet',
         component: my_wallet
+    },
+    {
+        path: '/my/buy',
+        component: my_buy
     },
     {
         path: '/radio/radio_list',

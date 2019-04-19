@@ -1,42 +1,49 @@
 <template>
-<div class="my-msg-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   :title="title"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="my-msg-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" :title="title">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
+    <div class="content">
 
-  <div class="content">
+      <div class="aui-row kong" v-show="list.length==0">
+        <img class="img" src="../../../../assets/images/my/kong@3x.png">
+        <div class="title">
+          暂无{{title}}
+        </div>
 
-    <div class="aui-content aui-margin-b-15 ">
-     <ul class="aui-list aui-media-list msg-list" v-for="l in list">
+      </div>
 
-        <li class="aui-list-item aui-list-item-middle ">
-              <div class="aui-media-list-item-inner">
-                  <div class="aui-list-item-media" style="width: 4rem;">
-                     <img src="../../../../assets/images/radio/head3.png" class="aui-img-round aui-list-img-sm img-head">
-                  </div>
-                  <div class="aui-list-item-inner msg-list-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title aui-font-size-14 msg-title">{{l.name}}</div>
-                          <div class="aui-list-item-right msg-time">
-                             08:12
-                          </div>
-                      </div>
-                      <div class="aui-list-item-text msg-cont">
-                        您赞的节目： {{l.title}}
-                      </div>
-                  </div>
+      <div class="aui-content aui-margin-b-15 ">
+        <ul class="aui-list aui-media-list msg-list" v-for="l in list">
+
+          <li class="aui-list-item aui-list-item-middle ">
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media" style="width: 4rem;">
+                <img src="../../../../assets/images/radio/head3.png" class="aui-img-round aui-list-img-sm img-head">
               </div>
+              <div class="aui-list-item-inner msg-list-inner">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-14 msg-title">{{l.name}}</div>
+                  <div class="aui-list-item-right msg-time">
+                    08:12
+                  </div>
+                </div>
+                <div class="aui-list-item-text msg-cont">
+
+                  您{{title}}的节目： {{l.title}}
+
+                </div>
+              </div>
+            </div>
           </li>
-      </ul>
+        </ul>
 
+      </div>
     </div>
-</div>
 
-   
-</div>
-  
+  </div>
+
 </template>
 
 <script>
@@ -94,6 +101,25 @@ export default {
     padding-bottom: px2rem(160);
     .van-pull-refresh__track {
       height: 100%;
+    }
+
+    .kong {
+      padding-bottom: px2rem(50);
+      .img {
+        width: px2rem(400);
+        height: px2rem(290);
+      }
+      .title {
+        color: #646261;
+        font-size: px2rem(28);
+        text-align: center;
+        font-weight: bold;
+      }
+      .cont {
+        padding-top: px2rem(10);
+        font-size: px2rem(24);
+        color: #9d9a99;
+      }
     }
 
     .msg-list {

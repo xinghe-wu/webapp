@@ -1,225 +1,200 @@
 <template>
-<div>
+  <div>
 
+    <div class="header">
 
-  <div class="header">
+      <div class="aui-row title">
+        <div class="aui-col-xs-1" @click="onClickLeft()">
+          <van-icon name="arrow-left" />
+        </div>
 
-	<div class="aui-row title" >
-			<div class="aui-col-xs-1" @click="onClickLeft()">
-					<van-icon  name="arrow-left" />
-			</div>
+        <div class="aui-col-xs-9">
+          &nbsp
+        </div>
 
-		<div class="aui-col-xs-9">
-				&nbsp
-		</div>
+        <div class="aui-col-xs-2">
 
-	   <div class="aui-col-xs-2">
-     <div class="btn-follow">订阅</div>
+          <div class="btn" v-show="column.subscribe===1" @click="postSubscribes(column.id)">已订阅</div>
+          <div class="btn-follow" @click="postSubscribes(column.id)" v-show="column.subscribe===0">订阅</div>
+        </div>
+      </div>
+
+      <div class="egret-flex-item musiclistprofile">
+
+        <div class="egret-flex-item-shelf">
+          <div class="title">{{column.name}}</div>
+          <div class="cont">{{column.brief}}</div>
+
+        </div>
+      </div>
+      <div class="userinfo">
+        <div class="userinfocol01 userinfocol br" tapmode="toolhover" @click="zan()" data-click="0">
+          <div class="info"><img src="../../../../assets/images/ico_like@3x.png" alt="" class="like-img"></div>
+          <div class="num">{{num}}</div>
+        </div>
+        <div class="userinfocol02 userinfocol br" tapmode="toolhover" @click="commentsClick">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclistcommet.png" alt=""></div>
+          <div class="num">{{column.comments}}</div>
+        </div>
+        <div class="userinfocol03 userinfocol br" tapmode="toolhover" @click="openShare">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclistshare.png" alt=""></div>
+          <div class="num">{{column.shares}}</div>
+        </div>
+        <div class="userinfocol03 userinfocol" tapmode="toolhover">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclistdown.png" alt=""></div>
+          <div class="num">下载</div>
+        </div>
+      </div>
+
     </div>
-	</div>
-
-
-<div class="egret-flex-item musiclistprofile">
-
-	<div class="egret-flex-item-shelf">
-		<div class="title">{{column.name}}</div>
-		<div class="cont">{{column.brief}}</div>
-
-	</div>
-</div>
-<div class="userinfo">
-	<div class="userinfocol01 userinfocol br" tapmode="toolhover" @click="collectmusic(this)" data-click="0">
-		<div class="info"><img src="../../../../assets/images/ico_like@3x.png" alt="" class="like-img"></div>
-		<div class="num">{{num}}</div>
-	</div>
-	<div class="userinfocol02 userinfocol br" tapmode="toolhover" @click="commentsClick">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclistcommet.png" alt=""></div>
-		<div class="num">{{column.comments}}</div>
-	</div>
-	<div class="userinfocol03 userinfocol br" tapmode="toolhover" @click="openShare">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclistshare.png" alt=""></div>
-		<div class="num">{{column.shares}}</div>
-	</div>
-	<div class="userinfocol03 userinfocol" tapmode="toolhover" @click="downloadAll()">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclistdown.png" alt=""></div>
-		<div class="num">下载</div>
-	</div>
-</div>
-
-</div>
-<div v-if="freeShow">
-<!-- 2 播放全部 -->
-<div class="egret-flex-item isolateitem-bottom playall" tapmode="allplayhover" @click="openMusicPlay()">
-	<!-- <div class="egret-flex-item-logo">
+    <div v-if="freeShow">
+      <!-- 2 播放全部 -->
+      <div class="egret-flex-item isolateitem-bottom playall" tapmode="allplayhover">
+        <!-- <div class="egret-flex-item-logo">
 		<img src="../../../../assets/images/musiclist/musiclistplay.png" alt="" class="">
 	</div> -->
-	<div class="egret-flex-item-shelf">
-		<div class="egret-flex-item-shelf03">共{{num}}期<span class="totalnum">已更新完成</span></div>
-	</div>
-	<div class="egret-flex-item-arrow">
-		<img src="../../../../assets/images/musiclist/musiclistplayarrow.png" alt="" class=""> <sapn class="title">排序</sapn>
-	</div>
-</div>
-
-<!-- 3  -->
-
-<div class="egret-flex-item musiclist-item"  v-for="(p,index) in programList" :key="index" >
-	<div class="egret-flex-item-logo">
-		{{p.count}}
-	</div>
-	<div class="egret-flex-item-abright" @click="playClick(p)">
-		<div class="egret-flex-item-shelf">
-			<div class="egret-flex-item-shelf01">{{p.name}}</div>
-      
-			<div class="egret-flex-item-shelf02" >
-        
-        <van-tag plain  type="primary" v-if="column.free==1" style="margin-right:10px">试听</van-tag >
-    
-        <span class="title">{{formatDateTime(p.create_time)}}</span>
-          <img src="../../../../assets/images/radio/shijian@2x.png" alt="" class="shijian"> 
-          <span class="title">{{formatSeconds(p.play_time)}}</span>
-         <img src="../../../../assets/images/radio/bofang@2x.png" alt="" class="shijian"> 
-          <span class="title">{{p.play_count}}</span>
+        <div class="egret-flex-item-shelf">
+          <div class="egret-flex-item-shelf03">共{{num}}期
+            <span class="totalnum">已更新完成</span>
+          </div>
         </div>
-      		<!-- <div class="egret-flex-item-shelf02" style="display:inline">{{formatDateTime(p.create_time)}}</div> -->
-		</div>
-		<div class="egret-flex-item-arrow">
-			<img src="../../../../assets/images/ico_more@3x.png" alt="" class="toobarimg" @click="expandlist(0, this)">
-		</div>
-	</div>
-</div>
-<div class="musiclist-item-tool" data-click='0' >
-	<div class="userinfocol" tapmode="toolhover" @click="">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
-		<div class="num">收藏</div>
-	</div>
-	<div class="userinfocol" tapmode="toolhover" @click="downloadMusic()">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
-		<div class="num">下载</div>
-	</div>
-	<div class="userinfocol" tapmode="toolhover" @click="openMusiclistshare()">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclisttool03.png" alt=""></div>
-		<div class="num">分享</div>
-	</div>
-	<div class="userinfocol" tapmode="toolhover" @click="">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclisttool04.png" alt=""></div>
-		<div class="num">歌手</div>
-	</div>
-	<div class="userinfocol" tapmode="toolhover" @click="">
-		<div class="info"><img src="../../../../assets/images/musiclist/musiclisttool05.png" alt=""></div>
-		<div class="num">专辑</div>
-	</div>
+        <div class="egret-flex-item-arrow">
+          <img src="../../../../assets/images/musiclist/musiclistplayarrow.png" alt="" class="">
+          <span class="title">排序</span>
+        </div>
+      </div>
 
-</div>
+      <!-- 3  -->
 
-</div>
+      <div class="egret-flex-item musiclist-item" v-for="(p,index) in programList" :key="index">
+        <div class="egret-flex-item-logo">
+          {{p.count}}
+        </div>
+        <div class="egret-flex-item-abright" @click="playClick(p)">
+          <div class="egret-flex-item-shelf">
+            <div class="egret-flex-item-shelf01">{{p.name}}</div>
 
-<div v-else>
-<div class="radius">
-	<div class="listen">
-		<div class="title">
-			电台简介
-		</div>
-	</div>
-</div>
+            <div class="egret-flex-item-shelf02">
 
-	<div class="class">
-       <div class="introduction" v-html="column.courseCont"></div>
-		<!-- <div class="aui-row aui-row-padded">
-		<img src="../../../../assets/images/radio/class01.png" style="width:400px">
-  	</div>
-		<div class="aui-row aui-row-padded">
-		<img src="../../../../assets/images/radio/class02.png" style="width:400px">
-		</div> -->
+              <van-tag plain type="primary" v-if="column.free==1" style="margin-right:10px">试听</van-tag>
 
+              <span class="title">{{formatDateTime(p.create_time)}}</span>
+              <img src="../../../../assets/images/radio/shijian@2x.png" alt="" class="shijian">
+              <span class="title">{{formatSeconds(p.play_time)}}</span>
+              <img src="../../../../assets/images/radio/bofang@2x.png" alt="" class="shijian">
+              <span class="title">{{p.play_count}}</span>
+            </div>
+            <!-- <div class="egret-flex-item-shelf02" style="display:inline">{{formatDateTime(p.create_time)}}</div> -->
+          </div>
+          <div class="egret-flex-item-arrow">
+            <img src="../../../../assets/images/ico_more@3x.png" alt="" class="toobarimg" @click="expandlist(0, this)">
+          </div>
+        </div>
+      </div>
+      <div class="musiclist-item-tool" data-click='0'>
+        <div class="userinfocol" tapmode="toolhover" @click="">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
+          <div class="num">收藏</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover" @click="downloadMusic()">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
+          <div class="num">下载</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover" @click="openMusiclistshare()">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool03.png" alt=""></div>
+          <div class="num">分享</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool04.png" alt=""></div>
+          <div class="num">歌手</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover">
+          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool05.png" alt=""></div>
+          <div class="num">专辑</div>
+        </div>
 
-		<!-- <div class="title">
-			购买须知
-		</div>
+      </div>
 
-		<div class="cont">
-			1.本电台为付费电台,每周一、周三20:00更新，订阅成功后即可畅听、下载</br>
-      2.购买成功后不可退款，不可转让，敬请谅解</br>
-      3 .等等须知。。。
-		</div> -->
+    </div>
 
+    <div v-else>
+      <div class="radius">
+        <div class="listen">
+          <div class="title">
+            电台简介
+          </div>
+        </div>
+      </div>
 
-    <div class="footer">
-	<div class="aui-row ">
-                <div class="aui-col-xs-5 audition">
-									<div class="aui-row ">
-										<div class="aui-col-xs-5" style="text-align:right">
-								  <img src="../../../../assets/images/radio/audition.png" > 
-								  </div>
-									<div class="aui-col-xs-7 free-btn" @click="freeListen">
-									<div style="color:#FF5F53;" >免费试听</div>
-									  </div>
-							  	</div>
+      <div class="class">
+        <div class="introduction" v-html="column.courseCont"></div>
+
+        <div class="footer">
+          <div class="aui-row ">
+            <div class="aui-col-xs-5 audition">
+              <div class="aui-row ">
+                <div class="aui-col-xs-5" style="text-align:right">
+                  <img src="../../../../assets/images/radio/audition.png">
                 </div>
-                <div class="aui-col-xs-7 buy" >
-									<span style="color:#fff" >购买：{{column.price}}</span>
+                <div class="aui-col-xs-7 free-btn" @click="freeListen">
+                  <div style="color:#FF5F53;">免费试听</div>
                 </div>
-	 </div>
+              </div>
+            </div>
+            <div class="aui-col-xs-7 buy">
+              <span style="color:#fff">购买：{{column.price}}</span>
+            </div>
+          </div>
 
-</div>
+        </div>
 
+      </div>
 
- </div>
+    </div>
 
-</div>
+    <div class="floatbox" v-show="isShow">
+      <div class="title">分享到</div>
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <!--First Slide-->
+          <div class="swiper-slide">
+            <table id="section02">
+              <tr>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div>
+                  <div class="section2title">微信</div>
+                </td>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/logo.png" alt=""></div>
+                  <div class="section2title">微信朋友圈</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div>
+                  <div class="section2title">QQ好友</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div>
+                  <div class="section2title">QQ空间</div>
+                </td>
+              </tr>
+              <tr>
 
-	<div class="floatbox" v-show="isShow">
-		<div class="title">分享到</div>
-		<div class="swiper-container">
-			<div class="swiper-wrapper">
-				<!--First Slide-->
-				<div class="swiper-slide">
-					<table id="section02">
-						<tr>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div><div class="section2title">微信</div></td>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/logo.png" alt=""></div><div class="section2title">微信朋友圈</div></td>
-							<td class=""><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div><div class="section2title">新浪微博</div></td>
-							<td class=""><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div><div class="section2title">腾讯微博</div></td>
-						</tr>
-						<tr>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_yixin.png" alt=""></div><div class="section2title">易信</div></td>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_logo_yxq.png" alt=""></div><div class="section2title">易信朋友圈</div></td>
-							<td class="  "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo_qq.png" alt=""></div><div class="section2title">QQ好友</div></td>
-							<td class="  "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_qzone.png" alt=""></div><div class="section2title">QQ空间</div></td>
-						</tr>
-					</table>
-				</div>
+              </tr>
+            </table>
+          </div>
 
-				<!--Second Slide-->
-				<div class="swiper-slide">
-					<table id="section02">
-						<tr>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_renren.png" alt=""></div><div class="section2title">人人网</div></td>
-							<td class=" "><div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_douban.png" alt=""></div><div class="section2title">豆瓣网</div></td>
-							<td class=""></td>
-							<td class=""></td>
-						</tr>
-						<tr>
-							<td class=" "></td>
-							<td class=" "></td>
-							<td class="  "></td>
-							<td class="  "></td>
-						</tr>
-					</table>
-				</div>
+        </div>
 
-			</div>
-			<div class="pagination"></div>
-		</div>
-		<div class="cancelbtn" tapmode="" @click="closeShare">取消</div>
-	</div>
+      </div>
+      <div class="cancelbtn" tapmode="" @click="closeShare">取消</div>
+    </div>
 
-</div>
+  </div>
 </template>
 <script>
 
-import { getProgram, src } from '../../index/services';
-
+import { getProgram, src, postSubscribes, postProgramListen } from '../../index/services';
+import { Toast } from 'vant';
 export default {
   store: ['paddingTop', 'token'],
   data() {
@@ -239,6 +214,21 @@ export default {
   },
   methods: {
     render(loaded) {
+
+      // this.column = this.$route.query.column
+      this.column = this.$ls.get('column')
+
+      if (this.column.free == 1) {
+        this.freeShow = false
+      } else {
+        this.freeShow = true
+      }
+
+
+      postProgramListen({ token: this.$ls.get('token'), columnId: this.column.id }).then(rep => {
+        // alert(JSON.stringify(this.column.id))
+      })
+
       this.query.id = this.column.id
       getProgram(this.query).then(rep => {
         this.programList = rep.data;
@@ -253,11 +243,19 @@ export default {
     },
 
     openMusiclistshare() {
-      alert(1)
+      // alert(1)
       this.isShow = true
     },
+    postSubscribes(id) {
+      postSubscribes({ token: this.$ls.get('token'), coumnId: id }).then(rep => {
+        // alert(JSON.stringify(rep))
+        Toast.success('订阅成功');
+        this.column.subscribe = 1;
+      })
+    },
+
     closeShare() {
-      alert(2)
+      // alert(2)
       this.isShow = false
     },
     onClickLeft() {
@@ -265,18 +263,23 @@ export default {
 
     },
     openShare() {
+      this.isShow = true;
 
+    },
+    zan() {
+      this.num++
     },
     freeListen() {
       this.freeShow = true
     },
     commentsClick() {
-      // alert(JSON.stringify(this.column))
-      this.$router.push({ path: '/anchor/columnComment', query: { comment: this.column } })
-
+      this.$router.push({ path: '/anchor/columnComment', query: { comment: this.column, type: 3 } })
     },
     playClick(p) {
 
+      this.$ls.set('programList', this.programList)
+      this.$ls.set('pId', p.id)
+      // this.$ls.set('column', this.column)
       this.$router.push({ path: '/program/play', query: { programList: this.programList, id: p.id, column: this.column } })
     },
     expandlist(index, clickitem) {
@@ -350,16 +353,6 @@ export default {
     }
   },
   created() {
-    this.column = this.$route.query.column
-
-    if (this.column.free == 1) {
-      this.freeShow = false
-    } else {
-      this.freeShow = true
-    }
-
-    // alert(JSON.stringify(this.column))
-
     this.render()
   }
 }
@@ -640,10 +633,23 @@ export default {
 
   .title {
     padding-left: px2rem(10);
-    padding-top: px2rem(60);
+    padding-top: px2rem(50);
     font-size: px2rem(34);
     text-align: left;
     color: #fff;
+  }
+  .cont {
+    padding-left: px2rem(10);
+  }
+  .btn {
+    text-align: center;
+    padding-top: px2rem(8);
+    background-color: #e3e8ee;
+    color: #232323;
+    width: px2rem(100);
+    height: px2rem(56);
+    font-size: px2rem(26);
+    border-radius: 10%;
   }
   .btn-follow {
     text-align: center;
@@ -659,6 +665,7 @@ export default {
 
 .radius {
   z-index: 999;
+  height: px2rem(300);
   position: absolute;
   top: px2rem(470);
   left: 0;

@@ -1,13 +1,13 @@
 <template>
-    <div >
-        <keep-alive>
-          <!-- <transition name="slide-right"> -->
-           <transition>  
-           <router-view></router-view>
-           </transition>
-        </keep-alive>
+  <div>
+    <keep-alive>
+      <!-- <transition name="slide-right"> -->
+      <transition>
+        <router-view></router-view>
+      </transition>
+    </keep-alive>
 
-    </div>
+  </div>
 </template>
 <style lang="scss" type="text/scss"  >
 * {
@@ -85,6 +85,9 @@ export default {
   },
   methods: {
 
-  }
+
+  },
+
+
 }
 </script>

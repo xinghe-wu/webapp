@@ -47,6 +47,7 @@ Vue.use(Vant);
 let isFirst = true;
 
 router.beforeEach((to, from, next) => {
+    // alert(to.path)
     if (to.path == '/login') {
         return next();
     }
@@ -104,43 +105,70 @@ window.apiready = function () {
            `,
 
         created() {
-            if (this.$ls.get("token")) {
-                this.store.token = this.$ls.get("token");
-                if (!this.store.token) {
-                    return this.$router.push('/login');
-                }
+
+            // if (this.$ls.get("token")) {
+            //     this.store.token = this.$ls.get("token");
+
+            var path = GetQueryString('path');
+
+            if (path) {
+                this.$router.replace('/' + path);
+            } else if (this.$route.path == '' || this.$route.path == '/') {
+                this.$router.push('/app');
             }
+            // if (!this.store.token) {
+
+            //     return this.$router.push('/login');
+            // }
+            // }
+
+            var ci = 0;
+            var time1, time2;
+            var self = this;
+            api.addEventListener({
+                name: 'keyback'
+            }, function (ret, err) {
+                const url = self.$route.path;
+                if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my') {
+                    time1 = new Date().getTime();
+                    if (ci == 0) {
+                        ci = 1;
+                        api.toast({
+                            msg: '再按一次返回键退出'
+                        })
+
+                    } else if (ci == 1) {
+                        time2 = new Date().getTime();
+                        if (time2 - time1 < 3000) {
+                            var audioPlayer = api.require('liveAudioPlayer');
+                            audioPlayer.stop();
+                            api.closeWidget({
+                                id: api.appId,
+                                retData: {
+                                    name: 'closeWidget'
+                                },
+                                silent: true
+                            });
+                        } else {
+                            ci = 0;
+
+                            api.toast({
+                                msg: '再按一次返回键退出'
+                            });
+                        }
+                    }
+                } else {
+                    self.$router.go(-1) //返回
+                }
+            })
+
         }
     })
+
+
 }
 
-// if (window.location.search.indexOf('debug') > -1) {
-//     alert('a')
-//     new Vue({
-//         router,
-//         el: '#app',
-//         store,
-//         data: {
-//             store: {
-//                 token: ''
-//             }
-//         },
-//         template: `
-//          <router-view></router-view>
-//         `,
-//         created() {
-//             if (this.$ls.get("token")) {
-//                 this.store.token = this.$ls.get("token");
-//                 var path = GetQueryString('path');
-//                 if (path) {
-//                     this.$router.replace('/' + path);
-//                 } else if (this.$route.path == '' || this.$route.path == '/') {
-//                     this.$router.push('/index');
-//                 }
-//             }
-//         }
-//     })
-// }
+
 
 Date.prototype.format = function (fmt) {
     var o = {

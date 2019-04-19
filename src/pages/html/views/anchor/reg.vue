@@ -1,65 +1,38 @@
 <template>
-<div class="view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="成为主播"  >
-        <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="anchor-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="成为主播">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="content">
+    <div class="content">
 
-<div class="title">
-  填写基础资料
-</div> 
-<div class="cont">
-  听到APP工作人员将第一时间与您联络
-</div> 
-
-<div class="reg">
-<van-cell-group >
-  <van-field
-    v-model="name"
-    clearable
-    label="姓名"
-    right-icon="question-o"
-    placeholder="请输入姓名"
-    class="input-title"
-  />
-
-  <van-field
-    v-model="mobile"
-    label="手机号"
-    placeholder="请输入手机号"
-    class="input-title"
-  />
-    <van-field
-    v-model="weixin"
-    label="微信"
-    placeholder="请输入微信"
-    class="input-title"
-  />
-
-  <van-field
-    class="input-title"
-    v-model="info"
-    label="介绍"
-   
-    placeholder="几句说说您的情况"
-    rows="3"
-    autosize
-  />
-</van-cell-group>
-
-
-<div class="aui-content aui-text-center aui-margin-t-15" @click="postSumbit">
-      <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
-          <span>提交</span>
+      <div class="title">
+        填写基础资料
       </div>
-  </div>
-</div>
+      <div class="cont">
+        听到APP工作人员将第一时间与您联络
+      </div>
 
-</div>
-</div>
-  
+      <div class="reg">
+        <van-cell-group>
+          <van-field v-model="name" clearable label="姓名" right-icon="question-o" placeholder="请输入姓名" class="input-title" />
+
+          <van-field v-model="mobile" label="手机号" placeholder="请输入手机号" class="input-title" />
+          <van-field v-model="weixin" label="微信" placeholder="请输入微信" class="input-title" />
+
+          <van-field class="input-title" v-model="info" label="介绍" placeholder="几句说说您的情况" rows="3" autosize />
+        </van-cell-group>
+
+        <div class="aui-content aui-text-center aui-margin-t-15" @click="postSumbit">
+          <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
+            <span>提交</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -130,7 +103,7 @@ export default {
 
 <style lang="scss" type="text/scss">
 @import "../../../../public/px2rem.scss";
-.view {
+.anchor-view {
   height: 100%;
   overflow-y: hidden;
   background-color: #fff;

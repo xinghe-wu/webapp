@@ -17,8 +17,8 @@
             });
             api.openFrame({
                 name: 'index',
-                //url: './dist/html/index.html?path=login',
-                url: 'http://192.168.1.102:8010/html/index.html#/login', //调试时使用
+                //url: 'dist/html/index.html?path=login',
+                //url: 'http://192.168.3.20:8010/html/index.html?path=login', //调试时使用
                 rect: {
                     x: 0,
                     y: 0,
@@ -36,39 +36,49 @@
                 updateCurrent: false,
             });
 
-            var ci = 0;
-            var time1, time2;
-            api.addEventListener({
-                name: 'keyback'
-            }, function (ret, err) {
-                if (ci == 0) {
-                    time1 = new Date().getTime();
-                    ci = 1;
-                    api.toast({
-                        msg: '再按一次返回键退出'
-                    });
 
-                } else if (ci == 1) {
-                    time2 = new Date().getTime();
-                    if (time2 - time1 < 3000) {
-                        var audioPlayer = api.require('liveAudioPlayer');
-                        audioPlayer.stop();
-                        api.closeWidget({
-                            id: api.appId,
-                            retData: {
-                                name: 'closeWidget'
-                            },
-                            silent: true
-                        });
-                    } else {
-                        ci = 0;
 
-                        api.toast({
-                            msg: '再按一次返回键退出'
-                        });
-                    }
-                }
-            });
+            // var ci = 0;
+            // var time1, time2;
+            // api.addEventListener({
+            //     name: 'keyback'
+            // }, function (ret, err) {
+
+            //     if (ci == 0) {
+            //         alert(window.onBack)
+            //         if (window.onBack) {
+            //             window.onBack.call(this);
+            //         }
+
+            //         time1 = new Date().getTime();
+            //         ci = 1;
+            //         api.toast({
+            //             msg: '再按一次返回键退出'
+            //         })
+
+
+
+            //     } else if (ci == 1) {
+            //         time2 = new Date().getTime();
+            //         if (time2 - time1 < 3000) {
+            //             var audioPlayer = api.require('liveAudioPlayer');
+            //             audioPlayer.stop();
+            //             api.closeWidget({
+            //                 id: api.appId,
+            //                 retData: {
+            //                     name: 'closeWidget'
+            //                 },
+            //                 silent: true
+            //             });
+            //         } else {
+            //             ci = 0;
+
+            //             api.toast({
+            //                 msg: '再按一次返回键退出'
+            //             });
+            //         }
+            //     }
+            // });
         };
     </script>
 </body>

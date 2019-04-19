@@ -1,122 +1,142 @@
 <template>
     <div class="view-interact" :class="{ipad: iPad}">
-    <!-- 直播头部 -->
-    <header class="aui-bar aui-bar-nav">
-	<div class="header1" >
-	   <div class="aui-row">
-		<div class="aui-col-xs-1" @click="radioList">
-		   <span slot="left" class="header-button"  >
-                <img src="../../../assets/images/diantailiebiao@3x.png" alt="" class="img">
-            </span>
-		</div>
+        <!-- 直播头部 -->
+        <header class="aui-bar aui-bar-nav">
+            <div class="header1">
+                <img :src="src + video.pic" class="img-bg" alt="">
+                <div class="cont">
+                    <div class="cont-row">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-1" @click="radioList">
+                                <span slot="left" class="header-button">
+                                    <img src="../../../assets/images/diantailiebiao@3x.png" alt="" class="img">
+                                </span>
+                            </div>
 
-		<div class="aui-col-xs-10" onclick="radioList()">
-		   <span class="name"> {{video.name}}</span>
-		</div>
+                            <div class="aui-col-xs-10" onclick="radioList()">
+                                <span class="name"> {{video.name}}</span>
+                            </div>
 
-		<div class="aui-col-xs-1">
-		</div>
-	</div>
+                            <div class="aui-col-xs-1">
+                            </div>
 
-		 <div class="aui-row">
-		    <div class="aui-col-xs-8" style="text-align:left">
-				 <span class="title"> {{video.video_title}}</span>
-			 </div>
-	    </div>
+                        </div>
 
-	    <div class="aui-row" style="margin-top:-20px">
-				<span class="time"> {{video.video_time}} {{video.compere}}</span>
+                        <div class="aui-row">
+
+                            <div class="aui-col-xs-8" style="text-align:left;margin-top:-15px;margin-left:20px">
+                                <span class="title"> {{video.video_title}}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="aui-row" style="margin-top:-30px">
+                            <span class="time"> {{video.video_time}} {{video.compere}}</span>
+                        </div>
+
+                    </div>
+
+                    <!-- 直播留言 -->
+                    <div class="live-msg">
+                        <div class="card" v-for="(m,index) in msgList">
+                            <div class="aui-col-xs-1">
+
+                                <img :src="src+m.head" class="aui-img-round  img">
+                            </div>
+                            <div class="aui-col-xs-11">
+                                <span class="cont">
+                                    {{m.cont}}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </header>
+        <img :src="src+video.icon" alt="" class="icon" @click="adVote(video.url)" v-show="video.icon">
+        <!-- 直播预告 -->
+        <div class="live">
+            <div class="aui-row">
+                <div class="aui-col-xs-1">
+                    <img class="img" src="../../../assets/images/radio/zhibo@3x.png">
+                </div>
+                <div class="aui-col-xs-11">
+                    <!-- 直播预告：西湖文博会将于本周日08:00直播 -->
+                    <van-notice-bar class="title" text="直播预告：西湖文博会将于本周日08:00直播,西湖文博会将于本周日08:00直播" background="#fff4f1" color="#ff5f53"></van-notice-bar>
+                </div>
+            </div>
         </div>
 
-
+        <!-- 电台活动推送 -->
+        <div class="ad">
+            <div class="aui-row">
+                <div class="aui-col-xs-1">
+                    <img src="../../../assets/images/radio/huodong@3x.png" class="img-alert">
+                </div>
+                <div class="aui-col-xs-2">
+                    <img src="../../../assets/images/index/enroll.png" class="img-enroll">
+                </div>
+                <div class="aui-col-xs-9" @click="ad">
+                    <span class="title"> {{video.activity.stat == 0?'已结束':'正在进行中'}}：{{video.activity.title}}</span>
+                </div>
+            </div>
         </div>
 
-	</header>
+        <!-- 互动 -->
+        <div class="play">
+            <section class="aui-grid aui-margin-b-15 play">
+                <div class="aui-row cont">
+                    <div class="aui-col-xs-4" @click.stop="onText">
 
-    <!-- 直播预告 -->
-    <div class="live">
-		<div class="aui-row">
-		 <div class="aui-col-xs-1">
-		  	<img class="img" src="../../../assets/images/radio/zhibo@3x.png" >
-		  </div>
-		 <div class="aui-col-xs-11">
-             <!-- 直播预告：西湖文博会将于本周日08:00直播 -->
-			 <van-notice-bar class="title" text="直播预告：西湖文博会将于本周日08:00直播,西湖文博会将于本周日08:00直播" background="#fff4f1" color="#ff5f53"></van-notice-bar>
-		 </div>
-	   </div>
-	</div>
+                        <img src="../../../assets/images/radio/tuwenhudong@3x.png" class="tuwenhudong">
 
-    <!-- 电台活动推送 -->
-    <div class="ad">
-	 <div class="aui-row">
-		<div class="aui-col-xs-1">
-	  	 <img src="../../../assets/images/radio/huodong@3x.png"  class="img-alert">
-	  </div>
-		<div class="aui-col-xs-2">
-		<img src="../../../assets/images/index/enroll.png" class="img-enroll">
-		</div>
-	    <div class="aui-col-xs-9" @click="ad">
-		   <span class="title"> {{video.activity.stat == 0?'已结束':'正在进行中'}}：{{video.activity.title}}</span>
-	     </div>
-        </div>
-    </div>
-
-    <!-- 互动 -->
-    <div class="play">
-	<section class="aui-grid aui-margin-b-15 play">
-	<div class="aui-row cont">
-			 <div class="aui-col-xs-4" @click.stop="onText">
-
-					 <img src="../../../assets/images/radio/tuwenhudong@3x.png" style="width:18px;margin-top:30px">
-
-					 <div class="aui-grid-label title" style="margin-top:20px">图文互动</div>
-			 </div>
-			 <div class="aui-col-xs-4"  @click="onSpeech">
-						<img src="../../../assets/images/radio/yuyinhudong@3x.png" style="width:65px">
-					<div class="aui-grid-label title">语音互动</div>
-			 </div>
-			 <div class="aui-col-xs-4">
-            <section class="player-block">
-                <span class="play-button" :class="interact_status" v-ripple @click="onPlay">
-                </span>
+                        <div class="aui-grid-label title">图文互动</div>
+                    </div>
+                    <div class="aui-col-xs-4" @click="onSpeech">
+                        <img src="../../../assets/images/radio/yuyinhudong@3x.png" class="yuyinhudong">
+                        <div class="aui-grid-label yuyinhudong-title">语音互动</div>
+                    </div>
+                    <div class="aui-col-xs-4">
+                        <section class="player-block">
+                            <span class="play-button" :class="interact_status" v-ripple @click="onPlay">
+                            </span>
+                        </section>
+                        <!-- <img src="../../../assets/images/index/stop.png" style="width:26px;margin-top:25px" > -->
+                        <div class="aui-grid-label title" v-if="interact_status=='play'"> 播放</div>
+                        <div class="aui-grid-label title" v-else>静音</div>
+                    </div>
+                </div>
             </section>
-						 <!-- <img src="../../../assets/images/index/stop.png" style="width:26px;margin-top:25px" > -->
-					<div class="aui-grid-label title" style="margin-top:18px"> 静音</div>
-			 </div>
-	 </div>
-    </section>
-    </div>
+        </div>
 
-    <!-- 新闻 -->
-    <div class="new">
-		<span class="title"> 西湖资讯</span>
-    </div>
-	<div class="aui-content aui-margin-b-15">
-       <ul class="aui-list aui-media-list">
-	       <li class="aui-list-item"  v-for="n in newList" >
-				 <div class="aui-media-list-item-inner info" @click="news(n)">
-					 <div class="aui-list-item-inner">
-						<div class="aui-list-item-title cont">{{n.title}}</div>
-							<div class="aui-list-item-text">
-								<span class="brief_title">{{n.radio_name}}</span>
-								<span class="brief">{{n.comments}}评论</span>
-								<span class="brief">{{getDateDiff(n.time)}}</span>
-							</div>
-						 </div>
-				 <div class="aui-list-item-media">
-                     <img :src="src + n.img" alt=""  class="img">
-				 </div>
-				 </div>
-             </li>
-        </ul>
-    
-    </div>
+        <!-- 新闻 -->
+        <div class="new">
+            <span class="title"> 西湖资讯</span>
+        </div>
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item" v-for="n in newList">
+                    <div class="aui-media-list-item-inner info" @click="news(n)">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title cont">{{n.title}}</div>
+                            <div class="">
+                                <span class="brief_title">{{n.radio_name}}</span>
+                                <span class="brief">{{n.comments}}评论</span>
+                                <span class="brief">{{getDateDiff(n.time)}}</span>
+                            </div>
+                        </div>
+                        <div class="aui-list-item-media">
+                            <img :src="src + n.img" alt="" class="img">
+                        </div>
+                    </div>
+                </li>
+            </ul>
 
-     
-    
-        
+        </div>
 
- <!-- <van-nav-bar :style="{paddingTop:paddingTop}" id="header" :title="video.name" @click-right="onShowLive" @click-left="onShowList" >
+        <!-- <van-nav-bar :style="{paddingTop:paddingTop}" id="header" :title="video.name" @click-right="onShowLive" @click-left="onShowList" >
       <span slot="right" class="header-button" >
  
       </span>
@@ -195,21 +215,17 @@
             <div class="speech-footer">
                 <span @click="onCloseSpeech" class="voice-circle">
                     <p>&nbsp;</p>
-                    <h5> {{countdown < 9 ?(countdown+ '秒'): '发送'}}</h5>
+                    <h5> {{countdown
+                        < 9 ?(countdown+ '秒'): '发送'}}</h5>
                 </span>
                 <span class="voice-tag" @click.stop="onCancelSpeech">
-                    <i class="iconfont  icon-guanbi"></i>
+                    <i class="iconfont">
+                        <span class="text">关闭</span>
+                    </i>
                 </span>
             </div>
         </div>
-        <vDialog v-model="dialog"
-                 :type="pushInfo.type"
-                 :time="pushInfo.show_time"
-                 :url="pushInfo.url"
-                 :id="pushInfo.id"
-                 :red="pushInfo.red"
-                 :blue="pushInfo.blue"
-            >
+        <vDialog v-model="dialog" :type="pushInfo.type" :time="pushInfo.show_time" :url="pushInfo.url" :id="pushInfo.id" :red="pushInfo.red" :blue="pushInfo.blue">
             <div slot="title">
                 {{pushInfo.title}}
             </div>
@@ -219,13 +235,13 @@
                     {{pushInfo.brief}}
                 </p>
             </span>
-        </vDialog> 
+        </vDialog>
     </div>
 </template>
 
 <script>
 //    var speech = api.require('speechRecognizer');
-import { getDefaultFm, getVideoDetail, getLiveStatus, src, base, postVoice, getPath, getPush, getNews } from '../index/services';
+import { getDefaultFm, getVideoDetail, getLiveStatus, src, base, postVoice, getPath, getPush, getNews, getMsg } from '../index/services';
 import { Toast } from 'vant';
 import vDialog from '../components/vDialog.vue';
 
@@ -248,6 +264,7 @@ export default {
                     id: ''
                 }
             },
+            msgList: [],
             iPad: false,
             wordStr: '',
             speech: false,
@@ -412,7 +429,7 @@ export default {
 
         },
         radioList() {
-            this.$router.push('/radio/radio_select');
+            this.$router.push('/radio/radio_list');
         },
         onShowList() {
 
@@ -457,12 +474,18 @@ export default {
             });
 
         },
+        getMsg() {
+            getMsg(this.$ls.get('token')).then(rep => {
+                this.msgList = rep
+            })
+        },
         getLive(id) {
 
             if (this.timer) {
                 clearInterval(this.timer);
             }
             this.timer = setInterval(() => {
+                this.getMsg();
                 getLiveStatus(id).then(rep => {
                     this.video.live = rep.stat;
                 })
@@ -595,6 +618,14 @@ export default {
                 result = "刚刚";
             }
             return result;
+        },
+        adVote(url) {
+            var browser = api.require('webBrowser');
+            if (url != '') {
+                browser.open({
+                    url: url
+                });
+            }
         }
 
     },
@@ -634,11 +665,7 @@ export default {
             ios_appid: '5bb96d8f',
             android_appid: '5bb96ba0'
         }, function (ret, err) {
-            // if (ret.status) {
-            //   api.alert({ msg: '创建成功'});
-            // } else {
-            //   api.alert({ msg: "创建失败" });
-            // }
+
         });
 
 
@@ -650,21 +677,6 @@ export default {
 
         })
 
-        // push.setListener(( ret, err )=>{
-        //   if( ret ){
-        //     let content = ret.data[0].split(',');
-        //     let type = content[0], id = content[1];
-        //     if(type == 1) {
-        //       getPush(id).then(rep=>{
-        //         this.pushInfo = rep;
-        //         this.dialog = true;
-        //       })
-        //     }else{
-        //       this.lucky.id = id;
-        //     }
-        //   }
-        // });
-
 
         Toast.loading({ mask: false });
         getDefaultFm({ token: this.token }).then(rep => {
@@ -673,7 +685,10 @@ export default {
                 if (current) {
                     this.render(current);
                 } else {
-                    this.$router.replace('/list?type=default')
+                    this.render(1);
+                    // this.$router.replace('/list?type=default')
+                    // alert('1')
+                    //this.$router.replace('/radio_select')
                 }
             } else {
                 this.render(rep.id);
@@ -726,11 +741,52 @@ export default {
 
 .view-interact {
   padding-bottom: px2rem(60);
+  .icon {
+    width: px2rem(80);
+    position: absolute;
+    right: px2rem(30);
+    top: px2rem(180);
+    z-index: 999;
+    border-radius: px2rem(20);
+  }
   .header1 {
-    padding: px2rem(32);
-    padding-top: px2rem(38);
+    // padding: px2rem(32);
+    // padding-top: px2rem(38);
     height: px2rem(678);
     background-image: url("../../../assets/images/index/head.png");
+    .img-bg {
+      top: 0;
+      left: 0;
+      position: relative;
+      width: 100%;
+      height: px2rem(678);
+    }
+    .cont {
+      //   position: absolute
+      z-index: 10;
+
+      .cont-row {
+        margin-top: px2rem(-678);
+        padding-top: px2rem(30);
+      }
+
+      .live-msg {
+        padding-top: px2rem(60);
+        //   background-color: #000;
+        text-align: left;
+        .card {
+          padding-top: px2rem(10);
+          .cont {
+            font-size: px2rem(26);
+            font-weight: bold;
+            padding: px2rem(10);
+            border-radius: px2rem(20);
+            background: rgba(0, 0, 0, 0.3);
+          }
+        }
+      }
+    }
+
     .img {
       width: px2rem(42);
       height: px2rem(42);
@@ -766,19 +822,21 @@ export default {
 
   .ad {
     padding-left: px2rem(30);
-    padding-top: px2rem(18);
+    // padding-top: px2rem(18);
     height: px2rem(100);
+    line-height: px2rem(100);
     background-color: #fff;
     .title {
+      margin-left: px2rem(-30);
       font-size: px2rem(30);
       font-weight: bold;
     }
     .img-alert {
-      padding-top: px2rem(10);
+      padding-top: px2rem(30);
       width: px2rem(46);
     }
     .img-enroll {
-      padding-top: px2rem(16);
+      padding-top: px2rem(33);
       width: px2rem(72);
     }
   }
@@ -786,12 +844,27 @@ export default {
   .play {
     height: px2rem(300);
     background-image: url(../../../assets/images/index/play_bg.png);
-    .title {
-      font-size: px2rem(26);
-      color: #9d9a99;
-    }
+
     .cont {
-      padding-top: px2rem(30);
+      //   padding-top: px2rem(30);
+      .tuwenhudong {
+        width: px2rem(36);
+        margin-top: px2rem(70);
+      }
+      .yuyinhudong {
+        width: px2rem(180);
+        height: px2rem(180);
+      }
+      .title {
+        margin-top: px2rem(60);
+        font-size: px2rem(26);
+        color: #9d9a99;
+      }
+      .yuyinhudong-title {
+        margin-top: px2rem(-10);
+        font-size: px2rem(26);
+        color: #9d9a99;
+      }
     }
   }
 
@@ -806,7 +879,8 @@ export default {
   }
 
   .info {
-    padding: px2rem(20);
+    padding-top: px2rem(10);
+    padding-right: px2rem(20);
     .cont {
       color: #292726;
       font-size: px2rem(30);
@@ -819,13 +893,13 @@ export default {
     }
     .brief {
       padding-top: px2rem(16);
-      padding-left: 20px;
+      margin-left: px2rem(30);
       font-size: px2rem(24);
       color: #9d9a99;
     }
     .img {
       width: px2rem(200);
-      height: px2rem(130);
+      height: px2rem(150);
     }
   }
 
@@ -885,7 +959,7 @@ export default {
           padding-left: px2rem(20);
           .iconfont {
             color: #fff;
-            font-size: px2rem(200);
+            // font-size: px2rem(200);
           }
         }
         .right {
@@ -944,20 +1018,24 @@ export default {
         text-align: center;
         line-height: px2rem(112);
         height: px2rem(112);
-        background-color: #fce76c;
+        background-color: #ff5f53;
         border-radius: 50%;
         position: absolute;
         top: px2rem(0);
         font-size: px2rem(46);
         color: #262628;
         left: px2rem(461);
+        .text {
+          color: #fff;
+          font-size: px2rem(24);
+        }
       }
 
       .voice-circle {
         width: px2rem(320);
         height: px2rem(320);
         box-shadow: 0px 0px px2rem(40) 0px rgba(0, 0, 0, 0.05);
-        border: solid 2px #fce76c;
+        border: solid 2px #ff5f53;
         margin: 0 auto;
         border-radius: 50%;
         position: relative;
@@ -1117,22 +1195,23 @@ export default {
     // height: px2rem(448);
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    padding-top: px2rem(50);
+    padding-top: px2rem(55);
     // padding-left: px2rem(40);
 
     .play-button {
-      width: px2rem(52);
-      height: px2rem(52);
+      //   padding-top: px2rem(90);
+      width: px2rem(46);
+      height: px2rem(46);
       display: inline-block;
-      border-radius: 50%;
+      //   border-radius: 50%;
 
       &.play {
-        background: url(../../../assets/images/bofang@3x.png) no-repeat;
+        background: url(../../../assets/images/radio/jingyin@3x.png) no-repeat;
         background-size: 100% 100%;
       }
 
       &.pause {
-        background: url(../../../assets/images/tools_btn_pause.png) no-repeat;
+        background: url(../../../assets/images/radio/bofang@3x.png) no-repeat;
         background-size: 100% 100%;
       }
     }

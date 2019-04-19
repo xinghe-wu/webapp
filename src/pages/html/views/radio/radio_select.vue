@@ -1,47 +1,44 @@
 <template>
-<div class="radio-list-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="电台选择"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="radio-list-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="电台选择">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
+    <div class="content">
 
-<div class="content">
-
-<div class="title">
-  本地电台
-</div>
-<section class="aui-grid">
-<div class="aui-row">
-
-      <div class="aui-col-xs-6"  v-for="l in localList">
-          	<img :src="src + l.pic"  class="radio-logo">
-          <div class="aui-grid-label radio-list-title">{{l.name}}</div>
+      <div class="title">
+        本地电台
       </div>
+      <section class="aui-grid">
+        <div class="aui-row">
+
+          <div class="aui-col-xs-6" v-for="l in localList" @click="onClickLeft">
+            <img :src="src + l.pic" class="radio-logo">
+            <div class="aui-grid-label radio-list-title">{{l.name}}</div>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="interval"></div>
+
+      <div class="title">
+        其它电台
+      </div>
+      <section class="aui-grid">
+        <div class="aui-row">
+          <div class="aui-col-xs-4" v-for="l in otherList">
+            <img :src="src + l.pic" class="radio-logo-other">
+            <div class="aui-grid-label radio-list-title">{{l.name}}</div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
 
   </div>
-</section>
 
-<div class="interval"></div>
-
-<div class="title">
-  其它电台
-</div>
-<section class="aui-grid">
-<div class="aui-row">
-      <div class="aui-col-xs-4" v-for="l in otherList">
-          	<img :src="src + l.pic"  class="radio-logo-other">
-          <div class="aui-grid-label radio-list-title">{{l.name}}</div>
-      </div>
-
-  </div>
-</section>
-
-</div>
-
-   
-</div>
-  
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
     <div class="view-list">
-        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft"  :left-arrow="type != 'default'" title="电台列表"  >
+        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" :left-arrow="type != 'default'" title="电台列表">
         </van-nav-bar>
         <div class="content">
             <ul class="list">
@@ -84,6 +84,7 @@ export default {
         },
         onClickLeft() {
             api.closeWin();
+            // this.$router.replace("/index");
         },
         onSelect(node) {
 
@@ -99,18 +100,23 @@ export default {
                     if (this.type == 'default') {
                         this.$router.replace("/index");
                     } else {
+                        // this.$router.replace("/index");
                         this.onClickLeft();
+
 
                     }
                 })
             } else {
+
                 this.$ls.set("currentId", node.id);
 
                 //                    api.sendEvent('currentId', {id: node.id})
 
                 if (this.type == 'default') {
+                    // alert(3)
                     this.$router.replace("/app");
                 } else {
+                    // alert(3)
                     this.onClickLeft();
 
                 }

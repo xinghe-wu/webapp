@@ -1,77 +1,73 @@
 <template>
-<div class="my-msg-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="我的消息"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="my-msg-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="我的消息">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-
-  <div class="content">
-  <section class="aui-grid  msg-list">
-    <div class="aui-row">
+    <div class="content">
+      <section class="aui-grid  msg-list">
+        <div class="aui-row">
           <div class="aui-col-xs-3" @click="detail(1)">
-              <div class="aui-badge" v-show="msg.zanCount>0">{{msg.zanCount}}</div>
-              <div class="xihuan" style="background-color: #c252e7;">
-                 <img class="img" src="../../../../assets/images/my/xihuan@3x.png" >
-              </div>
-              <div class="aui-grid-label title">赞</div>
+            <div class="aui-badge" v-show="msg.zanCount>0">{{msg.zanCount}}</div>
+            <div class="xihuan" style="background-color: #c252e7;">
+              <img class="img" src="../../../../assets/images/my/xihuan@3x.png">
+            </div>
+            <div class="aui-grid-label title">赞</div>
           </div>
-          <div class="aui-col-xs-3"  @click="detail(2)">
-              <div class="aui-badge" v-show="msg.commentCount>0">{{msg.commentCount}}</div>
-              <div class="xihuan" style="background-color: #30E19C;">
-                 <img class="img" src="../../../../assets/images/my/pinlun@3x.png" >
-              </div>
-              <div class="aui-grid-label title">评论</div>
+          <div class="aui-col-xs-3" @click="detail(2)">
+            <div class="aui-badge" v-show="msg.commentCount>0">{{msg.commentCount}}</div>
+            <div class="xihuan" style="background-color: #30E19C;">
+              <img class="img" src="../../../../assets/images/my/pinlun@3x.png">
+            </div>
+            <div class="aui-grid-label title">评论</div>
           </div>
-          <div class="aui-col-xs-3">
-              <!-- <div class="aui-badge">5</div> -->
-              <div class="xihuan" style="background-color: #499EFD;">
-                 <img class="img" src="../../../../assets/images/my/sixin@3x.png" >
-              </div>
-              <div class="aui-grid-label title">@我的</div>
+          <div class="aui-col-xs-3" @click="detail(3)">
+            <!-- <div class="aui-badge">5</div> -->
+            <div class="xihuan" style="background-color: #499EFD;">
+              <img class="img" src="../../../../assets/images/my/sixin@3x.png">
+            </div>
+            <div class="aui-grid-label title">@我的</div>
           </div>
-          <div class="aui-col-xs-3">
-              <!-- <div class="aui-badge">6</div> -->
-              <div class="xihuan" style="background-color: #FFA857;">
-                 <img class="img" src="../../../../assets/images/my/@@3x.png" >
-              </div>         
-              <div class="aui-grid-label title">私信</div>
+          <div class="aui-col-xs-3" @click="detail(4)">
+            <!-- <div class="aui-badge">6</div> -->
+            <div class="xihuan" style="background-color: #FFA857;">
+              <img class="img" src="../../../../assets/images/my/@@3x.png">
+            </div>
+            <div class="aui-grid-label title">私信</div>
           </div>
-     </div>
-   </section>
+        </div>
+      </section>
 
+      <div class="aui-content aui-margin-b-15 ">
 
-    <div class="aui-content aui-margin-b-15 ">
-
-     <ul class="aui-list aui-media-list msg-list" v-for="m in msg.zanList">
+        <ul class="aui-list aui-media-list msg-list" v-for="m in msg.zanList">
 
           <li class="aui-list-item aui-list-item-middle ">
-              <div class="aui-media-list-item-inner">
-                  <div class="aui-list-item-media" style="width: 4rem;">
-                      <img src="../../../../assets/images/radio/head3.png" class="aui-img-round aui-list-img-sm img-head">
-                  </div>
-                  <div class="aui-list-item-inner msg-list-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title aui-font-size-14 msg-title">{{m.name}}</div>
-                          <div class="aui-list-item-right msg-time">
-                             {{formatDateTime(m.time)}}
-                          </div>
-                      </div>
-                      <div class="aui-list-item-text msg-cont">
-                          {{m.title}}
-                      </div>
-                  </div>
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media" style="width: 4rem;">
+                <img src="../../../../assets/images/radio/head3.png" class="aui-img-round aui-list-img-sm img-head">
               </div>
+              <div class="aui-list-item-inner msg-list-inner">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-14 msg-title">{{m.name}}</div>
+                  <div class="aui-list-item-right msg-time">
+                    {{formatDateTime(m.time)}}
+                  </div>
+                </div>
+                <div class="aui-list-item-text msg-cont">
+                  {{m.title}}
+                </div>
+              </div>
+            </div>
           </li>
 
-      </ul>
+        </ul>
 
+      </div>
     </div>
-</div>
 
-   
-</div>
-  
+  </div>
+
 </template>
 
 <script>
@@ -83,7 +79,7 @@ export default {
   data() {
     return {
       msg: {},
-      list: ["1", '2', '3', '4', '5', '6', '3', '4', '5', '6']
+      list: []
     }
   },
   methods: {
@@ -97,8 +93,14 @@ export default {
         title = "赞"
         list = this.msg.zanList
       } else if (type == 2) {
-        title = "评论"
+
         list = this.msg.commentList
+      } else if (type == 3) {
+        title = "@我的"
+        list = []
+      } else if (type == 4) {
+        title = "私信"
+        list = []
       }
       this.$router.push({ path: '/my/msg_detail', query: { title: title, list: list } })
 

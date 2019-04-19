@@ -1,95 +1,94 @@
 <template>
-<div class="radio-list-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="电台列表"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="radio-list-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="电台列表">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
+    <div class="content">
 
-<div class="content">
+      <div class="title">
+        本地电台
+      </div>
+      <section class="aui-grid ">
+        <ul class="aui-list aui-media-list radio-list">
 
-<div class="title">
-  本地电台
-</div>
-<section class="aui-grid ">
-  <ul class="aui-list aui-media-list radio-list" >
+          <li class="aui-list-item aui-list-item-middle" v-for="l in list" @click="onClickLeft" v-if="l.city=='杭州'">
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media" style="width:5rem;">
+                <img :src="src+l.radio_img" class="radio-list-img">
+              </div>
+              <div class="aui-list-item-inner">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-14 radio-list-title">{{l.radio_name}}</div>
+                  <div class="aui-list-item-right ">
+                    <!-- <span class="count">
+                      <img src="../../../../assets/images/radio/listen_in.png" style="width:20px;"> 201w
+                    </span> -->
+                  </div>
+                </div>
+                <div class="aui-list-item-text radio-list-cont">
+                  正在直播：{{l.live_name}}
+                </div>
+                <div class="aui-list-item-text radio-list-anchor">
+                  主播：{{l.compere}}
+                </div>
+              </div>
+            </div>
+          </li>
 
-       <li class="aui-list-item aui-list-item-middle ">
-           <div class="aui-media-list-item-inner">
-               <div class="aui-list-item-media" style="width:5rem;">
-                   <img src="../../../../assets/images/radio/radio_logo.png" class="radio-list-img">
-               </div>
-               <div class="aui-list-item-inner">
-                   <div class="aui-list-item-text">
-                       <div class="aui-list-item-title aui-font-size-14 radio-list-title">西湖之声</div>
-                       <div class="aui-list-item-right ">
-                         <span class="count">
-                             <img src="../../../../assets/images/radio/listen_in.png" style="width:20px;">  201w
-                        </span>
-                       </div>
-                   </div>
-                   <div class="aui-list-item-text radio-list-cont">
-                       正在直播：乘着歌声的翅膀
-                   </div>
-                   <div class="aui-list-item-text radio-list-anchor">
-                      主播：陶乐、慕容
-                   </div>
-               </div>
-           </div>
-       </li>
+        </ul>
+      </section>
 
-   </ul>
-</section>
+      <div class="interval" />
 
+      <div class="title">
+        其它电台
+      </div>
+      <section class="aui-grid ">
+        <ul class="aui-list aui-media-list radio-list">
 
+          <li class="aui-list-item aui-list-item-middle" v-for="l in list" @click="onClickLeft" v-if="l.city!='杭州'">
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media" style="width:5rem;">
+                <img :src="src+l.radio_img" class="radio-list-img">
+              </div>
+              <div class="aui-list-item-inner">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-14 radio-list-title">{{l.radio_name}}</div>
+                  <div class="aui-list-item-right ">
+                    <!-- <span class="count">
+                      <img src="../../../../assets/images/radio/listen_in.png" style="width:20px;"> 201w
+                    </span> -->
+                  </div>
+                </div>
+                <div class="aui-list-item-text radio-list-cont">
+                  正在直播：{{l.live_name}}
+                </div>
+                <div class="aui-list-item-text radio-list-anchor">
+                  主播：{{l.compere}}
+                </div>
+              </div>
+            </div>
+          </li>
 
-<div class="interval"/>
+        </ul>
+      </section>
+    </div>
 
-<div class="title">
-  其它电台
-</div>
-<section class="aui-grid ">
-  <ul class="aui-list aui-media-list radio-list" >
-       <li class="aui-list-item aui-list-item-middle ">
-           <div class="aui-media-list-item-inner">
-               <div class="aui-list-item-media" style="width:5rem;">
-                   <img src="../../../../assets/images/radio/radio_logo.png" class="radio-list-img">
-               </div>
-               <div class="aui-list-item-inner">
-                   <div class="aui-list-item-text">
-                       <div class="aui-list-item-title aui-font-size-14 radio-list-title">西湖之声</div>
-                       <div class="aui-list-item-right ">
-                         <span class="count">
-                             <img src="../../../../assets/images/radio/listen_in.png" style="width:20px;">  201w
-                        </span>
-                       </div>
-                   </div>
-                   <div class="aui-list-item-text radio-list-cont">
-                       正在直播：乘着歌声的翅膀
-                   </div>
-                   <div class="aui-list-item-text radio-list-anchor">
-                      主播：陶乐、慕容
-                   </div>
-               </div>
-           </div>
-       </li>
-   </ul>
-</section>
-</div>
+  </div>
 
-   
-</div>
-  
 </template>
 
 <script>
-import { getVideo, src } from '../../index/services';
+import { getRadioList, src } from '../../index/services';
 
 export default {
   store: ['paddingTop', 'token'],
+
   data() {
     return {
-      list: ["1", '2', '3']
+      src: src,
+      list: []
     }
   },
   methods: {
@@ -99,16 +98,9 @@ export default {
 
   },
   mounted() {
-    // Toast.loading();
-    // this.type = this.$route.query.type;
-    alert(11)
-    // getVideo().then(rep => {
-
-    //   this.list = rep.data;
-
-    //   alert(JSON.stringify(this.list))
-
-    // })
+    getRadioList().then(rep => {
+      this.list = rep
+    })
   }
 
 }

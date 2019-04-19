@@ -1,71 +1,82 @@
 <template>
-<div class="colunm-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="听到主播"  >
-        <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="colunm-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="听到主播">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="content">
+    <div class="content">
 
-<pull-to :top-load-method="refresh" >
-  <div class="hot-column">
-		<div class="title">
-		  主播排行榜
-		</div>
+      <pull-to :top-load-method="refresh">
+        <div class="hot-column">
+          <div class="title">
+            主播排行榜
+          </div>
 
-  <div class="img-list">
-       	<div class="yajun-div" @click="anchor_detail(yajun_head_id)">
-          <img :src="src + yajun_head" class="aui-img-round aui-list-img-sm yajun-img">
+          <div class="img-list">
+            <div class="aui-col-xs-4">
+              <div class="yajun-div" @click="anchor_detail(yajun_head_id)">
+                <img :src="src + yajun_head" class="aui-img-round aui-list-img-sm yajun-img">
+              </div>
+              <div class="name">{{yajun_head_name}}</div>
+            </div>
+            <div class="aui-col-xs-4">
+              <div class="guanjun-div" @click="anchor_detail(guanjun_head_id)">
+                <img :src="src + guanjun_head" class="aui-img-round aui-list-img-sm guanjun-img">
+
+              </div>
+              <div class="name">{{guanjun_head_name}}</div>
+            </div>
+            <div class="aui-col-xs-4">
+              <div class="jijun-div" @click="anchor_detail(jijun_head_id)">
+                <img :src="src + jijun_head" class="aui-img-round aui-list-img-sm jijun-img">
+
+              </div>
+              <div class="name">{{jijun_head_name}}</div>
+            </div>
+          </div>
         </div>
-        
-        <div class="guanjun-div" @click="anchor_detail(guanjun_head_id)">
-           <img :src="src + guanjun_head" class="aui-img-round aui-list-img-sm guanjun-img">
+
+        <div class="bg-line">
         </div>
-        
-   	    <div class="jijun-div"  @click="anchor_detail(jijun_head_id)">
-           <img :src="src + jijun_head" class="aui-img-round aui-list-img-sm jijun-img">
+
+        <div class="all-anchor">
+          <div class="title">
+            所有主播
+          </div>
+
+          <div class="aui-content aui-margin-b-15 ">
+            <ul class="aui-list aui-media-list follow-list" v-for="d in data">
+
+              <li class="aui-list-item aui-list-item-middle" @click="anchor_detail(d.id)">
+                <div class="aui-media-list-item-inner">
+                  <div class="aui-list-item-media" style="width: 4rem;">
+                    <img :src="src + d.head" class="aui-img-round aui-list-img-sm anchor-head">
+                  </div>
+                  <div class="aui-list-item-inner all-ancho-list-inner">
+                    <div class="aui-list-item-text">
+                      <div class="aui-list-item-title aui-font-size-14 name">{{d.name}}</div>
+                      <div class="aui-list-item-right">
+                        <div v-if="d.follow" class="aui-btn btn">已关注</div>
+                        <div v-else class="aui-btn btn-follow" @click="compereFollow(d.id)">关注</div>
+                      </div>
+                    </div>
+                    <div class="cont">
+                      {{d.introduce}}
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+            </ul>
+
+          </div>
         </div>
+
+      </pull-to>
+
+    </div>
   </div>
-  </div>
 
-<div class="all-anchor">
-		<div class="title">
-		  所有主播
-		</div>
-    
-  <div class="aui-content aui-margin-b-15 ">
-    <ul class="aui-list aui-media-list follow-list" v-for="d in data">
-
-         <li class="aui-list-item aui-list-item-middle" @click="anchor_detail(d.id)">
-             <div class="aui-media-list-item-inner">
-                 <div class="aui-list-item-media" style="width: 4rem;">
-                      <img :src="src + d.head" class="aui-img-round aui-list-img-sm anchor-head">
-                 </div>
-                 <div class="aui-list-item-inner all-ancho-list-inner">
-                     <div class="aui-list-item-text">
-                         <div class="aui-list-item-title aui-font-size-14 name">{{d.name}}</div>
-                         <div class="aui-list-item-right">
-                           <div v-if="d.follow" class="aui-btn btn">已关注</div>
-                            <div v-else class="aui-btn btn-follow" @click="compereFollow(d.id)">关注</div>
-                         </div>
-                     </div>
-                     <div class="aui-list-item-text cont">
-                         {{d.introduce}}
-                     </div>
-                 </div>
-             </div>
-         </li>
-
-     </ul>
-
-   </div>
-</div>
-
-</pull-to>
-
-</div>
-</div>
-  
 </template>
 
 <script>
@@ -86,8 +97,11 @@ export default {
       yajun_head: '',
       guanjun_head: '',
       jijun_head: '',
+      jijun_head_name: "",
       yajun_head_id: 0,
+      yajun_head_name: "",
       guanjun_head_id: 0,
+      guanjun_head_name: "",
       jijun_head_id: 0,
       src: src,
       isLoading: false,
@@ -117,10 +131,14 @@ export default {
 
         this.yajun_head = this.compereSort[0].head
         this.guanjun_head = this.compereSort[1].head
+
         this.jijun_head = this.compereSort[2].head
         this.yajun_head_id = this.compereSort[0].id
         this.guanjun_head_id = this.compereSort[1].id
         this.jijun_head_id = this.compereSort[2].id
+        this.yajun_head_name = this.compereSort[0].name
+        this.guanjun_head_name = this.compereSort[1].name
+        this.jijun_head_name = this.compereSort[2].name
       })
     },
     getCompere() {
@@ -204,8 +222,15 @@ export default {
         padding: px2rem(30);
       }
       .img-list {
-        padding-bottom: px2rem(30);
+        padding-bottom: px2rem(260);
+
         text-align: center;
+
+        .name {
+          color: #292726;
+          font-size: px2rem(30);
+          font-weight: bold;
+        }
 
         .yajun-div {
           width: px2rem(174);
@@ -224,6 +249,7 @@ export default {
         }
 
         .guanjun-div {
+          margin-top: px2rem(-50);
           margin-left: px2rem(30);
           margin-right: px2rem(30);
           width: px2rem(222);
@@ -274,8 +300,12 @@ export default {
       }
     }
 
+    .bg-line {
+      height: px2rem(30);
+    }
+
     .all-anchor {
-      margin-top: px2rem(30);
+      margin-top: px2rem(50);
       background-color: #fff;
       .title {
         font-size: px2rem(30);
@@ -299,6 +329,10 @@ export default {
           margin-top: px2rem(10);
           color: #646261;
           font-size: px2rem(26);
+          max-width: px2rem(430);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .btn {
           width: px2rem(140);

@@ -2,9 +2,8 @@ import axios from 'axios';
 import {
     Toast
 } from 'vant';
-
-//const ip = 'http://www.tingdaoapp.com';
-const ip = 'http://192.168.1.102:8080'
+const ip = 'http://www.tingdaoapp.com';
+//const ip = 'http://192.168.1.103:8080'
 export const base = `${ip}/api`;
 export const src = `${ip}/static/upload/`;
 export const fmSrc = `${ip}/audio/`;
@@ -40,8 +39,18 @@ export const loginByWx = (params) => instance.post(`/member/login`, params);
 export const getUserInfo = token => instance.get(`/member/${token}`);
 export const getUserMsg = token => instance.get(`/member/msg/${token}`);
 export const getSubscribes = token => instance.get(`/member/subscribe/${token}`);
+
+export const postSubscribes = (params) => instance.post(`/member/subscribe`, params);
+export const postcolumnDel = (params) => instance.post(`/member/columnDel`, params);
+export const getMsg = token => instance.get(`/member/getMsg/${token}`);
+
 export const getProgramListen = token => instance.get(`/member/programListen/${token}`);
+export const postProgramListen = (params) => instance.post(`/member/programListen`, params);
+export const postProgram = (params) => instance.post(`/member/programListen`, params);
 export const getVideo = (params) => instance.get(`/radio`, {
+    params
+});
+export const getRadioList = (params) => instance.get(`/radioList`, {
     params
 });
 export const getVideoDetail = (id) => instance.get(`/radio/${id}`);
@@ -58,6 +67,10 @@ export const getActivity = (params) => instance.get(`/radio/activity`, {
 export const getColumn = (params) => instance.get(`/radio/column`, {
     params
 });
+export const getColumnDel = (params) => instance.get(`/radio/columnDel`, {
+    params
+});
+
 
 export const getProgram = (params) => instance.get(`/radio/program`, {
     params

@@ -1,71 +1,71 @@
 <template>
-<div class="my-subscribe-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="我的订阅"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="my-subscribe-view">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="我的订阅">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="content" v-if="subscribeList">
-<div class="subscribe">
-  <div class="aui-content aui-margin-b-15" >
-  <ul class="aui-list aui-media-list ad_list" v-for="(s,index) in subscribeList" :key="index" >
-  <li class="aui-list-item"  @click="programList(s)">
+    <div class="content">
+      <div class="subscribe">
+        <div class="aui-content aui-margin-b-15">
+          <ul class="aui-list aui-media-list ad_list" v-for="(s,index) in subscribeList" :key="index">
+            <li class="aui-list-item" @click="programList(s)">
               <div class="aui-media-list-item-inner ad-list-cont">
-                  <div class="aui-list-item-media">
-                      <img :src="src +s.img" class="aui-list-img-sm anchor-head" >
+                <div class="aui-list-item-media">
+                  <img :src="src +s.img" class="aui-list-img-sm anchor-head">
+                </div>
+                <div class="aui-list-item-inner">
+                  <div class="aui-list-item-text">
+                    <div class="aui-list-item-title ad_title">{{s.name}}</div>
                   </div>
-                  <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title ad_title">{{s.name}}</div>
-                      </div>
-                         <div class="aui-list-item-text  ad_anchor">
-                       主播:{{s.comprpe.name}} 
-                      </div>
-                      <div class="aui-list-item-text  ad_cont">
-                       {{s.brief}}
-                      </div>
-                 
+                  <div class="aui-list-item-text  ad_anchor">
+                    主播:{{s.comprpe.name}}
                   </div>
+                  <div class="aui-list-item-text  ad_cont">
+                    {{s.brief}}
+                  </div>
+
+                </div>
               </div>
-          </li>
-      </ul>
-   </div> 
-</div>  
+            </li>
+          </ul>
+        </div>
+      </div>
 
-<!-- 暂无订阅 -->
-<div class="aui-row kong" v-if="subscribeList.lenght==0">
- <img class="img" src="../../../../assets/images/my/kong@3x.png" >
- <div class="title">
-   暂无订阅
- </div>
- <div class="cont">
-   订阅喜欢的电台到这里吧~
- </div>
-</div>
+      <!-- 暂无订阅 -->
+      <div class="aui-row kong" v-if="subscribeList.lenght==0">
+        <img class="img" src="../../../../assets/images/my/kong@3x.png">
+        <div class="title">
+          暂无订阅
+        </div>
+        <div class="cont">
+          订阅喜欢的电台到这里吧~
+        </div>
+      </div>
 
-<div class="interval"></div>
+      <div class="interval"></div>
 
-  <div class="like">
-		<div class="title">
-		  	 你可能喜欢
-		</div>
-    <section class="aui-grid">
-      <div class="aui-row">
+      <div class="like">
+        <div class="title">
+          你可能喜欢
+        </div>
+        <section class="aui-grid">
+          <div class="aui-row">
             <div class="aui-col-xs-4" v-for="l in columnList" @click="programList(l)">
-                <img class="img" :src="src+l.img" >
-                <div class="aui-grid-label cont">{{l.name}}</div>
+              <img class="img" :src="src+l.img">
+              <div class="aui-grid-label cont">{{l.name}}</div>
             </div>
-       </div>
-    </section>
-   </div>
-
+          </div>
+        </section>
+      </div>
 
       <div style=" text-align: center;">
-            <div class="aui-btn aui-btn-danger  aui-btn-outlined aui-btn-sm change-btn" @click="changeCoumns()"><span>换一批</span></div>
-       </div>
- </div>
-</div>
-  
+        <div class="aui-btn aui-btn-danger  aui-btn-outlined aui-btn-sm change-btn" @click="changeCoumns()">
+          <span>换一批</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -79,6 +79,7 @@ export default {
       subscribeList: [],
       columnList: [],
       query: {
+        token: '',
         page: 1,
         size: 6,
         id: 1
@@ -95,6 +96,7 @@ export default {
       })
     },
     getCoumns() {
+      this.query.token = this.$ls.get('token')
       getColumn(this.query).then(rep => {
         if (rep.data.length > 0) {
           this.columnList = rep.data;
@@ -106,8 +108,8 @@ export default {
       this.getCoumns()
     },
     programList(data) {
-      alert(JSON.stringify(data))
-
+      //alert(JSON.stringify(data))
+      this.$ls.set("column", data);
       this.$router.push({ path: '/program/list', query: { column: data } })
 
     }
@@ -191,11 +193,16 @@ export default {
       text-align: center;
       font-weight: bold;
     }
-    .cont {
-      padding-top: px2rem(10);
-      font-size: px2rem(24);
-      color: #9d9a99;
-    }
+  }
+
+  .cont {
+    padding-top: px2rem(10);
+    font-size: px2rem(24);
+    color: #9d9a99;
+    max-width: px2rem(200);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .interval {

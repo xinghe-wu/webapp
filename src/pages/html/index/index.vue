@@ -1,17 +1,17 @@
 <template>
-    <div >
-        <keep-alive>
-           <router-view></router-view>
-        </keep-alive>
-        <van-tabbar v-model="active" @change="onChangeTab" style="background-color:#fff">
-            <van-tabbar-item v-for="n in tabs" icon="shop">
-                <span >{{n.name}}</span>
-                <template slot="icon" slot-scope="props">
-                    <img  :src="props.active ? n.active:n.un_active" />
-                </template>
-            </van-tabbar-item>
-        </van-tabbar>
-    </div>
+  <div>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+    <van-tabbar v-model="active" @change="onChangeTab" style="background-color:#fff;z-index:999">
+      <van-tabbar-item v-for="n in tabs" icon="shop">
+        <span>{{n.name}}</span>
+        <template slot="icon" slot-scope="props">
+          <img :src="props.active ? n.active:n.un_active" />
+        </template>
+      </van-tabbar-item>
+    </van-tabbar>
+  </div>
 </template>
 <style lang="scss" type="text/scss"  >
 @media screen and (min-width: 320px) {
@@ -224,9 +224,10 @@ export default {
   },
   methods: {
     onChangeTab(active) {
-      if ((active == 1) && !this.token) {
+      if ((active == 1) && !this.token || ((active == 2) && !this.token) || ((active == 3) && !this.token)) {
         this.interact_status = 'play';
         this.$nextTick(() => {
+
           this.$router.push('/login');
         })
       } else {
@@ -239,6 +240,7 @@ export default {
     this.active = this.tabs.findIndex(item => {
       return item.url == this.$route.path;
     });
+
   }
 }
 </script>

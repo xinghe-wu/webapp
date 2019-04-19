@@ -1,26 +1,33 @@
 <template>
     <div class="view-config">
-        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft"  left-arrow title="编辑资料"  >
+        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" left-arrow title="编辑资料">
 
         </van-nav-bar>
         <div class="content">
 
             <div class="row">
-                <van-uploader  accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
-                <div class=" t-cell van-cell-group van-hairline--bottom"><div class="van-cell van-hairline">
-                    <div class="van-cell__title">
-                        <!----><span class="van-cell__text">头像</span><!----></div><!---->
-                    <div class="van-cell__value van-cell__value--link">
-                        <img class="head"  v-if="info.head" :src="getSrc()" />
+                <van-uploader accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
+                    <div class=" t-cell van-cell-group van-hairline--bottom">
+                        <div class="van-cell van-hairline">
+                            <div class="van-cell__title">
+                                <!---->
+                                <span class="van-cell__text">头像</span>
+                                <!---->
+                            </div>
+                            <!---->
+                            <div class="van-cell__value van-cell__value--link">
+                                <img class="head" v-if="info.head" :src="getSrc()" />
+                            </div>
+                            <i class="van-icon van-cell__right-icon van-icon-arrow">
+                                <!---->
+                            </i>
+                        </div>
                     </div>
-                    <i class="van-icon van-cell__right-icon van-icon-arrow"><!----></i>
-                    </div>
-                </div>
                 </van-uploader>
             </div>
-            <div class="row other" >
+            <div class="row other">
                 <van-cell-group>
-                    <van-cell  @click="onEdit(info.nick_name,'nick_name')" title="昵称" :value="info.nick_name" is-link />
+                    <van-cell @click="onEdit(info.nick_name,'nick_name')" title="昵称" :value="info.nick_name" is-link />
                 </van-cell-group>
             </div>
 
@@ -108,7 +115,6 @@ export default {
             api.closeWin();
         },
         onRead(file) {
-            alert('qq')
 
             Toast.loading();
             let formData = new FormData();

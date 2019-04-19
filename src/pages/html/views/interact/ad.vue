@@ -1,62 +1,62 @@
 <template>
-<div class="ad">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   title="活动"  >
-        <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="ad">
+    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="活动">
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
- <div class="content">
-     
-<pull-to :top-load-method="refresh" >
-<div >
-  <div class="aui-content aui-margin-b-15" >
-    <!-- @click="vote"  -->
-  <ul class="aui-list aui-media-list ad_list" v-for="(ad,index) in adList" :key="index" >
-  <li class="aui-list-item" @click="vote(ad)">
-              <div class="aui-media-list-item-inner ad_list_cont">
+    <div class="content">
+
+      <pull-to :top-load-method="refresh">
+        <div>
+          <div class="aui-content aui-margin-b-15">
+            <!-- @click="vote"  -->
+            <ul class="aui-list aui-media-list ad_list" v-for="(ad,index) in adList" :key="index">
+              <li class="aui-list-item" @click="vote(ad)">
+                <div class="aui-media-list-item-inner ad_list_cont">
                   <div class="aui-list-item-media">
-                    	<img :src="src+ad.img" class="ad_img">
+                    <img :src="src+ad.img" class="ad_img">
                   </div>
                   <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title ad_title">{{ad.title}}</div>
-                      </div>
-                      <div class="aui-list-item-text  ad_cont">
-                        {{ad.brief}}
-                      </div>
-                   <van-tag  type="danger"><div  v-if="ad.type === 1">购物</div><div  v-if="ad.type === 2">报名</div><div  v-if="ad.type === 3">图文</div><div  v-if="ad.type === 4">投票</div></van-tag>
-                        <!-- <img src="../../../../assets/images/radio/ad_ing.png"  style="width:80px;"/> -->
-                  <van-tag  plain type="danger" class="stat"><div  v-if="ad.stat === 0">未开始</div><div  v-if="ad.stat === 1">正在进行中</div><div  v-if="ad.stat === 2">已结束</div></van-tag>
+                    <div class="aui-list-item-text">
+                      <div class="aui-list-item-title ad_title">{{ad.title}}</div>
+                    </div>
+                    <div class="aui-list-item-text  ad_cont">
+                      {{ad.brief}}
+                    </div>
+                    <van-tag type="danger">
+                      <div v-if="ad.type === 1">购物</div>
+                      <div v-if="ad.type === 2">报名</div>
+                      <div v-if="ad.type === 3">图文</div>
+                      <div v-if="ad.type === 4">投票</div>
+                    </van-tag>
+                    <!-- <img src="../../../../assets/images/radio/ad_ing.png"  style="width:80px;"/> -->
+                    <van-tag plain type="danger" class="stat">
+                      <div v-if="ad.stat === 0">未开始</div>
+                      <div v-if="ad.stat === 1">正在进行中</div>
+                      <div v-if="ad.stat === 2">已结束</div>
+                    </van-tag>
                   </div>
-              </div>
-          </li>
-      </ul>
-   </div>
-     </div>
-</pull-to>
-</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </pull-to>
+    </div>
 
+    <vDialog v-model="dialog" :type="pushInfo.type" :time="pushInfo.show_time" :url="pushInfo.url" :id="pushInfo.id" :red="pushInfo.red" :blue="pushInfo.blue">
+      <div slot="title">
+        {{pushInfo.title}}
+      </div>
+      <span slot="body">
+        <img class="pull-info-img" style="width: 100%;max-height:200px;" :src="src+ pushInfo.img" alt="">
+        <p>
+          {{pushInfo.brief}}
+        </p>
+      </span>
+    </vDialog>
 
-      <vDialog v-model="dialog"
-                 :type="pushInfo.type"
-                 :time="pushInfo.show_time"
-                 :url="pushInfo.url"
-                 :id="pushInfo.id"
-                 :red="pushInfo.red"
-                 :blue="pushInfo.blue"
-        >
-            <div slot="title">
-                {{pushInfo.title}}
-            </div>
-            <span slot="body">
-                <img class="pull-info-img" style="width: 100%;max-height:200px;" :src="src+ pushInfo.img" alt="">
-                <p>
-                    {{pushInfo.brief}}
-                </p>
-            </span>
-        </vDialog>
+  </div>
 
-</div>
-  
 </template>
 
 <script>
@@ -143,6 +143,7 @@ export default {
 
   .ad_img {
     width: px2rem(160);
+    height: px2rem(160);
   }
   .ad_title {
     color: #292726;

@@ -1,88 +1,138 @@
 <template>
-    <div class="view-live" > 
-        <ul class="tab" id="live-tab" :style="{paddingTop:paddingTop}">
-            <li @click="recommeClick()">
-              <span :class="recomme_status">推荐</span>
-            </li>
-            <li @click="followClick()">
-                <span :class="follow_status">关注</span>
-            </li>
-        </ul>
+  <div class="view-live">
+    <ul class="tab" id="live-tab" :style="{paddingTop:paddingTop}">
+      <li @click="recommeClick()">
+        <span :class="recomme_status">推荐</span>
+      </li>
+      <li @click="followClick()">
+        <span :class="follow_status">关注</span>
+      </li>
+    </ul>
 
-<!-- 推荐 -->
-<div class="recomme"  v-show='recommeShow'>
-		  <div class="title">
-		    为你推荐
-		  </div>
-			<section class="aui-grid aui-margin-b-15">
-			<div class="aui-row list">
-			      <div class="aui-col-xs-6" @click="column">
-			          	<div  class="lanmu">
-                    <span class="title">听到栏目</span>
-                  </div>
-			      </div>
-			      <div class="aui-col-xs-6" @click="anchor">
-			          	<div  class="zhubo">
-                      <span class="title">听到主播</span>
-                  </div>
-			      </div>
-			  </div>
-			</section>
-	</div> 
+    <!-- 推荐 -->
+    <div class="recomme" v-show='recommeShow'>
+      <div class="title">
+        为你推荐
+      </div>
+      <section class="aui-grid aui-margin-b-15">
+        <div class="aui-row list">
+          <div class="aui-col-xs-6" @click="column">
+            <div class="lanmu">
+              <span class="title">听到栏目</span>
+            </div>
+          </div>
+          <div class="aui-col-xs-6" @click="anchor">
+            <div class="zhubo">
+              <span class="title">听到主播</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
 
-<!-- 已关注 -->
- <div class="follow-list" v-show='followShow' >
-  <div >
-		<swiper  :options="swiperOption" class="follow-list-swiper">
-      	<swiper-slide>
-					<div class="aui-card-list" @click="followList">
-							 <div class="aui-card-list-content">
-							     <img src="../../../assets/images/radio/all.png" class="img">
-							 </div>
-							 <div class="swiper-title">查看全部</div>
-					 </div>
-			</swiper-slide>
-			<swiper-slide v-for="r in recomList">
-					<div class="aui-card-list">
-							 <div class="aui-card-list-content" @click="anchor_detail(r.id)">
-							       <img :src="src + r.head" class="aui-img-round aui-list-img-sm anchor-head img">
-							 </div>
-							 <div class="swiper-title">{{r.name}}</div>
-					 </div>
-			</swiper-slide>
-		</swiper>
-	</div>
-</div>
+    <!-- 已关注 -->
+    <div class="follow-list" v-show='followShow'>
+      <div>
+        <swiper :options="swiperOption" class="follow-list-swiper" v-show="recomList.length>0">
+          <swiper-slide>
+            <div class="aui-card-list" @click="followList">
+              <div class="aui-card-list-content">
+                <img src="../../../assets/images/radio/all.png" class="img">
+              </div>
+              <div class="swiper-title">查看全部</div>
+            </div>
+          </swiper-slide>
+          <swiper-slide v-for="r in recomList">
+            <div class="aui-card-list">
+              <div class="aui-card-list-content" @click="anchor_detail(r.id)">
+                <img :src="src + r.head" class="aui-img-round aui-list-img-sm anchor-head img">
+              </div>
+              <div class="swiper-title">{{r.name}}</div>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </div>
 
- <div class="anchor">
-		<div class="aui-card-list"  v-for="i in infoList">
-			<div class="aui-card-list-header aui-card-list-user aui-border-b"  >
-					<div class="aui-card-list-user-avatar">
-							<img :src="src+i.head" class="aui-img-round" />
-					</div>
-					<div class="aui-card-list-user-name">
-							<div class="name">{{i.name}}</div>
-                           <div v-if="i.follow" class="aui-btn btn">已关注</div>
-                            <div v-else class="aui-btn btn-follow" @click="compereFollow(i.id)">关注</div>
-					</div>
-					<div class="aui-card-list-user-info time">11-25 09:12</div>
-			</div>
-  
-      <!-- anchor_detail -->
-			<div class="aui-card-list-content-padded" @click="commentClick(i)">
+    <div class="anchor">
+      <div class="aui-card-list" v-for="i in infoList">
+        <div class="aui-card-list-header aui-card-list-user aui-border-b">
 
-				  <p class="cont">{{i.cont}}</p>
-					<img :src="src+i.img" class="anchor-cont-img"/>
-			</div>
-			<div class="aui-card-list-footer aui-border-t footer-list" >
-					<div @click='postZan(i.id)'>	<img class="img" src="../../../assets/images/radio/like.png" /><span class="title-check"  > {{i.zans}}</span></div>
-					<div @click="commentClick(i)">	<img class="img" src="../../../assets/images/radio/comment.png" /><span class="title">{{i.comments}}</span></div>
-					<div>	<img class="img" src="../../../assets/images/radio/forward.png" /><span class="title"></span></div>
-			</div>
-	</div> 
+          <div class="aui-card-list-user-avatar">
+            <img :src="src+i.head" class="aui-img-round" @click="anchor_detail(i.compereId)" />
+          </div>
+          <div class="aui-card-list-user-name">
+            <div class="name">{{i.name}}</div>
+            <div v-if="i.follow" class="aui-btn btn">已关注</div>
+            <div v-else class="aui-btn btn-follow" @click="compereFollow(i.compereId)">关注</div>
+          </div>
+          <div class="aui-card-list-user-info time">11-25 09:12</div>
+        </div>
 
-</div>
-<!-- 
+        <!-- anchor_detail -->
+        <div class="aui-card-list-content-padded" @click="commentClick(i)">
+
+          <p class="cont">{{i.cont}}</p>
+          <img :src="src+i.img" class="anchor-cont-img" />
+        </div>
+        <div class="aui-card-list-footer aui-border-t footer-list">
+          <div @click='postZan(i.id)'> <img class="img" src="../../../assets/images/radio/like.png" />
+            <span class="title-check"> {{i.zans}}</span>
+          </div>
+          <div @click="commentClick(i)"> <img class="img" src="../../../assets/images/radio/comment.png" />
+            <span class="title">{{i.comments}}</span>
+          </div>
+          <div> <img class="img" @click="openShare" src="../../../assets/images/radio/forward.png" />
+            <span class="title"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="floatbox" v-show="isShow">
+
+      <div class="title">分享到
+        <span @click="closeShare" style="position:absolute;right:10px;font-size:14px">关闭</span>
+
+      </div>
+
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <!--First Slide-->
+          <div class="swiper-slide">
+            <table id="section02">
+              <tr>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div>
+                  <div class="section2title">微信</div>
+                </td>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../assets/images/frame04cover/logo.png" alt=""></div>
+                  <div class="section2title">微信朋友圈</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div>
+                  <div class="section2title">QQ好友</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div>
+                  <div class="section2title">QQ空间</div>
+                </td>
+              </tr>
+              <tr>
+
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="cancelbtn" tapmode="" @click="closeShare">取消</div>
+    </div>
+
+    <!-- 
       <div class="content" id="live-content">
             <pull-to :top-load-method="refresh" >
 
@@ -96,12 +146,13 @@
             </ul>
             </pull-to>
         </div> -->
-    </div>
+  </div>
 </template>
 
 <script>
 import PullTo from 'vue-pull-to';
-import { getLive, src, getPath, getCompere, getCompereRecom, getInfos, postInfoZan } from '../index/services';
+import { Toast } from 'vant';
+import { getLive, src, getPath, getCompere, getCompereRecom, getInfos, postInfoZan, postCompereFollow } from '../index/services';
 export default {
   store: ['paddingTop', 'interact_status', 'fm_playing'],
   data() {
@@ -111,6 +162,7 @@ export default {
         slidesOffsetBefore: 20,
         spaceBetween: 20,
       },
+      isShow: false,
       recomme_status: 'title-active',
       follow_status: 'title',
       isLoading: false,
@@ -122,6 +174,7 @@ export default {
       recomList: [],
       page: 1,
       query: {
+        token: '',
         page: 1,
         size: 10,
         id: 1
@@ -138,7 +191,9 @@ export default {
   },
   methods: {
     render(loaded) {
+      this.query.token = this.$ls.get('token')
       getCompere(this.query).then(rep => {
+
         this.data = rep.data;
         this.isLoading = false;
         if (loaded) {
@@ -150,15 +205,29 @@ export default {
       this.render(loaded);
     },
     compereRecom() {
+
       getCompereRecom({ 'token': this.$ls.get('token'), 'id': 1 }).then(rep => {
         this.recomList = rep.data
       })
+    },
+    anchor_detail(id) {
+      this.$router.push({ path: '/anchor/detail', query: { compereId: id } })
     },
     recommeClick() {
       this.recomme_status = 'title-active',
         this.follow_status = 'title',
         this.recommeShow = true;
       this.followShow = false;
+    },
+    compereFollow(id) {
+      //alert(JSON.stringify(id))
+      Toast.loading();
+      postCompereFollow({ 'token': this.$ls.get('token'), 'compereId': id }).then(rep => {
+        Toast.clear();
+
+        Toast.success('关注成功');
+        this.getInfos()
+      })
     },
     followClick() {
       this.recomme_status = 'title',
@@ -170,7 +239,6 @@ export default {
       this.param.token = this.$ls.get('token')
       getInfos(this.param).then(rep => {
         this.infoList = rep.data
-        alert(JSON.stringify(this.infoList))
       });
 
     },
@@ -181,7 +249,7 @@ export default {
       })
     },
     anchor_detail(d) {
-      alert(JSON.stringify(d))
+      // alert(JSON.stringify(d))
       this.$router.push({ path: '/anchor/detail', query: { compereId: d } })
     },
     column() {
@@ -194,7 +262,7 @@ export default {
       this.$router.push('/anchor/columnFollow');
     },
     commentClick(data) {
-      alert(JSON.stringify(data))
+      // alert(JSON.stringify(data))
       this.$router.push({ path: '/anchor/columnComment', query: { comment: data, type: 1 } })
     },
 
@@ -234,7 +302,13 @@ export default {
       } else if (state === 'loaded-done') {
         this.iconLink = '#icon-finish';
       }
-    }
+    },
+    closeShare() {
+      this.isShow = false
+    },
+    openShare() {
+      this.isShow = true
+    },
   },
   components: {
     PullTo
@@ -244,7 +318,7 @@ export default {
     // let pd = this.paddingTop ? this.paddingTop.replace("px", '') : 0;
     // document.getElementById("live-content").style.top = parseInt(pd) + tab.clientHeight + 'px';
 
-    this.render();
+    // this.render();
     this.compereRecom();
     this.getInfos();
   }

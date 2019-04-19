@@ -94,8 +94,13 @@ export default {
         tags: this.selectTags,
         token: this.token
       }).then(rep => {
-        Toast.clear();
-        this.$router.go(-1);
+
+
+        // this.$router.go(-1);
+
+
+        this.$router.replace("/fm-list");
+        Toast.success("设置成功")
         // if(this.$route.query.type) {
         //     this.$router.replace("/fm-list");
         // }else{

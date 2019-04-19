@@ -1,21 +1,21 @@
 <template>
 
     <div class="view-fm" :class="{iPad: iPad}">
-        <van-nav-bar title="我的私人FM" :style="{'paddingTop':paddingTop}" @click-right="onShowList" >
-             <span slot="right" class="header-button" >
-                     <img src="../../../assets/images/fmlist.png" slot="right" alt="">
+        <van-nav-bar title="我的私人FM" :style="{'paddingTop':paddingTop}" @click-right="onShowList">
+            <span slot="right" class="header-button">
+                <img src="../../../assets/images/fmlist.png" slot="right" alt="">
             </span>
         </van-nav-bar>
         <div class="container">
-            <swiper  :options="swiperOption" ref="mySwiper" class="swiper-container">
-                <swiper-slide v-for="(n,index) in fm_list" >
+            <swiper :options="swiperOption" ref="mySwiper" class="swiper-container">
+                <swiper-slide v-for="(n,index) in fm_list">
                     <div class="content" :style="{backgroundImage:'url('+ src + n.img +')'}">
                         <div class="toolbar">
                             <a href="javascript:;">
                                 <!--<img src="../../../assets/images/ico_like@3x.png" alt="">-->
                             </a>
-                            <a href="javascript:;" @click="onRemove(n.id,index)" >
-                                <img  src="../../../assets/images/ico_del_W@3x.png"  alt="">
+                            <a href="javascript:;" @click="onRemove(n.id,index)">
+                                <img src="../../../assets/images/ico_del_W@3x.png" alt="">
                             </a>
                         </div>
                         <div class="time" v-show="index == active">
@@ -36,17 +36,17 @@
                 <!--</p>-->
                 <ul>
                     <li>
-                        <a href="#"  v-ripple  class="tools-back" @click="onPrev">
+                        <a href="#" v-ripple class="tools-back" @click="onPrev">
                             <img src="../../../assets/images/tools_back@3x.png" alt="">
                         </a>
                     </li>
                     <li>
-                        <a v-ripple href="#" class="player-btn"  @click="onChangeStatus" >
+                        <a v-ripple href="#" class="player-btn" @click="onChangeStatus">
                             <img :src="play_src" alt="">
                         </a>
                     </li>
                     <li>
-                        <a href="#"  v-ripple  class="tools-next" @click="onNext">
+                        <a href="#" v-ripple class="tools-next" @click="onNext">
                             <img src="../../../assets/images/tools_next@3x.png" alt="">
                         </a>
                     </li>
@@ -249,7 +249,7 @@ export default {
             return this.$refs.mySwiper.swiper
         },
         play_src: function () {
-            return this.fm_playing ? require("../../../assets/images/tools_btn_pause.png") : require("../../../assets/images/bofang@3x.png");
+            return this.fm_playing ? require("../../../assets/images/bofang@3x.png") : require("../../../assets/images/tools_btn_pause.png");
         }
     }
 }

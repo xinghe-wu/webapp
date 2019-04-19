@@ -1,112 +1,109 @@
 <template>
     <div id="view-my">
 
-    <header class="aui-bar aui-bar-nav">
-     
-	    <div class="my-header">
-				<div class="aui-row" >
-					<div class="aui-col-xs-1" @click="radio_list">
-						   <img src="../../../assets/images/radio/diantailiebiao@3x.png" class="img">
-					</div>
-					<div class="aui-col-xs-8" >
-						&nbsp
-					</div>
-					<div class="aui-col-xs-1" @click="msg" v-show="info.message>0">
-						  <img src="../../../assets/images/radio/xiaoxi@3x.png" class="img">
-						<div class="aui-badge">{{info.message}}</div>
-					</div>
-                     <div class="aui-col-xs-2" @click="open_fm">
-					     <img src="../../../assets/images/radio/shezhi@3x.png" class="img">
-	    	        </div>
-				</div>
-	     </div>
-	</header>
+        <header class="aui-bar aui-bar-nav">
 
-    <div class="head">
-		<ul class="aui-list aui-media-list " >
-			 <li class="aui-list-item aui-list-item-middle">
-				 <div class="aui-media-list-item-inner ">
-					<div class="aui-list-item-media head-media-list head-list-text" >
-						<img :src="src+info.head" class="aui-img-round aui-list-img-sm img">
-					</div>
-					 <div class="aui-list-item-inner ">
-						 <div class="aui-list-item-text " style="margin-left">
-							  <div class="aui-list-item-title aui-font-size-14 name">{{info.nick_name}}</div>
+            <div class="my-header">
+                <div class="aui-row">
+                    <div class="aui-col-xs-1" @click="radio_list">
+                        <img src="../../../assets/images/radio/diantailiebiao@3x.png" class="img">
+                    </div>
+                    <div class="aui-col-xs-8">
+                        &nbsp
+                    </div>
+                    <div class="aui-col-xs-1" @click="msg">
+                        <img src="../../../assets/images/radio/xiaoxi@3x.png" class="img">
+                        <div class="aui-badge " v-show="info.message>0"></div>
+                    </div>
+                    <div class="aui-col-xs-2" @click="onLogout">
+                        <img src="../../../assets/images/radio/shezhi@3x.png" class="img">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="head">
+            <ul class="aui-list aui-media-list ">
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner ">
+                        <div class="aui-list-item-media head-media-list head-list-text">
+                            <img :src="src+info.head" class="aui-img-round aui-list-img-sm img">
+                        </div>
+                        <div class="aui-list-item-inner ">
+                            <div class="aui-list-item-text " style="margin-left">
+                                <div class="aui-list-item-title aui-font-size-14 name">{{info.nick_name}}</div>
                                 <!-- <div class="aui-list-item-right">08:00</div> -->
-                         <div v-if="info.compere_id==0" class="btn" @click="reg">成为主播</div>
-                          	<img v-if="info.compere_id>0" class="btn-gengduo"  src="../../../assets/images/radio/gengduo.png" > 
-                    
-						 </div>
-						<div class="aui-list-item-text title">
-								查看个人主页
-						 </div>
-					</div>
-					 </div>
-			     </li>
-		 </ul>
-	</div>
+                                <div v-if="info.compere_id==0" class="btn" @click="reg">成为主播</div>
+                                <img v-if="info.compere_id>0" class="btn-gengduo" src="../../../assets/images/radio/gengduo.png">
 
-
- <div class="listen">
-		<div class="title">
-		  	<img  class="img-icon"  src="../../../assets/images/radio/zuijinshpouting@3x.png" > 最近收听
-		</div>
-     <div class="listen-swiper">
-		<swiper  :options="swiperOption" >
-            
-			<swiper-slide v-for="p in programList">
-				<div class="aui-card-list">
-				<div class="aui-card-list-content">
-            <div style="position: relative;">
-                <div style="position: absolute;">
-                    <img src="../../../assets/images/radio/play@2x.png" class="paly-btn" @click="fmClick(p)">
-                 </div>  
-                    <img :src="src+p.img" class="img" >
-                 </div>
-							 </div>
-							 <div class="swiper-title">{{p.name}}</div>
-							 <div class="swiper-cont"> {{p.brief}}</div>
-					 </div>
-			</swiper-slide>
-		</swiper>
-	</div>
-</div>
-
-
-    
-    <div class="my">
-       <div class="aui-content aui-margin-b-15">
-            <ul class="aui-list aui-list-in">
-                <li class="aui-list-item list" @click="subscribe">
-                     <div class="aui-list-item-label-icon">
-                     	<img  class="img" src="../../../assets/images/radio/gengduo@3x.png" >
-                     </div>
-                     <div class="aui-list-item-inner title">
-                      我的订阅
-                     </div>
+                            </div>
+                            <div class="aui-list-item-text title">
+                                查看个人主页
+                            </div>
+                        </div>
+                    </div>
                 </li>
-        <li class="aui-list-item list"  @click="onLogout">
-            <div class="aui-list-item-label-icon">
-              	<img  class="img"  src="../../../assets/images/radio/wodegoumia@3x.png" >
-            </div>
-            <div class="aui-list-item-inner title">
-                我的购买
-            </div>
-        </li>
-        <li class="aui-list-item  list" @click="wallet()">
-            <div class="aui-list-item-label-icon">
-                	<img   class="img"  src="../../../assets/images/radio/wodeqianbao@3x.png" >
-            </div>
-            <div class="aui-list-item-inner title">
-                我的钱包
-            </div>
-        </li>
-    </ul>
-     </div>
-</div>
+            </ul>
+        </div>
 
+        <div class="my-listen">
+            <div class="title">
+                <img class="img-icon" src="../../../assets/images/radio/zuijinshpouting@3x.png"> 最近收听
+            </div>
 
-    <!-- <van-nav-bar  :style="{paddingTop:paddingTop}" @click-right="onConfig" title="我的" >
+            <div class="listen-swiper" v-if="programListShow">
+                <swiper :options="swiperOption" style="background-color:#fff">
+
+                    <swiper-slide v-for="p in programList">
+                        <div class="aui-card-list">
+                            <div class="aui-card-list-content">
+                                <div style="position: relative;">
+                                    <div style="position: absolute;">
+                                        <img src="../../../assets/images/radio/play@2x.png" class="paly-btn" @click="fmClick(p)">
+                                    </div>
+                                    <img :src="src+p.img" class="img">
+                                </div>
+                            </div>
+                            <div class="swiper-title">{{p.name}}</div>
+
+                        </div>
+                    </swiper-slide>
+                </swiper>
+            </div>
+        </div>
+
+        <div class="my">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-list-in">
+                    <li class="aui-list-item list" @click="subscribe">
+                        <div class="aui-list-item-label-icon">
+                            <img class="img" src="../../../assets/images/radio/gengduo@3x.png">
+                        </div>
+                        <div class="aui-list-item-inner title">
+                            我的订阅
+                        </div>
+                    </li>
+                    <li class="aui-list-item list" @click="buy">
+                        <div class="aui-list-item-label-icon">
+                            <img class="img" src="../../../assets/images/radio/wodegoumia@3x.png">
+                        </div>
+                        <div class="aui-list-item-inner title">
+                            我的购买
+                        </div>
+                    </li>
+                    <li class="aui-list-item  list" @click="wallet()">
+                        <div class="aui-list-item-label-icon">
+                            <img class="img" src="../../../assets/images/radio/wodeqianbao@3x.png">
+                        </div>
+                        <div class="aui-list-item-inner title">
+                            我的钱包
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- <van-nav-bar  :style="{paddingTop:paddingTop}" @click-right="onConfig" title="我的" >
             <van-icon slot="right" name="setting" />
         </van-nav-bar>
         <div class="container">
@@ -240,7 +237,7 @@
       font-weight: bold;
     }
   }
-  .listen {
+  .my-listen {
     background-color: #fff;
     margin-top: px2rem(30);
     margin-bottom: px2rem(30);
@@ -259,17 +256,24 @@
       width: px2rem(200);
       height: px2rem(200);
     }
+    .swiper-slide-cont {
+      width: px2rem(102);
+      height: px2rem(102);
+    }
     .paly-btn {
       margin: px2rem(48);
       width: px2rem(102);
       height: px2rem(102);
     }
     .swiper-title {
+      padding-top: px2rem(10);
+      width: px2rem(200);
       font-size: px2rem(28);
       font-weight: bold;
     }
     .swiper-cont {
       color: #646261;
+      width: px2rem(200);
       font-size: px2rem(24);
     }
   }
@@ -394,13 +398,14 @@
 </style>
 <script>
 import { Dialog } from 'vant';
-import { getUserInfo, src, getPath, getProgramListen } from '../index/services';
+import { getUserInfo, src, getPath, getProgramListen, getColumnListen } from '../index/services';
 import { Toast } from 'vant';
 const head = require('../../../assets/images/head.jpg')
 export default {
     store: ['view', 'token', 'paddingTop', 'interact_status', 'fm_playing'],
     data() {
         return {
+            programListShow: false,
             swiperOption: {
                 slidesPerView: 4,
                 slidesOffsetBefore: 20,
@@ -438,8 +443,14 @@ export default {
         },
 
         getProgramListen() {
-            getProgramListen(this.$ls.get('token')).then(rep => {
-                this.programList = rep;
+            // getProgramListen(this.$ls.get('token')).then(rep => {
+            //     this.programList = rep;
+            // })
+            getColumnListen({ 'token': this.$ls.get('token'), 'id': 1 }).then(rep => {
+                this.programList = rep.data;
+                if (this.programList.length > 0) {
+                    this.programListShow = true
+                }
             })
         },
         reg() {
@@ -454,8 +465,11 @@ export default {
         wallet() {
             this.$router.push('/my/wallet');
         },
+        buy() {
+            this.$router.push('/my/buy');
+        },
         radio_list() {
-            this.$router.push('/radio/radio_select');
+            this.$router.push('/radio/radio_list');
         },
         open_fm() {
             this.$router.push('/radio/tag');
@@ -468,6 +482,7 @@ export default {
             if (this.token) {
                 Toast.loading();
                 getUserInfo(this.token).then(rep => {
+
                     this.info = rep;
                     Toast.clear();
                 })

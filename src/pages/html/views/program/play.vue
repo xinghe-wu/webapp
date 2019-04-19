@@ -1,163 +1,192 @@
 <template>
-<div class="view">
+  <div class="view">
 
-<div class="content">
+    <div class="content">
 
-<div class="play-up">
+      <div class="play-up">
 
-	<img :src="src+info.img"  alt="" class=" playdisc">
+        <img :src="src+info.img" class="playdisc" alt="">
 
-  	<div class="aui-row title">
-			<div class="aui-col-xs-1" @click="onClickLeft()">
-					<van-icon  name="arrow-left" />
-			</div>
+        <div class="aui-row title">
+          <div class="aui-col-xs-1" @click="onClickLeft()">
+            <van-icon name="arrow-left" />
+          </div>
 
-		<div class="aui-col-xs-11">
-			{{info.name}} 
-		</div>
-	</div>
-      
+          <div class="aui-col-xs-11">
+            {{info.name}}
+          </div>
+        </div>
 
+        <div class="aui-row info-list">
+          <div class="aui-col-xs-2">
+            <img :src="src+column.img" class="img">
+          </div>
+          <div class="aui-col-xs-8">
+            <div class="name">{{column.name}}</div>
+            <div class="info-listen">{{column.listenCount}}人在听</div>
+          </div>
+          <div class="aui-col-xs-2">
+            <!-- <div class="btn-follow">订阅</div> -->
+            <div class="btn" v-if="column.subscribe===1">已订阅</div>
+            <div class="btn-follow" @click="postSubscribes(column.id)" v-if="column.subscribe===0">订阅</div>
+          </div>
 
-  <div class="aui-row info-list">
-    <div class="aui-col-xs-2" >
-      <img :src="src+column.img" class="img">
-    </div>
-      <div class="aui-col-xs-8">
-      <div class="name">{{column.name}}</div>
-       <div class="info-listen">{{column.listenCount}}人在听</div>
-    </div>
-    <div class="aui-col-xs-2">
-     <div class="btn-follow">订阅</div>
-    </div>
- 
-   </div>
+        </div>
 
-
-      <div class="progress-bar">   
-       <div class="aui-col-xs-2" style="text-align: center;">    
-          <span class="now">{{current}}</span>
-       </div>
-            <div class="aui-col-xs-8 bar">
-                    <van-progress
+        <div class="progress-bar">
+          <div class="aui-col-xs-2" style="text-align: center;">
+            <span class="now">{{current}}</span>
+          </div>
+          <div class="aui-col-xs-8 bar">
+            <!-- <van-progress
                        pivot-text=" "
                        color="#f2826a"
-                     />
-            </div>  
-            <div class="aui-col-xs-2" style="text-align: center;">           
-          <span class="total">{{duration}}</span>
-            </div>  
-    </div> 
-
-
-<!-- {{play_list}} -->
-
-	<div class="aui-row play-up-toolbar" >
-  
- 		<div class="aui-col-xs-4 play-up-tool "><img src="../../../../assets/images/ico_like@3x.png" alt="" class="img-like"><span>{{column.zans}}</span></div>
-		<div class="aui-col-xs-4 play-up-tool "><img src="../../../../assets/images/musiclist/musiclistcommet.png" alt=""><span>{{column.comments}}</span></div>
-		<div class="aui-col-xs-4 play-up-tool "><img src="../../../../assets/images/musiclist/musiclistshare.png" alt=""><span>分享</span></div>
-  
-	</div>
-</div>
-
-
-<div class="player-bar">   
-       <div class="aui-col-xs-2" style="text-align: center;" >    
-         <img  src="../../../../assets/images/radio/shunxubofang @2x.png" alt=""  >
-       </div>
-            <div class="aui-col-xs-8 bar">
-            &nbsp;              
-            </div>  
-            <div class="aui-col-xs-2" style="text-align: center;">           
-        <img src="../../../../assets/images/radio/bianji@2x.png" alt="" @click="playList" >
-            </div>  
-    </div> 
-
-
-
-   <div class="player-block">
-     
-                <ul>
-              
-                    <li>
-                        <a href="#"  v-ripple  class="tools-back" @click="onPrev">
-                            <img src="../../../../assets/images/radio/shangyishou@2x.png" alt="" >
-                        </a>
-                    </li>
-                    <li>
-                        <a v-ripple href="#" class="player-btn"  @click="onChangeStatus" >
-                            <img :src="play_src" alt="" >
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"  v-ripple  class="tools-next" @click="onNext">
-                            <img src="../../../../assets/images/radio/xiayijiemu@2x.png" alt="">
-                        </a>
-                    </li>
-
-                
-                </ul>
-
-     </div>
-
-
-</div>
-
-
-
-	<div class="floatbox" v-show="isShow">
-	     <div class="title">
-        <img class="img-title" src="../../../../assets/images/radio/shunxubofang @2x.png" alt="" >
-        <span class="name">循环播放</span>
+                     /> -->
+          </div>
+          <div class="aui-col-xs-2" style="text-align: center;">
+            <span class="total">{{duration}}</span>
+          </div>
         </div>
-    
-		<div class="swiper-container">
-			<div class="swiper-wrapper">
-		
-				<div class="swiper-slide">
 
+        <!-- {{play_list}} -->
 
+        <div class="aui-row play-up-toolbar">
 
-<div class="aui-content aui-margin-b-15">
-    <ul class="aui-list aui-list-in">
+          <div class="aui-col-xs-4 play-up-tool " @click="zan"><img src="../../../../assets/images/ico_like@3x.png" alt="" class="img-like">
+            <span>{{column.zans}}</span>
+          </div>
+          <div class="aui-col-xs-4 play-up-tool " @click="commentsClick"><img src="../../../../assets/images/musiclist/musiclistcommet.png" alt="">
+            <span>{{column.comments}}</span>
+          </div>
+          <div class="aui-col-xs-4 play-up-tool " @click="openShean"><img src="../../../../assets/images/musiclist/musiclistshare.png" alt="">
+            <span>分享</span>
+          </div>
 
-        <li class="aui-list-item"  v-for="(p,index) in play_list" :key="index" @click="onChangeList(index)">
-            <div class="aui-list-item-inner">
-      
-                <div class="aui-list-item-title name-activie" v-if="index===active">{{p.name}}</div>
-                <div class="aui-list-item-title name" v-else>{{p.name}}</div>
+        </div>
+      </div>
+
+      <div class="player-bar">
+        <div class="aui-col-xs-2" style="text-align: center;">
+          <img src="../../../../assets/images/radio/shunxubofang @2x.png" alt="">
+        </div>
+        <div class="aui-col-xs-8 bar">
+          &nbsp;
+        </div>
+        <div class="aui-col-xs-2" style="text-align: center;">
+          <img src="../../../../assets/images/radio/bianji@2x.png" alt="" @click="playList">
+        </div>
+      </div>
+
+      <div class="player-block">
+
+        <ul>
+
+          <li>
+            <a href="#" v-ripple class="tools-back" @click="onPrev">
+              <img src="../../../../assets/images/radio/shangyishou@2x.png" alt="">
+            </a>
+          </li>
+          <li>
+            <a v-ripple href="#" class="player-btn" @click="onChangeStatus">
+              <img :src="play_src" alt="">
+            </a>
+          </li>
+          <li>
+            <a href="#" v-ripple class="tools-next" @click="onNext">
+              <img src="../../../../assets/images/radio/xiayijiemu@2x.png" alt="">
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+    <div class="floatbox" v-show="isShow">
+      <div class="title">
+        <img class="img-title" src="../../../../assets/images/radio/shunxubofang @2x.png" alt="">
+        <span class="name">循环播放</span>
+        <span @click="closeShare" style="position:absolute;right:10px;font-size:14px">关闭</span>
+      </div>
+
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide">
+
+            <div class="aui-content aui-margin-b-15">
+              <ul class="aui-list aui-list-in">
+
+                <li class="aui-list-item" v-for="(p,index) in play_list" :key="index" @click="onChangeList(index)">
+                  <div class="aui-list-item-inner">
+
+                    <div class="aui-list-item-title name-activie" v-if="index===active">{{p.name}}</div>
+                    <div class="aui-list-item-title name" v-else>{{p.name}}</div>
+                  </div>
+                </li>
+
+              </ul>
             </div>
-        </li>
 
-    </ul>
-</div>
+          </div>
 
-				</div>
+          <div class="swiper-slide">
+            <table id="section02">
 
-			
-				<div class="swiper-slide">
-					<table id="section02">
-		
-					</table>
-				</div>
+            </table>
+          </div>
 
-			</div>
-			<div class="pagination"></div>
-		</div>
-		<div class="cancelbtn" tapmode="" @click="closeShare">关闭</div>
-	</div>
+        </div>
+        <div class="pagination"></div>
+      </div>
 
+    </div>
 
+    <div class="floatbox1" v-show="isShow1">
+      <div class="title">分享到</div>
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <!--First Slide-->
+          <div class="swiper-slide">
+            <table id="section02">
+              <tr>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div>
+                  <div class="section2title">微信</div>
+                </td>
+                <td class=" ">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/logo.png" alt=""></div>
+                  <div class="section2title">微信朋友圈</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div>
+                  <div class="section2title">QQ好友</div>
+                </td>
+                <td class="">
+                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div>
+                  <div class="section2title">QQ空间</div>
+                </td>
+              </tr>
+              <tr>
 
+              </tr>
+            </table>
+          </div>
 
-</div>
-  
+        </div>
+
+      </div>
+      <div class="cancelbtn" tapmode="" @click="closeShare1">取消</div>
+    </div>
+
+  </div>
+
 </template>
 
 <script>
 import PullTo from 'vue-pull-to';
-import { src, getCompere, getCompereSort, postCompereFollow, fmSrc } from '../../index/services';
+import { src, getCompere, getCompereSort, postCompereFollow, fmSrc, postProgram, postSubscribes } from '../../index/services';
 import { Toast } from 'vant';
 import { Progress } from 'vant';
 export default {
@@ -170,6 +199,7 @@ export default {
       src: src,
       column: {},
       isShow: false,
+      isShow1: false,
       info: {
         "id": "",
         "name": "",
@@ -217,6 +247,11 @@ export default {
           }
         });
 
+        //最近播放
+        postProgram({ token: this.$ls.get('token'), programId: this.info.id }).then(rep => {
+          // alert(JSON.stringify(rep))
+        })
+
         audio.removeEventListener({ name: 'playing' })
         audio.addEventListener({ name: 'playing' }, (ret) => {
           if (this.current == '00:30') {//试听30秒
@@ -256,24 +291,23 @@ export default {
       this.onChange();
     },
     onPrev() {
-      // this.swiper.slidePrev();
-      setTimeout(() => {
-        this.info = this.play_list[this.active - 1];
-        this.active--;
+      if (this.active > 0) {
+        setTimeout(() => {
+          this.info = this.play_list[this.active - 1];
+          this.active--;
 
-        this.stopPlay();
-        if (!this.fm_playing) {
-          this.fm_playing = true;
-        } else {
-          this.onPlayer();
-        }
-      }, 400)
+          this.stopPlay();
+          if (!this.fm_playing) {
+            this.fm_playing = true;
+          } else {
+            this.onPlayer();
+          }
+        }, 400)
+      }
     },
     onNow() {
-
       setTimeout(() => {
         this.info = this.play_list[this.active];
-
         this.stopPlay();
         if (!this.fm_playing) {
           this.fm_playing = true;
@@ -283,25 +317,28 @@ export default {
       }, 400)
     },
     onChange() {
-      setTimeout(() => {
-        // alert(JSON.stringify(this.active))
-        this.info = this.play_list[this.active + 1];
-        this.active++;
-        // this.active = this.swiper.activeIndex;
-        this.stopPlay();
-        //                    this.fm_playing = false;
-        //                    this.$nextTick(()=>{
-        //                        this.fm_playing = true;
-        //                    })
-        if (!this.fm_playing) {
-          this.fm_playing = true;
-        } else {
-          this.onPlayer();
-        }
+      if (this.active < this.play_list.length - 1) {
+        setTimeout(() => {
 
-        //                    this.stopPlay();
-        //                    this.onPlayer();
-      }, 400)
+          this.info = this.play_list[this.active + 1];
+          // alert(JSON.stringify(this.info))
+          this.active++;
+          // this.active = this.swiper.activeIndex;
+          this.stopPlay();
+          //                    this.fm_playing = false;
+          //                    this.$nextTick(()=>{
+          //                        this.fm_playing = true;
+          //                    })
+          if (!this.fm_playing) {
+            this.fm_playing = true;
+          } else {
+            this.onPlayer();
+          }
+
+          //                    this.stopPlay();
+          //                    this.onPlayer();
+        }, 400)
+      }
     },
     onChangeList(id) {
       this.isShow = false;
@@ -320,14 +357,21 @@ export default {
 
       this.isShow = true
     },
+    commentsClick() {
+      this.$router.push({ path: '/anchor/columnComment', query: { comment: this.column, type: 3 } })
+    },
     closeShare() {
       this.isShow = false
+    },
+    closeShare1() {
+      this.isShow1 = false
     },
     refresh(loaded) {
       this.render(loaded);
     },
     onClickLeft() {
       this.stopPlay();
+
       this.$router.replace({ path: '/program/list', query: { column: this.column } })
 
     },
@@ -350,8 +394,22 @@ export default {
         }
       }
       return activeId
-    }
+    },
+    postSubscribes(id) {
+      postSubscribes({ token: this.$ls.get('token'), coumnId: id }).then(rep => {
 
+        this.column.subscribe = 1
+        Toast.success('订阅成功');
+
+
+      })
+    },
+    openShean() {
+      this.isShow1 = true;
+    },
+    zan() {
+      this.column.zans++
+    },
 
   },
   watch: {
@@ -372,36 +430,18 @@ export default {
   computed: {
 
     play_src: function () {
-      return this.fm_playing ? require("../../../../assets/images/radio/bofang-stop@2x.png") : require("../../../../assets/images/radio/bofang@2x.png");
+      return this.fm_playing ? require("../../../../assets/images/radio/bofang@2x.png") : require("../../../../assets/images/radio/bofang-stop@2x.png");
     }
   },
   mounted() {
 
-    this.column = this.$route.query.column
-    this.play_list = this.$route.query.programList
-
-    // alert(JSON.stringify(this.$route.query.id))
-    this.active = this.getActive(this.play_list, this.$route.query.id)
-
+    // this.column = this.$route.query.column
+    // this.play_list = this.$route.query.programList
+    this.column = this.$ls.get('column')
+    this.play_list = this.$ls.get('programList')
+    this.active = this.getActive(this.play_list, this.$ls.get('pId'))
     this.onNow()
-
     this.playmusic(); //进入页面开始播放
-
-    // this.info = this.play_list[0];
-
-    // this.load()
-    // if (this.play_list && this.play_list.length > 0) {
-
-    //   if (this.active >= this.play_list.length) {
-    //     this.active = this.play_list.length - 1;
-    //   }
-    //   alert(JSON.stringify(this.active))
-    //   this.info = this.play_list[this.active];
-    //   alert(JSON.stringify(this.info))
-
-    // }
-
-    // this.render();
   }
 
 }
@@ -426,7 +466,7 @@ export default {
   .play-up {
     // position: relative;
     .title {
-      // padding-top: 30px;
+      padding-top: px2rem(68);
       font-size: px2rem(34);
       text-align: left;
       color: #fff;
@@ -438,6 +478,27 @@ export default {
       border-bottom: 1px solid #f2f4f5;
       padding-top: px2rem(30);
       padding-left: px2rem(30);
+
+      .btn {
+        text-align: center;
+        padding-top: px2rem(8);
+        background-color: #e3e8ee;
+        color: #232323;
+        width: px2rem(100);
+        height: px2rem(56);
+        font-size: px2rem(26);
+        border-radius: 10%;
+      }
+      .btn-follow {
+        text-align: center;
+        padding-top: px2rem(8);
+        background-color: #ff5f53;
+        color: #fff;
+        width: px2rem(100);
+        height: px2rem(56);
+        font-size: px2rem(26);
+        border-radius: 10%;
+      }
       .img {
         width: px2rem(68);
         height: px2rem(68);
@@ -653,6 +714,38 @@ export default {
         color: #292726;
         font-size: px2rem(28);
       }
+    }
+
+    .name {
+      color: #292726;
+      font-size: px2rem(30);
+    }
+    .name-activie {
+      padding-left: px2rem(10);
+      vertical-align: middle;
+      color: #ff5f53;
+      font-size: px2rem(30);
+    }
+    .cancelbtn {
+      background-color: #fff;
+      height: px2rem(80);
+      line-height: px2rem(80);
+      font-size: px2rem(36);
+      text-align: center;
+    }
+  }
+
+  .floatbox1 {
+    position: absolute;
+    background: #fff;
+    bottom: 0;
+    width: 100%;
+    overflow-y: auto;
+
+    .title {
+      padding: px2rem(10);
+      color: #292726;
+      font-size: px2rem(30);
     }
 
     .name {

@@ -14,7 +14,7 @@
 
 	</author>
 
-	<content src="index.html" />
+	<content src="http://192.168.3.20:8010/html/index.html?path=login" />
 
 	<access origin="*" />
 
