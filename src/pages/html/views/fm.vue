@@ -31,10 +31,12 @@
       </swiper>
 
       <div class="player-block">
+        <div class="player-slider">
+          <van-slider @change="onSliderChange" v-if="slider.max" v-model="slider.current" :min="0" :max="100" />
+        </div>
         <h5>
           {{ info.name }}
         </h5>
-
         <ul>
           <li>
             <a href="#" v-ripple class="tools-back" @click="onPrev">
@@ -98,7 +100,12 @@ export default {
       },
       current: "00:00",
       duration: "00:00",
-      active: active
+      active: active,
+      slider: {
+        max: 0,
+        min: 0,
+        current: 0
+      }
     };
   },
   watch: {
@@ -131,6 +138,7 @@ export default {
           (ret, err) => {
             if (ret.duration) {
               this.duration = new Date(ret.duration * 1000).Format("mm:ss");
+              this.slider.max = ret.duration;
             }
           }
         );
@@ -138,6 +146,7 @@ export default {
         audio.removeEventListener({ name: "playing" });
         audio.addEventListener({ name: "playing" }, ret => {
           this.current = new Date(ret.current * 1000).Format("mm:ss");
+          this.slider.current = ret.current* 100 / this.slider.max;
         });
       } else {
         audio.play();
@@ -231,6 +240,12 @@ export default {
         .catch(() => {
           // on cancel
         });
+    },
+    onSliderChange(v) {
+
+      const audio = api.require("audioPlayer");
+      const current = this.slider.max / 100 * v;
+      audio.setCurrent({current})
     }
   },
   mounted() {
@@ -303,7 +318,13 @@ export default {
     }
 
     .player-block {
-      padding-top: px2rem(29);
+      padding-top: px2rem(20);
+
+      .player-slider {
+        padding: 0 px2rem(65);
+        margin-bottom: 40px;
+      }
+
       h5 {
         margin: 0;
         text-align: center;

@@ -44,31 +44,13 @@ const router = new VueRouter({
 })
 
 import Vant from 'vant';
-import 'vant/lib/vant-css/index.css';
+import 'vant/lib/index.css';
 Vue.use(Vant);
 
 let isFirst = true;
 
 router.beforeEach((to, from, next) => {
-    console.log(to.path)
-   // console.log(JSON.stringify(from));
-   //  if (to.path == '/login') {
-   //      return next();
-   //  }
     return next();
-
-
-    // if (Vue.ls.get('token')) {
-
-    //     return next();
-    // } else {
-
-    //     // return next('/login');
-    //     if (to.path == '/login') {
-    //         return next();
-    //     }
-
-    // }
 });
 
 
