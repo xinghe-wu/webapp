@@ -234,9 +234,7 @@ export default {
         (active == 3 && !this.token)
       ) {
         this.interact_status = "play";
-        this.$nextTick(() => {
-          this.$router.push("/login");
-        });
+
       } else {
         this.$router.replace(this.tabs[active].url);
       }

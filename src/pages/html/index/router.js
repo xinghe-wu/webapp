@@ -2,7 +2,6 @@ import interact from '../views/interact.vue';
 import fm from '../views/appfm.vue'
 import my from '../views/my.vue'
 import live from '../views/live.vue'
-import login from '../views/login.vue'
 import vlist from '../views/vlist.vue';
 import textarea from '../views/textarea.vue';
 import index from '../index/index.vue';
@@ -48,6 +47,7 @@ import program_test from '../views/program/test.vue'
 
 
 export default [{
+        alias: '/',
         path: '/index',
         component: index,
         meta: {
@@ -74,11 +74,11 @@ export default [{
         path: '/list',
         component: vlist
     },
-    {
-        path: '/login',
-        alias: '/',
-        component: login
-    },
+    // {
+    //     path: '/login',
+    //     alias: '/',
+    //     component: login
+    // },
     {
         path: '/textarea',
         component: textarea,

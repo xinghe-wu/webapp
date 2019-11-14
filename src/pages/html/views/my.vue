@@ -500,14 +500,12 @@ export default {
       })
         .then(() => {
           this.$ls.set("token", null);
-          //this.token = null;
+          this.token = null;
           this.fm_playing = false;
           this.interact_status = "play";
           // alert(JSON.stringify(this.$ls.get("token")));
 
-          this.$nextTick(() => {
-            this.$router.replace("/login");
-          });
+
           // api.closeWidget({
           //   silent: true
           // });
@@ -675,9 +673,7 @@ export default {
     },
     onLogin() {
       this.interact_status = "play";
-      this.$nextTick(() => {
-        this.$router.push("/login");
-      });
+
     }
   },
   mounted() {

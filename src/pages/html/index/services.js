@@ -2,8 +2,8 @@ import axios from 'axios';
 import {
     Toast
 } from 'vant';
-//const ip = 'http://www.tingdaoapp.com';
-const ip = 'http://192.168.0.103:8080'
+const ip = 'http://www.tingdaoapp.com';
+// const ip = 'http://192.168.0.103:8080'
 export const base = `${ip}/api`;
 export const src = `${ip}/static/upload/`;
 export const fmSrc = `${ip}/audio/`;
@@ -12,7 +12,6 @@ export const getPath = () => {
     if ('prod' == 'development') {
         return '';
     } else {
-        ˆˆ
         return api.wgtRootDir + '/dist';
     }
     ˆ

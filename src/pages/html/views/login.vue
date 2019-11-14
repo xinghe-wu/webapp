@@ -153,7 +153,7 @@ export default {
               },
               ret => {
                 Toast.clear();
-                this.$router.push("/index");
+                this.$router.push("/");
               }
             );
           }
@@ -181,7 +181,7 @@ export default {
               },
               ret => {
                 Toast.clear();
-                this.$router.push("/index");
+                this.$router.push("/");
               }
             );
           }
@@ -191,7 +191,7 @@ export default {
         });
     },
     onNoLogin() {
-      this.$router.push("/index");
+      this.$router.push("/");
     },
     onGetCode() {
       if (this.interval > 0) {
@@ -215,8 +215,7 @@ export default {
     });
     if (this.$ls.get("token")) {
       this.token = this.$ls.get("token");
-      //alert("token:" + this.token)
-      this.$router.push("/index");
+      this.$router.push("/");
     }
 
     // this.$ls.set("dm", true);

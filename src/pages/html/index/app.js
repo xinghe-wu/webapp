@@ -8,6 +8,7 @@ import VueLocalStorage from 'vue-ls';
 import './tools';
 import '../../../assets/css/aui.2.0.css';
 import Ripple from 'vue-ripple-directive';
+import login from '../views/login.vue'
 
 require('vue2-animate/dist/vue2-animate.min.css')
 
@@ -49,10 +50,11 @@ Vue.use(Vant);
 let isFirst = true;
 
 router.beforeEach((to, from, next) => {
-
-    if (to.path == '/login') {
-        return next();
-    }
+    console.log(to.path)
+   // console.log(JSON.stringify(from));
+   //  if (to.path == '/login') {
+   //      return next();
+   //  }
     return next();
 
 
@@ -95,9 +97,6 @@ function GetQueryString(name) {
 
 
 window.apiready = function () {
-
-
-
     new Vue({
         router,
         el: '#app',
@@ -110,30 +109,12 @@ window.apiready = function () {
                 fm_list: []
             }
         },
-        render: h => h(App),
-        // template: `
-
-        //  <router-view></router-view>
-
-        //    `,
-
+        render(h) {
+            return this.store.token? h(App): h(login)
+        },
         created() {
             if (this.$ls.get("token")) {
-
-                var path = GetQueryString('path');
-
-                if (path) {
-
-                    this.$router.replace('/' + path);
-                } else if (this.$route.path == '' || this.$route.path == '/') {
-                    this.$router.push('/app');
-                }
-                if (!this.store.token) {
-
-                    return this.$router.push('/login');
-                }
-            } else {
-                return this.$router.push('/login');
+                this.store.token = this.$ls.get("token");
             }
 
 
@@ -142,25 +123,22 @@ window.apiready = function () {
                 color: '#000'
             });
 
-            var ci = 0;
-            var time1, time2;
-            var self = this;
+            // var ci = 0;
+            // var time1, time2;
+            // var self = this;
             // api.addEventListener({
             //     name: 'keyback'
             // }, function (ret, err) {
             //     const url = self.$route.path;
-            //     alert(JSON.stringify(url))
             //     if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my' || url == '/login') {
-            //         alert("1")
             //         time1 = new Date().getTime();
             //         if (ci == 0) {
             //             ci = 1;
             //             api.toast({
             //                 msg: '再按一次返回键退出1'
             //             })
-
+            //
             //         } else if (ci == 1) {
-            //             alert("2")
             //             time2 = new Date().getTime();
             //             if (time2 - time1 < 3000) {
             //                 var audioPlayer = api.require('audioStreamer');
@@ -174,14 +152,13 @@ window.apiready = function () {
             //                 });
             //             } else {
             //                 ci = 0;
-
+            //
             //                 api.toast({
             //                     msg: '再按一次返回键退出2'
             //                 });
             //             }
             //         }
             //     } else {
-            //         alert("3")
             //         self.$router.go(-1) //返回
             //     }
             // })

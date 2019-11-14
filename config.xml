@@ -14,9 +14,9 @@
 
 	</author>
 
-	<content src="http://192.168.0.103:8010/html/index.html?path=login" />
+	<content src="http://192.168.3.28:8010/html/index.html" />
 <!-- <content src="https://720yun.com" /> -->
-	
+
    <!-- <content src="dist/html/index.html?path=login" /> -->
     <!-- <content src="html/index.html"/>  -->
 	<access origin="*" />

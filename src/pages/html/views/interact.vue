@@ -522,9 +522,7 @@ export default {
         }, 1000);
       } else {
         this.interact_status = "play";
-        this.$nextTick(() => {
-          this.$router.push("/login");
-        });
+
       }
     },
     onCancelSpeech() {
@@ -698,9 +696,7 @@ export default {
         // });
       } else {
         this.interact_status = "play";
-        this.$nextTick(() => {
-          this.$router.push("/login");
-        });
+
       }
     },
     ad() {
@@ -721,9 +717,7 @@ export default {
         // });
       } else {
         this.interact_status = "play";
-        this.$nextTick(() => {
-          this.$router.push("/login");
-        });
+
       }
     },
     onShowLive() {
