@@ -1,38 +1,49 @@
 <template>
   <div class="ad">
-    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="活动">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      title="活动"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
     <div class="content">
-
       <pull-to :top-load-method="refresh">
         <div>
           <div class="aui-content aui-margin-b-15">
             <!-- @click="vote"  -->
-            <ul class="aui-list aui-media-list ad_list" v-for="(ad,index) in adList" :key="index">
+            <ul
+              class="aui-list aui-media-list ad_list"
+              v-for="(ad, index) in adList"
+              :key="index"
+            >
               <li class="aui-list-item" @click="vote(ad)">
                 <div class="aui-media-list-item-inner ad_list_cont">
                   <div class="aui-list-item-media">
-                    <img :src="src+ad.img" class="ad_img">
+                    <img :src="src + ad.img" class="ad_img" />
                   </div>
                   <div class="aui-list-item-inner">
                     <div class="aui-list-item-text">
-                      <div class="aui-list-item-title ad_title">{{ad.title}}</div>
+                      <div class="aui-list-item-title ad_title">
+                        {{ ad.title }}
+                      </div>
                     </div>
                     <div class="aui-list-item-text  ad_cont">
-                      {{ad.brief}}
+                      {{ ad.brief }}
                     </div>
-                    <van-tag type="danger">
-                      <div v-if="ad.type === 1">购物</div>
-                      <div v-if="ad.type === 2">报名</div>
-                      <div v-if="ad.type === 3">图文</div>
-                      <div v-if="ad.type === 4">投票</div>
+                    <van-tag type="danger" class="stat">
+                      <div v-if="ad.type === 1" class="title">购物</div>
+                      <div v-if="ad.type === 2" class="title">报名</div>
+                      <div v-if="ad.type === 3" class="title">图文</div>
+                      <div v-if="ad.type === 4" class="title">投票</div>
                     </van-tag>
                     <!-- <img src="../../../../assets/images/radio/ad_ing.png"  style="width:80px;"/> -->
                     <van-tag plain type="danger" class="stat">
-                      <div v-if="ad.stat === 0">未开始</div>
-                      <div v-if="ad.stat === 1">正在进行中</div>
-                      <div v-if="ad.stat === 2">已结束</div>
+                      <div v-if="ad.stat === 0" class="title">未开始</div>
+                      <div v-if="ad.stat === 1" class="title">正在进行中</div>
+                      <div v-if="ad.stat === 2" class="title">已结束</div>
                     </van-tag>
                   </div>
                 </div>
@@ -43,31 +54,42 @@
       </pull-to>
     </div>
 
-    <vDialog v-model="dialog" :type="pushInfo.type" :time="pushInfo.show_time" :url="pushInfo.url" :id="pushInfo.id" :red="pushInfo.red" :blue="pushInfo.blue">
+    <vDialog
+      v-model="dialog"
+      :type="pushInfo.type"
+      :time="pushInfo.show_time"
+      :url="pushInfo.url"
+      :id="pushInfo.id"
+      :red="pushInfo.red"
+      :blue="pushInfo.blue"
+    >
       <div slot="title">
-        {{pushInfo.title}}
+        {{ pushInfo.title }}
       </div>
       <span slot="body">
-        <img class="pull-info-img" style="width: 100%;max-height:200px;" :src="src+ pushInfo.img" alt="">
+        <img
+          class="pull-info-img"
+          style="width: 100%;max-height:200px;"
+          :src="src + pushInfo.img"
+          alt=""
+        />
         <p>
-          {{pushInfo.brief}}
+          {{ pushInfo.brief }}
         </p>
       </span>
     </vDialog>
-
   </div>
-
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
+import PullTo from "vue-pull-to";
 
-import { getActivity, src, joinActivity } from '../../index/services';
-import { Toast } from 'vant';
-import { Tag } from 'vant';
-import vDialog from '../../components/vDialog.vue';
+import { getActivity, src, joinActivity } from "../../index/services";
+import { Toast } from "vant";
+import { Tag } from "vant";
+import vDialog from "../../components/vDialog.vue";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       src: src,
@@ -75,42 +97,45 @@ export default {
       isLoading: false,
       pushInfo: {},
       dialog: false
-    }
+    };
   },
   methods: {
     render(loaded) {
       setTimeout(() => {
-        getActivity({ id: 1 || api.pageParam.id }).then((rep) => {
+        getActivity({ id: 1 || api.pageParam.id }).then(rep => {
           this.adList = rep.data;
           if (loaded) {
-            loaded('done');
+            loaded("done");
           }
-        })
-      }, 500)
+        });
+      }, 500);
     },
     refresh(loaded) {
       this.render(loaded);
     },
     onSelect(data) {
-      this.pushInfo = data
+      this.pushInfo = data;
       this.dialog = true;
     },
     onClickLeft() {
       this.$router.go(-1);
     },
     vote(data) {
-      var browser = api.require('webBrowser');
+      var browser = api.require("webBrowser");
       Toast.loading();
-      joinActivity({ token: this.$ls.get('token'), id: this.id }).then(rep => {
+      joinActivity({ token: this.$ls.get("token"), id: this.id }).then(rep => {
         Toast.clear();
-        if (data.url != '') {
+        if (data.url != "") {
           browser.open({
             url: data.url
           });
         } else {
-          this.$router.push({ path: '/interaction/vote', query: { vote: data } })
+          this.$router.push({
+            path: "/interaction/vote",
+            query: { vote: data }
+          });
         }
-      })
+      });
     }
   },
   components: {
@@ -118,12 +143,11 @@ export default {
     vDialog
   },
   mounted() {
-    getActivity({ id: 1 || api.pageParam.id }).then((rep) => {
+    getActivity({ id: 1 || api.pageParam.id }).then(rep => {
       this.adList = rep.data;
-    })
+    });
   }
-
-}
+};
 </script>
 
 
@@ -160,6 +184,9 @@ export default {
     }
     .stat {
       margin-left: px2rem(20);
+      .title {
+        padding-top: px2rem(8);
+      }
     }
   }
 

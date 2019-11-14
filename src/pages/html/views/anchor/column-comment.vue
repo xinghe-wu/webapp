@@ -1,115 +1,152 @@
 <template>
-  <div class="new-body">
-    <van-nav-bar :style="{paddingTop:paddingTop}" @click-left="onClickLeft" right-text="" :title="title">
+  <div class="column-comment-body">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      @click-left="onClickLeft"
+      right-text=""
+      :title="title"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <!-- 资讯内容     -->
     <pull-to :bottom-load-method="refresh">
-      <div class="comment-dynamic" v-show="type==1">
+      <div class="comment-dynamic" v-show="type == 1">
         <div class="aui-card-list-header aui-card-list-user aui-border-b">
           <div class="aui-card-list-user-avatar">
-            <img :src="src+comment.head" class="aui-img-round" />
+            <img :src="src + comment.head" class="aui-img-round img" />
           </div>
           <div class="aui-card-list-user-name">
-            <div class="name">{{comment.name}}</div>
+            <div class="name">{{ comment.name }}</div>
             <div v-if="comment.follow" class="aui-btn btn">已关注</div>
 
-            <div v-else class="aui-btn btn-follow" @click="compereFollow(comment.compereId)">关注</div>
+            <div
+              v-else
+              class="aui-btn btn-follow"
+              @click="compereFollow(comment.compereId)"
+            >
+              关注
+            </div>
           </div>
-          <div class="aui-card-list-user-info time">11-25 09:12</div>
+          <div class="aui-card-list-user-info time">
+            {{ formatDateTime(comment.time) }}
+          </div>
         </div>
         <div class="aui-card-list-content-padded">
-          <p class="cont">{{comment.cont}}</p>
+          <p class="cont">{{ comment.cont }}</p>
 
-          <img :src="src+comment.img + '?t='+getTime()" style="width:260px" />
+          <img
+            v-if="comment.img"
+            :src="src + comment.img + '?t=' + getTime()"
+            class="comment-img"
+            @click="imgMax(src + comment.img)"
+          />
         </div>
-        <div class="comment-dynamic-foot">
-        </div>
+        <div class="comment-dynamic-foot"></div>
       </div>
 
-      <div class="comment-list" v-show="type==2">
+      <div class="comment-list" v-show="type == 2">
         <div class="aui-media-list-item-inner ad-list-cont">
           <div class="aui-list-item-media">
-
-            <img :src="src+comment.img" class="img">
+            <img :src="src + comment.img" class="img" />
           </div>
           <div class="aui-list-item-inner">
             <div class="aui-list-item-text">
-              <div class="aui-list-item-title comment-title">{{comment.brief}}</div>
+              <div class="aui-list-item-title comment-title">
+                {{ comment.brief }}
+              </div>
             </div>
             <div class="aui-list-item-text  comment-anchor">
-              主播：{{comment.name}}
+              主播：{{ comment.name }}
             </div>
           </div>
         </div>
       </div>
 
       <!-- 评论 -->
-      <div v-show="type==3" style="margin-top:70px">
-      </div>
+      <div v-show="type == 3" style="margin-top:70px"></div>
       <div class="comment">
-        <div class="title">评论 {{this.commentList.length}}</div>
+        <div class="title">评论 {{ this.commentList.length }}</div>
         <div class="aui-content aui-margin-b-15 ">
           <ul class="aui-list aui-media-list " v-for="c in commentList">
             <li class="aui-list-item">
               <div class="aui-media-list-item-inner">
                 <div class="aui-list-item-media" style="width: 2rem;">
-
-                  <img :src="src + c.head+'?t='+getTime()" class="aui-img-round aui-list-img-sm">
+                  <img
+                    v-if="c.head.substring(0, 4) != 'http'"
+                    :src="src + c.head + '?t=' + getTime()"
+                    class="aui-img-round head"
+                  />
+                  <img
+                    v-else
+                    :src="c.head + '?t=' + getTime()"
+                    class="aui-img-round head"
+                  />
                 </div>
                 <div class="aui-list-item-inner">
                   <div class="aui-list-item-text">
                     <div class="aui-list-item-title">
-                      <p class="name">{{c.name}}</p>
-                      <p class="time">{{formatDateTime(c.time)}}</p>
+                      <p class="name">{{ c.name }}</p>
+                      <p class="time">{{ formatDateTime(c.time) }}</p>
                     </div>
-                    <div class="aui-list-item-right" @click='postZan(c.id)'>
-                      <img src="../../../../assets/images/radio/x.png" class="zan-img">
-                      <span class="count">{{c.zan}}</span>
+                    <div class="aui-list-item-right" @click="postZan(c.id)">
+                      <img
+                        src="../../../../assets/images/radio/x.png"
+                        class="zan-img"
+                      />
+                      <span class="count">{{ c.zan }}</span>
                     </div>
                   </div>
                   <!-- <div class="aui-list-item-text cont">
                       @颜渊:生命的意义在于坚持，有一些人往往离成功只差一步，却没有坚持下来，你行的，加油！
                   </div> -->
                   <div class="aui-info aui-margin-t-5 reply" style="padding:0">
-                    {{c.content}}
+                    {{ c.content }}
                   </div>
                 </div>
               </div>
             </li>
           </ul>
         </div>
-
       </div>
-
     </pull-to>
 
     <div class="sumbit footer">
       <div class="aui-row row">
         <div class="aui-col-xs-10">
           <div class="aui-searchbar-input aui-border-radius input-class">
-            <input type="text" placeholder="快和大家一起讨论吧" v-model="content" />
+            <input
+              type="text"
+              placeholder="快和大家一起讨论吧"
+              v-model="content"
+            />
           </div>
         </div>
         <div class="aui-col-xs-2" @click="postComment">
-          <img src="../../../../assets/images/radio/send.png" class="send-btn">
+          <img
+            src="../../../../assets/images/radio/send.png"
+            class="send-btn"
+          />
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
-import { getNews, src, postInfoComment, postInfoZan, getInfoComment, compereFollow, postCompereFollow } from '../../index/services';
-import { Toast } from 'vant';
+import PullTo from "vue-pull-to";
+import {
+  getNews,
+  src,
+  postInfoComment,
+  postInfoZan,
+  getInfoComment,
+  compereFollow,
+  postCompereFollow
+} from "../../index/services";
+import { Toast } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       comment: {},
@@ -118,52 +155,87 @@ export default {
       isLoading: false,
       src: src,
       type: 1,
-      title: '动态详情',
-      content: '',
+      title: "动态详情",
+      content: "",
       param: {
-        'id': 1,
-        'type': 1,
-        'page': 0,
-        'size': 2
+        id: 1,
+        type: 1,
+        page: 0,
+        size: 2
       },
       paramComment: {
-        'type': 1,
-        'typeId': 0,
-        'page': 0,
-        'size': 10
+        type: 1,
+        typeId: 0,
+        page: 1,
+        size: 5
       },
       postParamComment: {
-        'token': '',
-        'type': 1,
-        'typeId': 0,
-        'content': ''
+        token: "",
+        type: 1,
+        typeId: 0,
+        content: ""
       }
-    }
+    };
   },
   methods: {
     render(loaded) {
       this.isLoading = true;
-      this.paramComment.typeId = this.comment.id
+      this.paramComment.typeId = this.comment.id;
+      this.paramComment.type = this.type;
       getInfoComment(this.paramComment).then(rep => {
         this.data = rep.data;
-        this.isLoading = false;
-        if (loaded) {
-          loaded('done');
-        }
-      })
-
+      });
     },
     onClickLeft() {
-      this.$router.go(-1);
+      if (this.$route.query.back == 1) {
+        this.$router.replace({
+          path: "/program/list",
+          query: { column: this.$ls.get("column") }
+        });
+      } else {
+        this.$router.go(-1);
+      }
+    },
+    imgMax(img) {
+      var imgs = [];
+      imgs.push(img);
+      var UIPhotoViewer = api.require("UIPhotoViewer");
+      UIPhotoViewer.open(
+        {
+          images: imgs,
+          placeholderImg: "widget://res/img/apicloud.png",
+          bgColor: "#000"
+        },
+        function(ret, err) {
+          if (ret) {
+            if (ret.eventType == "click") {
+              UIPhotoViewer.close();
+            }
+          } else {
+            //alert(JSON.stringify(err));
+          }
+        }
+      );
     },
     refresh(loaded) {
-      this.render(loaded);
+      this.paramComment.page++;
+      this.getComment(loaded);
     },
-    getComment() {
-      this.paramComment.typeId = this.comment.id
-      getInfoComment(this.paramComment).then(rep => {
-        this.commentList = rep.data
+    getComment(loaded) {
+      this.paramComment.typeId = this.comment.id;
+      this.paramComment.type = this.type;
 
+      getInfoComment(this.paramComment).then(rep => {
+        const rs = rep.data;
+
+        for (const r of rs) {
+          this.commentList.push(r);
+        }
+
+        this.isLoading = false;
+        if (loaded) {
+          loaded("done");
+        }
       });
     },
     getTime() {
@@ -171,43 +243,56 @@ export default {
     },
     postComment() {
       Toast.loading();
-      postInfoComment({ 'token': this.$ls.get('token'), 'type': 1, 'typeId': this.comment.id, 'content': this.content }).then(rep => {
+      postInfoComment({
+        token: this.$ls.get("token"),
+        type: this.type,
+        typeId: this.comment.id,
+        content: this.content
+      }).then(rep => {
         // alert(JSON.stringify(rep))
         Toast.clear();
-        Toast.success('评论成功');
-        this.content = '';
+        Toast.success("评论成功");
+        this.content = "";
+        this.param.page = 1;
+        this.commentList = [];
         this.getComment();
-      })
+      });
     },
     postZan(id) {
-      postInfoZan({ 'token': this.$ls.get('token'), 'type': 2, 'typeId': id }).then(rep => {
-        this.getComment();
-      })
+      postInfoZan({ token: this.$ls.get("token"), type: 2, typeId: id }).then(
+        rep => {
+          this.param.page = 1;
+          this.commentList = [];
+          this.getComment();
+        }
+      );
     },
     compereFollow(id) {
       Toast.loading();
-      postCompereFollow({ 'token': this.$ls.get('token'), 'compereId': id }).then(rep => {
-        Toast.clear();
-        Toast.success('关注成功');
-        this.comment.follow = 1
-        // this.getComment();
-      })
+      postCompereFollow({ token: this.$ls.get("token"), compereId: id }).then(
+        rep => {
+          Toast.clear();
+          Toast.success("关注成功");
+          this.comment.follow = 1;
+          // this.getComment();
+        }
+      );
     },
     formatDateTime(timeStamp) {
       var date = new Date();
       date.setTime(timeStamp * 1000);
       var y = date.getFullYear();
       var m = date.getMonth() + 1;
-      m = m < 10 ? ('0' + m) : m;
+      m = m < 10 ? "0" + m : m;
       var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
+      d = d < 10 ? "0" + d : d;
       var h = date.getHours();
-      h = h < 10 ? ('0' + h) : h;
+      h = h < 10 ? "0" + h : h;
       var minute = date.getMinutes();
       var second = date.getSeconds();
-      minute = minute < 10 ? ('0' + minute) : minute;
-      second = second < 10 ? ('0' + second) : second;
-      return m + '-' + d + ' ' + h + ':' + minute
+      minute = minute < 10 ? "0" + minute : minute;
+      second = second < 10 ? "0" + second : second;
+      return m + "-" + d + " " + h + ":" + minute;
     },
     getDateDiff(dateTimeStamp) {
       var result;
@@ -228,51 +313,46 @@ export default {
       var hourC = diffValue / hour;
       var minC = diffValue / minute;
       if (monthC >= 1) {
-        if (monthC <= 12)
-          result = "" + parseInt(monthC) + "月前";
+        if (monthC <= 12) result = "" + parseInt(monthC) + "月前";
         else {
           result = "" + parseInt(monthC / 12) + "年前";
         }
-      }
-      else if (weekC >= 1) {
+      } else if (weekC >= 1) {
         result = "" + parseInt(weekC) + "周前";
-      }
-      else if (dayC >= 1) {
+      } else if (dayC >= 1) {
         result = "" + parseInt(dayC) + "天前";
-      }
-      else if (hourC >= 1) {
+      } else if (hourC >= 1) {
         result = "" + parseInt(hourC) + "小时前";
-      }
-      else if (minC >= 1) {
+      } else if (minC >= 1) {
         result = "" + parseInt(minC) + "分钟前";
       } else {
         result = "刚刚";
       }
       return result;
     }
-
   },
   components: {
     PullTo
   },
   mounted() {
-    this.comment = this.$route.query.comment
-    this.type = this.$route.query.type
-    if (this.type == 2) {
-      this.title = "栏目评论"
-    }
-    this.getComment()
-  }
+    this.comment = this.$route.query.comment;
 
-}
+    this.type = this.$route.query.type;
+    if (this.type == 2) {
+      this.title = "栏目评论";
+    }
+    this.getComment();
+  }
+};
 </script>
 
 <style lang="scss" type="text/scss">
 @import "../../../../public/px2rem.scss";
-.new-body {
+.column-comment-body {
   height: 100%;
   overflow-y: auto;
   background-color: #fff;
+  padding-bottom: px2rem(90);
 
   .van-pull-refresh__track {
     height: 100%;
@@ -303,6 +383,16 @@ export default {
     bottom: 0;
     width: 100%;
     height: px2rem(130);
+  }
+
+  .head {
+    width: px2rem(80);
+    height: px2rem(58);
+  }
+
+  .img {
+    width: px2rem(100);
+    height: px2rem(100);
   }
 
   .comment1 {
@@ -346,7 +436,7 @@ export default {
   }
 
   .cont {
-    margin-top: px2rem(-40);
+    margin-top: px2rem(-10);
 
     padding-bottom: px2rem(10);
     color: #454647;
@@ -394,6 +484,10 @@ export default {
         height: px2rem(130);
       }
     }
+  }
+
+  .comment-img {
+    width: px2rem(540);
   }
 
   .comment {

@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=1.0,width=device-width,initial-scale=1.0"
-    />
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=1.0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>入口页面</title>
 </head>
@@ -13,12 +13,13 @@
     <script>
         apiready = function () {
             api.setStatusBarStyle({
-                style: 'dark'
+                style: 'dark',
+                color: '#000'
             });
             api.openFrame({
                 name: 'index',
                 //url: 'dist/html/index.html?path=login',
-                //url: 'http://192.168.3.20:8010/html/index.html?path=login', //调试时使用
+                //url: 'http://192.168.3.32:8010/html/index.html?path=login', //调试时使用
                 rect: {
                     x: 0,
                     y: 0,

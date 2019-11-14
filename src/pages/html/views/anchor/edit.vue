@@ -1,20 +1,29 @@
 <template>
   <div class="view-edit">
-    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="编辑资料">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      title="编辑资料"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <div class="content">
       <div class="reg">
-
         <div class="aui-content aui-margin-b-15">
           <ul class="aui-list aui-list-in">
             <li class="aui-list-item">
-              <div class="aui-list-item-inner aui-list-item-arrow">
-                <div class="aui-list-item-title reg-title">头像</div>
-                <div class="aui-list-item-right">
-
-                  <!-- <van-uploader  accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
+              <van-uploader
+                accept="image/png, image/jpeg"
+                :after-read="onRead"
+                style="width: 100%"
+              >
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                  <div class="aui-list-item-title reg-title">头像</div>
+                  <div class="aui-list-item-right">
+                    <!-- <van-uploader  accept="image/png, image/jpeg" :after-read="onRead" style="width: 100%">
                 <div class=" t-cell van-cell-group van-hairline--bottom"><div class="van-cell van-hairline">
                    
                     <div class="van-cell__value van-cell__value--link">
@@ -24,30 +33,51 @@
                     </div>
                 </div>
                 </van-uploader> -->
-                  <img :src="src+compere.head" class="aui-img-round aui-list-img-sm anchor-head" style="position:relative;top:0; right:0">
-
+                    <img
+                      :src="src + compere.head"
+                      class="aui-img-round aui-list-img-sm anchor-head"
+                      style="position:relative;top:0; right:0"
+                    />
+                  </div>
                 </div>
-              </div>
+              </van-uploader>
             </li>
-            <li class="aui-list-item">
-              <div class="aui-list-item-inner aui-list-item-arrow">
+
+            <!-- <div class="aui-list-item-inner aui-list-item-arrow">
                 <div class="aui-list-item-title reg-title">用户名</div>
                 <div class="aui-list-item-right">
-                  <div>{{compere.name}}</div>
+                  <div>{{ compere.name }}</div>
                 </div>
-              </div>
-            </li>
+              </div> -->
 
-            <li class="aui-list-item">
-              <div class="aui-list-item-inner aui-list-item-arrow">
+            <van-field
+              v-model="compere.name"
+              label="昵称"
+              placeholder="请输入昵称 "
+            />
+
+            <!-- <li class="aui-list-item"> -->
+            <!-- <div class="aui-list-item-inner aui-list-item-arrow">
                 <div class="aui-list-item-title reg-title">个人简介</div>
                 <div class="aui-list-item-right">
-
-                  <div>{{compere.introduce}}</div>
+                  <div>{{ compere.introduce }}</div>
+              
                 </div>
-              </div>
-            </li>
+              </div> -->
+
+            <van-field
+              v-model="compere.introduce"
+              rows="2"
+              autosize
+              label="简介"
+              type="textarea"
+              maxlength="100"
+              placeholder="请输入简介"
+              show-word-limit
+            />
           </ul>
+
+          <!-- </li> -->
         </div>
 
         <!-- <van-cell-group >
@@ -66,81 +96,153 @@
 
 </van-cell-group> -->
 
-        <div class="aui-content aui-text-center aui-margin-t-15">
-          <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
+        <div
+          class="aui-content aui-text-center aui-margin-t-15"
+          @click="postSumbit"
+        >
+          <div
+            class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn"
+          >
             <span>提交</span>
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
-import { src, postApplyAnchor } from '../../index/services';
-import { Toast } from 'vant';
-import { Field } from 'vant';
+import PullTo from "vue-pull-to";
+import { src, postmemberEdit, uploadPic } from "../../index/services";
+import { Toast } from "vant";
+import { Field } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       swiperOption: {
         slidesPerView: 2,
         slidesOffsetBefore: 20,
-        spaceBetween: 100,
+        spaceBetween: 100
       },
       compere: {},
-      name: '',
-      mobile: '',
-      weixin: '',
-      info: '',
+      name: "",
+      mobile: "",
+      weixin: "",
+      info: "",
       src: src,
       isLoading: false,
       query: {
-        token: '',
+        token: "",
         page: 1,
         size: 10,
         id: 1
-      },
-
-    }
+      }
+    };
   },
   methods: {
     postSumbit() {
       // Toast.loading();
-      postApplyAnchor({
-        token: this.$ls.get('token'),
-        name: this.name,
-        mobile: this.mobile,
-        weixin: this.weixin,
-        info: this.info,
+      postmemberEdit({
+        token: this.$ls.get("token"),
+        id: this.compere.id,
+        name: this.compere.name,
+        head: this.compere.head,
+        info: this.compere.introduce
       }).then(rep => {
-
-
-        Toast.success("提交成功请等待");
+        Toast.success("提交修改成功");
 
         setTimeout(() => {
           Toast.clear();
           this.onClickLeft();
-        }, 1000)
-      })
-
+        }, 1000);
+      });
     },
     onClickLeft() {
       this.$router.go(-1);
     },
+    onRead({ file }) {
+      Toast.loading();
+
+      this.photoCompress(file, { width: 600 }, base64 => {
+        let newFile = this.dataURLtoFile(base64, "upload.png");
+        let formData = new FormData();
+        formData.append("token", this.$ls.get("token"));
+        formData.append("file", newFile);
+
+        uploadPic(formData)
+          .then(rep => {
+            Toast.clear();
+            if (rep.src) {
+              this.compere.head = rep.src;
+            }
+          })
+          .catch(e => {
+            // alert(e);
+          });
+      });
+    },
+    photoCompress(file, w, objDiv) {
+      var ready = new FileReader();
+      ready.readAsDataURL(file);
+      var self = this;
+      ready.onload = function() {
+        var re = this.result;
+        self.canvasDataURL(re, w, objDiv);
+      };
+    },
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    canvasDataURL(path, obj, callback) {
+      var img = new Image();
+      img.src = path;
+      img.onload = function() {
+        var that = this;
+        // 默认按比例压缩
+        var w = that.width,
+          h = that.height,
+          scale = w / h;
+        w = obj.width || w;
+        h = obj.height || w / scale;
+        var quality = 0.5; // 默认图片质量为0.7
+        //生成canvas
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        // 创建属性节点
+        var anw = document.createAttribute("width");
+        anw.nodeValue = w;
+        var anh = document.createAttribute("height");
+        anh.nodeValue = h;
+        canvas.setAttributeNode(anw);
+        canvas.setAttributeNode(anh);
+        ctx.drawImage(that, 0, 0, w, h);
+        // 图像质量
+        if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+          quality = obj.quality;
+        }
+        // quality值越小，所绘制出的图像越模糊
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        // 回调函数返回base64的值
+        callback(base64);
+      };
+    }
   },
   components: {
     PullTo
   },
   mounted() {
-    this.compere = this.$route.query.compere
+    this.compere = this.$route.query.compere;
   }
-
-}
+};
 </script>
 
 
@@ -202,6 +304,7 @@ export default {
         margin-top: px2rem(20);
         margin-bottom: px2rem(20);
         width: px2rem(120);
+        height: px2rem(120);
       }
       .reg-title {
         color: #333333;

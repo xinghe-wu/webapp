@@ -1,93 +1,22 @@
 <template>
-  <div>
+  <!-- <keep-alive>
+    <router-view> </router-view>
+  </keep-alive> -->
+
+  <!-- <router-view v-if="!$route.meta.keepAlive"> </router-view> -->
+
+  <div id="app" class="app">
     <keep-alive>
-      <!-- <transition name="slide-right"> -->
-      <transition>
-        <router-view></router-view>
-      </transition>
+      <router-view v-if="$route.path == '/index'"> </router-view>
     </keep-alive>
 
+    <!-- 这里是不被缓存的视图组件，比如 page3 -->
+    <router-view v-if="$route.path != '/index'"> </router-view>
   </div>
 </template>
-<style lang="scss" type="text/scss"  >
-* {
-  margin: 0;
-  padding: 0;
-}
-.btn {
-  width: 50%;
-}
-html,
-body,
-#app {
+<style lang="scss" type="text/scss">
+.app {
   height: 100%;
-}
-.turn-on-enter {
-  transform: translate3d(0, 0, 100%);
-  opacity: 0;
-}
-.turn-on-leave-to {
-  //   transform: translate3d(-100%, 0, 0);
-  //   opacity: 0;
-}
-.turn-on-enter-active,
-.turn-on-leave-active {
-  transition: transform 0.1s ease;
-}
-.turn-off-enter {
-  /* transform: translate3d(-20%, 0, 0); */
-}
-.turn-off-leave-to {
-  transform: translate3d(100%, 0, 0);
-}
-.turn-off-enter-active,
-.turn-off-leave-active {
-  transition: transform 0.6s ease;
-}
-.turn-off-leave-active {
-  z-index: 2;
-}
-
-.slide-right-enter-active,
-.slide-right-leave-active,
-.slide-left-enter-active,
-.slide-left-leave-active {
-  will-change: transform;
-  transition: all 300ms;
-  position: absolute;
-}
-.slide-right-enter {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
-}
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
-}
-.slide-left-enter {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
-}
-.slide-left-leave-active {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
 }
 </style>
 
-<script>
-export default {
-
-  data() {
-    return {
-
-
-    }
-  },
-  methods: {
-
-
-  },
-
-
-}
-</script>

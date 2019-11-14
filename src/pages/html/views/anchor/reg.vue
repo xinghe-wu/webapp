@@ -1,11 +1,16 @@
 <template>
   <div class="anchor-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="成为主播">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      title="成为主播"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <div class="content">
-
       <div class="title">
         填写基础资料
       </div>
@@ -15,89 +20,108 @@
 
       <div class="reg">
         <van-cell-group>
-          <van-field v-model="name" clearable label="姓名" right-icon="question-o" placeholder="请输入姓名" class="input-title" />
+          <van-field
+            v-model="name"
+            clearable
+            label="姓名"
+            right-icon="question-o"
+            placeholder="请输入姓名"
+            class="input-title"
+          />
 
-          <van-field v-model="mobile" label="手机号" placeholder="请输入手机号" class="input-title" />
-          <van-field v-model="weixin" label="微信" placeholder="请输入微信" class="input-title" />
+          <van-field
+            v-model="mobile"
+            label="手机号"
+            placeholder="请输入手机号"
+            class="input-title"
+          />
+          <van-field
+            v-model="weixin"
+            label="微信"
+            placeholder="请输入微信"
+            class="input-title"
+          />
 
-          <van-field class="input-title" v-model="info" label="介绍" placeholder="几句说说您的情况" rows="3" autosize />
+          <van-field
+            class="input-title"
+            v-model="info"
+            label="介绍"
+            placeholder="几句说说您的情况"
+          />
         </van-cell-group>
 
-        <div class="aui-content aui-text-center aui-margin-t-15" @click="postSumbit">
-          <div class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn">
+        <div
+          class="aui-content aui-text-center aui-margin-t-15"
+          @click="postSumbit"
+        >
+          <div
+            class="aui-btn aui-font-size-16 cblue-bg white-font button-height sumbit-btn"
+          >
             <span>提交</span>
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
-import { src, postApplyAnchor } from '../../index/services';
-import { Toast } from 'vant';
-import { Field } from 'vant';
+import PullTo from "vue-pull-to";
+import { src, postApplyAnchor } from "../../index/services";
+import { Toast } from "vant";
+import { Field } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       swiperOption: {
         slidesPerView: 2,
         slidesOffsetBefore: 20,
-        spaceBetween: 100,
+        spaceBetween: 100
       },
-      name: '',
-      mobile: '',
-      weixin: '',
-      info: '',
+      name: "",
+      mobile: "",
+      weixin: "",
+      info: "",
       src: src,
       isLoading: false,
       query: {
-        token: '',
+        token: "",
         page: 1,
         size: 10,
         id: 1
-      },
-
-    }
+      }
+    };
   },
   methods: {
     postSumbit() {
-
       // Toast.loading();
       postApplyAnchor({
-        token: this.$ls.get('token'),
+        token: this.$ls.get("token"),
         name: this.name,
         mobile: this.mobile,
         weixin: this.weixin,
-        info: this.info,
+        info: this.info
       }).then(rep => {
-
-
-        Toast.success("您的主播申请已提交，请保持通信畅通，工作人员将尽快与您联络");
+        Toast.success(
+          "您的主播申请已提交，请保持通信畅通，工作人员将尽快与您联络"
+        );
 
         setTimeout(() => {
           Toast.clear();
           this.onClickLeft();
-        }, 1000)
-      })
-
+        }, 1000);
+      });
     },
     onClickLeft() {
       this.$router.go(-1);
-    },
+    }
   },
   components: {
     PullTo
   },
-  mounted() {
-
-  }
-
-}
+  mounted() {}
+};
 </script>
 
 

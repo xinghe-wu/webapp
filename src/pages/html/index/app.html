@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"
-    />
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
     <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
     <title>听到</title>
 </head>
@@ -13,7 +13,29 @@
     <div id='app'>
     </div>
 </body>
+<script>
+    function keyListen() {
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            //双击退出
+            api.toast({
+                msg: '再按一次进入后台',
+                duration: 2000,
+                location: 'bottom'
+            });
+            api.addEventListener({
+                name: 'keyback'
+            }, function (ret, err) {
+                if (ret) {
+                    exitApp();
+                }
+            });
+            setTimeout(function () {
+                keyListen();
+            }, 5000);
+        });
+    }
+</script>
 
 </html>
-<style>
-</style>

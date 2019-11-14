@@ -1,48 +1,46 @@
 <template>
   <div class="my-subscribe-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" title="我的购买">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      title="VIP栏目"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <div class="aui-row kong">
-      <img class="img" src="../../../../assets/images/my/kong@3x.png">
+      <img class="img" src="../../../../assets/images/my/kong@3x.png" />
       <div class="title">
-        暂无购买记录
+        暂无VIP栏目记录
       </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
-
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
-
       subscribeList: [],
       columnList: [],
       query: {
-        token: '',
+        token: "",
         page: 1,
         size: 6,
         id: 1
       }
-    }
+    };
   },
   methods: {
     onClickLeft() {
       this.$router.go(-1);
     }
   },
-  mounted() {
-
-  }
-
-}
+  mounted() {}
+};
 </script>
 
 

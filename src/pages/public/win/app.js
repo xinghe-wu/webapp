@@ -1,7 +1,10 @@
 import 'assets/css/sm.min.css';
 
-import { fixStatusBar, getHeight } from 'public/public';
-window.apiready = function() {
+import {
+    fixStatusBar,
+    getHeight
+} from 'public/public';
+window.apiready = function () {
     var header = document.getElementById('header');
     var content = document.getElementById('content');
     fixStatusBar(header);
@@ -29,7 +32,7 @@ window.apiready = function() {
         //viewappear事件在ios中首次打开不会调用，在安卓使用以避免切换时加载frame造成卡顿。
         api.addEventListener({
             name: 'viewappear'
-        }, function(ret, err) {
+        }, function (ret, err) {
             if (pageload < 1) {
                 api.openFrame({
                     name: 'frame',
@@ -50,7 +53,7 @@ window.apiready = function() {
         });
     }
 
-    document.getElementById('back').addEventListener('tap', function() {
+    document.getElementById('back').addEventListener('tap', function () {
         api.closeWin();
     });
 }

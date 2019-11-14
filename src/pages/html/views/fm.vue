@@ -1,258 +1,261 @@
 <template>
-
-    <div class="view-fm" :class="{iPad: iPad}">
-        <van-nav-bar title="我的私人FM" :style="{'paddingTop':paddingTop}" @click-right="onShowList">
-            <span slot="right" class="header-button">
-                <img src="../../../assets/images/fmlist.png" slot="right" alt="">
-            </span>
-        </van-nav-bar>
-        <div class="container">
-            <swiper :options="swiperOption" ref="mySwiper" class="swiper-container">
-                <swiper-slide v-for="(n,index) in fm_list">
-                    <div class="content" :style="{backgroundImage:'url('+ src + n.img +')'}">
-                        <div class="toolbar">
-                            <a href="javascript:;">
-                                <!--<img src="../../../assets/images/ico_like@3x.png" alt="">-->
-                            </a>
-                            <a href="javascript:;" @click="onRemove(n.id,index)">
-                                <img src="../../../assets/images/ico_del_W@3x.png" alt="">
-                            </a>
-                        </div>
-                        <div class="time" v-show="index == active">
-                            <span class="now-text">{{current}}</span>
-                            <span class="total-text">{{duration}}</span>
-                        </div>
-                    </div>
-
-                </swiper-slide>
-            </swiper>
-
-            <div class="player-block">
-                <h5>
-                    {{info.name}}
-                </h5>
-                <!--<p>-->
-                <!--17:15 /周二-->
-                <!--</p>-->
-                <ul>
-                    <li>
-                        <a href="#" v-ripple class="tools-back" @click="onPrev">
-                            <img src="../../../assets/images/tools_back@3x.png" alt="">
-                        </a>
-                    </li>
-                    <li>
-                        <a v-ripple href="#" class="player-btn" @click="onChangeStatus">
-                            <img :src="play_src" alt="">
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" v-ripple class="tools-next" @click="onNext">
-                            <img src="../../../assets/images/tools_next@3x.png" alt="">
-                        </a>
-                    </li>
-                </ul>
-
+  <div class="view-fm" :class="{ iPad: iPad }">
+    <van-nav-bar
+      title="我的私人FM"
+      :style="{ paddingTop: paddingTop }"
+      @click-right="onShowList"
+    >
+      <span slot="right" class="header-button">
+        <img src="../../../assets/images/fmlist.png" slot="right" alt="" />
+      </span>
+    </van-nav-bar>
+    <div class="container">
+      <swiper :options="swiperOption" ref="mySwiper" class="swiper-container">
+        <swiper-slide v-for="(n, index) in fm_list">
+          <div
+            class="content"
+            :style="{ backgroundImage: 'url(' + src + n.img + ')' }"
+          >
+            <div class="toolbar">
+              <a href="javascript:;"> </a>
+              <a href="javascript:;" @click="onRemove(n.id, index)">
+                <img src="../../../assets/images/ico_del_W@3x.png" alt="" />
+              </a>
             </div>
-        </div>
+            <div class="time" v-show="index == active">
+              <span class="now-text">{{ current }}</span>
+              <span class="total-text">{{ duration }}</span>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper>
+
+      <div class="player-block">
+        <h5>
+          {{ info.name }}
+        </h5>
+
+        <ul>
+          <li>
+            <a href="#" v-ripple class="tools-back" @click="onPrev">
+              <img src="../../../assets/images/tools_back@3x.png" alt="" />
+            </a>
+          </li>
+          <li>
+            <a v-ripple href="#" class="player-btn" @click="onChangeStatus">
+              <img :src="play_src" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="#" v-ripple class="tools-next" @click="onNext">
+              <img src="../../../assets/images/tools_next@3x.png" alt="" />
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
 </template>
 <script>
-import { getVideo, src, delPrograms, fmSrc, getPath } from '../index/services';
-import { Toast, Dialog } from 'vant';
+import { getVideo, src, delPrograms, fmSrc, getPath } from "../index/services";
+import { Toast, Dialog } from "vant";
 
 export default {
-    store: ['paddingTop', 'token', 'interact_status', 'fm_playing', 'fm_list'],
-    data() {
-        let active = this.$ls.get('fm_active', 0);
-        return {
-            src: src,
-            swiperOption: {
-
-                effect: 'coverflow',
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflowEffect: {
-                    rotate: 0,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: false
-                },
-                on: {
-                    slideChange: (x) => {
-                        this.onChange();
-                    }
-                }
-            },
-            iPad: false,
-            info: {
-                "id": "",
-                "name": "",
-                "img": "",
-                "count": "1",
-                "brief": "",
-                "audio_link": "",
-                "play_time": 0,
-                "play_count": 0,
-                "position": 1
-            },
-            current: '00:00',
-            duration: '00:00',
-            active: active
-        }
-    },
-    watch: {
-        active(a) {
-            this.$ls.set('fm_active', a);
+  store: ["paddingTop", "token", "interact_status", "fm_playing", "fm_list"],
+  data() {
+    let active = this.$ls.get("fm_active", 0);
+    return {
+      src: src,
+      swiperOption: {
+        effect: "coverflow",
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: "auto",
+        coverflowEffect: {
+          rotate: 0,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: false
         },
-        fm_playing(b) {
-            if (b) {
-                this.onPlayer();
-            } else {
-                this.pausePlay();
-            }
-        }
-    },
-    methods: {
-        onChangeStatus() {
-            this.fm_playing = !this.fm_playing;
-        },
-        onPlayer() {
-            const audio = api.require('audioPlayer');
-
-            this.interact_status = 'play';
-            if (this.current == '00:00') {
-                audio.initPlayer({
-                    path: fmSrc + this.info.audio_link,
-                    cache: false
-                }, (ret, err) => {
-                    if (ret.duration) {
-                        this.duration = new Date(ret.duration * 1000).Format('mm:ss');
-                    }
-                });
-
-                audio.removeEventListener({ name: 'playing' })
-                audio.addEventListener({ name: 'playing' }, (ret) => {
-                    this.current = new Date(ret.current * 1000).Format('mm:ss');
-                })
-            } else {
-                audio.play();
-            }
-
-
-
-
-        },
-        pausePlay() {
-            const audio = api.require('audioPlayer');
-            audio.pause();
-        },
-        stopPlay() {
-            const audio = api.require('audioPlayer');
-            this.current = '00:00';
-            this.duration = '00:00';
-            audio.stop();
-        },
-        //            render(){
-        //                Toast.loading();
-        //                getVideo({token:this.token}).then( (rep)=>{
-        //                    this.list = rep;
-        //                    this.info = this.list[this.active];
-        //                    this.swiper.slideTo(this.active);
-        //                    Toast.clear();
-        //                })
-        //            },
-        onNext() {
-            this.swiper.slideNext();
+        on: {
+          slideChange: x => {
             this.onChange();
-        },
-        onPrev() {
-            this.swiper.slidePrev();
-            this.onChange();
-        },
-        onChange() {
-            setTimeout(() => {
-                this.info = this.fm_list[this.swiper.activeIndex];
-                this.active = this.swiper.activeIndex;
-                this.stopPlay();
-                //                    this.fm_playing = false;
-                //                    this.$nextTick(()=>{
-                //                        this.fm_playing = true;
-                //                    })
-                if (!this.fm_playing) {
-                    this.fm_playing = true;
-                } else {
-                    this.onPlayer();
-                }
+          }
+        }
+      },
+      iPad: false,
+      info: {
+        id: "",
+        name: "",
+        img: "",
+        count: "1",
+        brief: "",
+        audio_link: "",
+        play_time: 0,
+        play_count: 0,
+        position: 1
+      },
+      current: "00:00",
+      duration: "00:00",
+      active: active
+    };
+  },
+  watch: {
+    active(a) {
+      this.$ls.set("fm_active", a);
+    },
+    fm_playing(b) {
+      if (b) {
+        this.onPlayer();
+      } else {
+        this.pausePlay();
+      }
+    }
+  },
+  methods: {
+    onChangeStatus() {
+      this.fm_playing = !this.fm_playing;
+    },
+    onPlayer() {
+      const audio = api.require("audioPlayer");
 
-                //                    this.stopPlay();
-                //                    this.onPlayer();
-            }, 400)
-        },
-        onShowList() {
+      this.interact_status = "play";
+
+      if (this.current == "00:00") {
+        audio.initPlayer(
+          {
+            path: fmSrc + this.info.audio_link,
+            cache: false
+          },
+          (ret, err) => {
+            if (ret.duration) {
+              this.duration = new Date(ret.duration * 1000).Format("mm:ss");
+            }
+          }
+        );
+
+        audio.removeEventListener({ name: "playing" });
+        audio.addEventListener({ name: "playing" }, ret => {
+          this.current = new Date(ret.current * 1000).Format("mm:ss");
+        });
+      } else {
+        audio.play();
+      }
+    },
+    pausePlay() {
+      const audio = api.require("audioPlayer");
+      audio.pause();
+    },
+    stopPlay() {
+      const audio = api.require("audioPlayer");
+      this.current = "00:00";
+      this.duration = "00:00";
+      audio.stop();
+    },
+    //            render(){
+    //                Toast.loading();
+    //                getVideo({token:this.token}).then( (rep)=>{
+    //                    this.list = rep;
+    //                    this.info = this.list[this.active];
+    //                    this.swiper.slideTo(this.active);
+    //                    Toast.clear();
+    //                })
+    //            },
+    onNext() {
+      this.swiper.slideNext();
+      this.onChange();
+    },
+    onPrev() {
+      this.swiper.slidePrev();
+      this.onChange();
+    },
+    onChange() {
+      setTimeout(() => {
+        this.info = this.fm_list[this.swiper.activeIndex];
+        this.active = this.swiper.activeIndex;
+        this.stopPlay();
+        //                    this.fm_playing = false;
+        //                    this.$nextTick(()=>{
+        //                        this.fm_playing = true;
+        //                    })
+        if (!this.fm_playing) {
+          this.fm_playing = true;
+        } else {
+          this.onPlayer();
+        }
+
+        //                    this.stopPlay();
+        //                    this.onPlayer();
+      }, 400);
+    },
+    onShowList() {
+      this.stopPlay();
+      this.fm_playing = false;
+      this.$router.push("/fm-list");
+      // api.openWin({
+      //     name: 'fm-list',
+      //     url: getPath() + '/html/index.html?path=fm-list',
+      //     pageParam: {
+      //         token: this.token
+      //     }
+      // });
+    },
+    onRemove(id, index) {
+      Dialog.confirm({
+        title: "提示",
+        message: "确定删除您所选的节目吗？"
+      })
+        .then(() => {
+          Dialog.close();
+          Toast.loading();
+          delPrograms({ token: this.token, programIds: [id] }).then(rep => {
+            Toast.clear();
+            this.fm_list = this.fm_list.filter(l => l.id != id);
+            if (
+              this.active >= this.fm_list.length &&
+              this.fm_list.length != 0
+            ) {
+              this.active = this.fm_list.length - 1;
+            }
+            if (this.fm_list.length != 0) {
+              this.info = this.fm_list[this.active];
+            } else {
+              this.$emit("reload");
+            }
             this.stopPlay();
             this.fm_playing = false;
-            this.$router.push('/fm-list');
-            // api.openWin({
-            //     name: 'fm-list',
-            //     url: getPath() + '/html/index.html?path=fm-list',
-            //     pageParam: {
-            //         token: this.token
-            //     }
-            // });
-        },
-        onRemove(id, index) {
-            Dialog.confirm({
-                title: '提示',
-                message: '确定删除您所选的节目吗？'
-            }).then(() => {
-                Dialog.close();
-                Toast.loading();
-                delPrograms({ token: this.token, programIds: [id] }).then(rep => {
-                    Toast.clear();
-                    this.fm_list = this.fm_list.filter(l => l.id != id);
-                    if (this.active >= this.fm_list.length && this.fm_list.length != 0) {
-                        this.active = this.fm_list.length - 1;
-                    }
-                    if (this.fm_list.length != 0) {
-                        this.info = this.fm_list[this.active];
-                    } else {
-                        this.$emit('reload')
-
-                    }
-                    this.stopPlay();
-                    this.fm_playing = false;
-                    api.toast({ msg: "删除成功~" });
-                })
-
-            }).catch(() => {
-                // on cancel
-            });
-        }
-    },
-    mounted() {
-        if (this.fm_list && this.fm_list.length > 0) {
-
-            if (this.active >= this.fm_list.length) {
-                this.active = this.fm_list.length - 1;
-            }
-
-            this.info = this.fm_list[this.active];
-            this.swiper.slideTo(this.active);
-        }
-
-        this.iPad = api.deviceModel.indexOf('iPad') > -1;
-    },
-    computed: {
-        swiper() {
-            return this.$refs.mySwiper.swiper
-        },
-        play_src: function () {
-            return this.fm_playing ? require("../../../assets/images/bofang@3x.png") : require("../../../assets/images/tools_btn_pause.png");
-        }
+            api.toast({ msg: "删除成功~" });
+          });
+        })
+        .catch(() => {
+          // on cancel
+        });
     }
-}
+  },
+  mounted() {
+    if (this.fm_list && this.fm_list.length > 0) {
+      if (this.active >= this.fm_list.length) {
+        this.active = this.fm_list.length - 1;
+      }
+
+      this.info = this.fm_list[this.active];
+      this.swiper.slideTo(this.active);
+    }
+
+    this.iPad = api.deviceModel.indexOf("iPad") > -1;
+  },
+  computed: {
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    },
+    play_src: function() {
+      return this.fm_playing
+        ? require("../../../assets/images/tools_btn_pause.png")
+        : require("../../../assets/images/bofang@3x.png");
+    }
+  }
+};
 </script>
 
 <style lang="scss" type="text/scss" scoped>

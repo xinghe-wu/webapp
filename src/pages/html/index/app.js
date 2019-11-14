@@ -6,10 +6,12 @@ import routes from './router';
 import 'swiper/dist/css/swiper.css'
 import VueLocalStorage from 'vue-ls';
 import './tools';
-import Ripple from 'vue-ripple-directive';
-require('vue2-animate/dist/vue2-animate.min.css')
-// import '../../../assets/css/iconfont.css';
 import '../../../assets/css/aui.2.0.css';
+import Ripple from 'vue-ripple-directive';
+
+require('vue2-animate/dist/vue2-animate.min.css')
+
+
 import vueTouch from 'vue-plugin-touch';
 Vue.use(vueTouch);
 
@@ -47,16 +49,23 @@ Vue.use(Vant);
 let isFirst = true;
 
 router.beforeEach((to, from, next) => {
-    // alert(to.path)
+
     if (to.path == '/login') {
         return next();
     }
-
     return next();
-    // if(Vue.ls.get('token')) {
+
+
+    // if (Vue.ls.get('token')) {
+
     //     return next();
-    // }else{
-    //     return next('/login');
+    // } else {
+
+    //     // return next('/login');
+    //     if (to.path == '/login') {
+    //         return next();
+    //     }
+
     // }
 });
 
@@ -87,80 +96,104 @@ function GetQueryString(name) {
 
 window.apiready = function () {
 
+
+
     new Vue({
         router,
         el: '#app',
         data: {
             store: {
                 token: '',
-                paddingTop: api.systemType == 'ios' ? '20px' : '25px',
+                paddingTop: api.systemType == 'ios' ? '30px' : '30px',
                 interact_status: 'play',
                 fm_playing: false,
                 fm_list: []
             }
         },
-        // render: h => h(App),
-        template: `
-            <router-view></router-view>
-           `,
+        render: h => h(App),
+        // template: `
+
+        //  <router-view></router-view>
+
+        //    `,
 
         created() {
+            if (this.$ls.get("token")) {
 
-            // if (this.$ls.get("token")) {
-            //     this.store.token = this.$ls.get("token");
+                var path = GetQueryString('path');
 
-            var path = GetQueryString('path');
+                if (path) {
 
-            if (path) {
-                this.$router.replace('/' + path);
-            } else if (this.$route.path == '' || this.$route.path == '/') {
-                this.$router.push('/app');
+                    this.$router.replace('/' + path);
+                } else if (this.$route.path == '' || this.$route.path == '/') {
+                    this.$router.push('/app');
+                }
+                if (!this.store.token) {
+
+                    return this.$router.push('/login');
+                }
+            } else {
+                return this.$router.push('/login');
             }
-            // if (!this.store.token) {
 
-            //     return this.$router.push('/login');
-            // }
-            // }
+
+            api.setStatusBarStyle({
+                style: 'dark',
+                color: '#000'
+            });
 
             var ci = 0;
             var time1, time2;
             var self = this;
-            api.addEventListener({
-                name: 'keyback'
+            // api.addEventListener({
+            //     name: 'keyback'
+            // }, function (ret, err) {
+            //     const url = self.$route.path;
+            //     alert(JSON.stringify(url))
+            //     if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my' || url == '/login') {
+            //         alert("1")
+            //         time1 = new Date().getTime();
+            //         if (ci == 0) {
+            //             ci = 1;
+            //             api.toast({
+            //                 msg: '再按一次返回键退出1'
+            //             })
+
+            //         } else if (ci == 1) {
+            //             alert("2")
+            //             time2 = new Date().getTime();
+            //             if (time2 - time1 < 3000) {
+            //                 var audioPlayer = api.require('audioStreamer');
+            //                 audioPlayer.stop();
+            //                 api.closeWidget({
+            //                     id: api.appId,
+            //                     retData: {
+            //                         name: 'closeWidget'
+            //                     },
+            //                     silent: true
+            //                 });
+            //             } else {
+            //                 ci = 0;
+
+            //                 api.toast({
+            //                     msg: '再按一次返回键退出2'
+            //                 });
+            //             }
+            //         }
+            //     } else {
+            //         alert("3")
+            //         self.$router.go(-1) //返回
+            //     }
+            // })
+
+            const perms = ['camera', 'location', 'microphone', 'storage']
+            api.requestPermission({
+                list: perms,
+                code: 100001
             }, function (ret, err) {
-                const url = self.$route.path;
-                if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my') {
-                    time1 = new Date().getTime();
-                    if (ci == 0) {
-                        ci = 1;
-                        api.toast({
-                            msg: '再按一次返回键退出'
-                        })
 
-                    } else if (ci == 1) {
-                        time2 = new Date().getTime();
-                        if (time2 - time1 < 3000) {
-                            var audioPlayer = api.require('liveAudioPlayer');
-                            audioPlayer.stop();
-                            api.closeWidget({
-                                id: api.appId,
-                                retData: {
-                                    name: 'closeWidget'
-                                },
-                                silent: true
-                            });
-                        } else {
-                            ci = 0;
+            });
 
-                            api.toast({
-                                msg: '再按一次返回键退出'
-                            });
-                        }
-                    }
-                } else {
-                    self.$router.go(-1) //返回
-                }
-            })
 
         }
     })

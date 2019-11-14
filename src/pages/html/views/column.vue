@@ -1,30 +1,50 @@
 <template>
-    <div class="my-fm-list">
-        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft"  @click-right="onClickRight" left-arrow title="听到栏目"  >
-        </van-nav-bar>
-     
- <div class="content">
- <ul class="aui-list aui-media-list ad_list" v-for="(ad,index) in adList" :key="index" >
-  <li class="aui-list-item">
-              <div class="aui-media-list-item-inner ad-list-cont">
-                  <div class="aui-list-item-media">
-                    	<img src="../../../assets/images/radio/ad_list.png" class="ad_img">
-                  </div>
-                  <div class="aui-list-item-inner">
-                      <div class="aui-list-item-text">
-                          <div class="aui-list-item-title ad_title">{{ad.title}}</div>
-                      </div>
-                      <div class="aui-list-item-text  ad_cont">
-                        {{ad.cont}}
-                      </div>
-                        <img src="../../../assets/images/radio/enroll.png"  style="width:50px;"/>
-                        <img src="../../../assets/images/radio/ad_ing.png"  style="width:80px;"/>
-                  </div>
+  <div class="my-fm-list">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      @click-right="onClickRight"
+      left-arrow
+      title="听到栏目"
+    >
+    </van-nav-bar>
+
+    <div class="content">
+      <ul
+        class="aui-list aui-media-list ad_list"
+        v-for="(ad, index) in adList"
+        :key="index"
+      >
+        <li class="aui-list-item">
+          <div class="aui-media-list-item-inner ad-list-cont">
+            <div class="aui-list-item-media">
+              <img
+                src="../../../assets/images/radio/ad_list.png"
+                class="ad_img"
+              />
+            </div>
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-text">
+                <div class="aui-list-item-title ad_title">{{ ad.title }}</div>
               </div>
-          </li>
+              <div class="aui-list-item-text  ad_cont">
+                {{ ad.cont }}
+              </div>
+              <img
+                src="../../../assets/images/radio/enroll.png"
+                style="width:50px;"
+              />
+              <img
+                src="../../../assets/images/radio/ad_ing.png"
+                style="width:80px;"
+              />
+            </div>
+          </div>
+        </li>
       </ul>
-        </div>
     </div>
+  </div>
 </template>
 <style lang="scss" type="text/scss" >
 @import "../../../public/px2rem.scss";
@@ -195,112 +215,103 @@
 }
 </style>
 <script>
-import { getVideo, src, delPrograms } from '../index/services';
-import { Toast, Dialog } from 'vant';
+import { getVideo, src, delPrograms } from "../index/services";
+import { Toast, Dialog } from "vant";
 export default {
-    store: ['paddingTop', 'fm_list'],
-    data() {
-        return {
-            src: src,
-            select: [],
-            editable: false,
-            selectAll: false,
-            token: '',
-            adList: [
-                { title: '初秋的西湖你来吗', cont: '你见过初秋的西湖吗，不同于冬天别样的...' },
-                { title: '西湖之声特别节目播出时间投票', cont: '一档特别的节目，你想要他在哪个时间段...' },
-                { title: '蛇口海上世界文化艺术中心', cont: '带你看看蛇口海上世界文化艺术中心的魅...' },
-                { title: '亚马逊限时会员享八折', cont: '会员折上折限量礼品先到先得...' },
-                { title: '智能晾衣架五折抢购，精彩好礼相送', cont: '带你看看蛇口海上世界文化艺术中心的魅...' },
-                { title: '这个周末一起旅行吧', cont: '你多久没有出去散心了，来一场说走就走...' },
-                { title: '智能晾衣架五折抢购，精彩好礼相送', cont: '带你看看蛇口海上世界文化艺术中心的魅...' },
-                { title: '这个周末一起旅行吧', cont: '你多久没有出去散心了，来一场说走就走...' },
-            ]
-        }
+  store: ["paddingTop", "fm_list"],
+  data() {
+    return {
+      src: src,
+      select: [],
+      editable: false,
+      selectAll: false,
+      token: "",
+      adList: []
+    };
+  },
+  methods: {
+    refresh(loaded) {
+      setTimeout(() => {
+        loaded("done");
+      }, 2000);
     },
-    methods: {
-        refresh(loaded) {
-            setTimeout(() => {
-                loaded('done');
-            }, 2000)
-        },
-        onClickLeft() {
-            this.$router.go(-1);
-        },
-        hasSelect(id) {
-            return this.select.findIndex(s => s == id) > -1;
-        },
-        onSelect(id) {
-            if (this.editable) {
-                if (this.select.findIndex(s => s == id) == -1) {
-                    this.select.push(id);
-                } else {
-                    this.select = this.select.filter(s => s != id);
-                }
-            }
-            this.selectAll = false;
-        },
-        onSelectAll() {
-            if (!this.selectAll) {
-                this.select = this.fm_list.map(l => l.id);
-            } else {
-                this.select = [];
-            }
-            this.selectAll = !this.selectAll;
-        },
-        render() {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
+    hasSelect(id) {
+      return this.select.findIndex(s => s == id) > -1;
+    },
+    onSelect(id) {
+      if (this.editable) {
+        if (this.select.findIndex(s => s == id) == -1) {
+          this.select.push(id);
+        } else {
+          this.select = this.select.filter(s => s != id);
+        }
+      }
+      this.selectAll = false;
+    },
+    onSelectAll() {
+      if (!this.selectAll) {
+        this.select = this.fm_list.map(l => l.id);
+      } else {
+        this.select = [];
+      }
+      this.selectAll = !this.selectAll;
+    },
+    render() {
+      Toast.loading();
+      this.select = [];
+      this.editable = false;
+      this.selectAll = false;
+      getVideo({ token: this.token }).then(rep => {
+        this.fm_list = rep;
+        Toast.clear();
+      });
+    },
+    getTime(time) {
+      return new Date(time * 1000).Format("mm:ss");
+    },
+    onSave() {
+      this.editable = false;
+    },
+    onClickRight() {
+      if (!this.editable) {
+        this.editable = true;
+      } else {
+        this.$router.push("/openfm?type=select");
+      }
+    },
+    onRemove() {
+      if (this.select.length > 0) {
+        Dialog.confirm({
+          title: "提示",
+          message: "确定删除您所选的节目吗？"
+        })
+          .then(() => {
+            Dialog.close();
             Toast.loading();
-            this.select = [];
-            this.editable = false;
-            this.selectAll = false;
-            getVideo({ token: this.token }).then((rep) => {
-                this.fm_list = rep;
+
+            delPrograms({ token: this.token, programIds: this.select }).then(
+              rep => {
                 Toast.clear();
-            })
-        },
-        getTime(time) {
-            return new Date(time * 1000).Format('mm:ss');
-        },
-        onSave() {
-            this.editable = false;
-        },
-        onClickRight() {
-            if (!this.editable) {
-                this.editable = true;
-            } else {
-                this.$router.push('/openfm?type=select');
-            }
-        },
-        onRemove() {
-            if (this.select.length > 0) {
-                Dialog.confirm({
-                    title: '提示',
-                    message: '确定删除您所选的节目吗？'
-                }).then(() => {
-
-                    Dialog.close();
-                    Toast.loading();
-
-                    delPrograms({ token: this.token, programIds: this.select }).then(rep => {
-                        Toast.clear();
-                        api.toast({ msg: "删除成功~" });
-                        this.render();
-                        this.$ls.set("refresh", new Date().valueOf());
-                    })
-
-
-                }).catch(() => {
-                    // on cancel
-                });
-            } else {
-                api.toast({ msg: "您什么都没有选取~" });
-            }
-
-        }
-    },
-    mounted() {
-        this.token = api.pageParam.token;
-        this.render();
+                api.toast({ msg: "删除成功~" });
+                this.render();
+                this.$ls.set("refresh", new Date().valueOf());
+              }
+            );
+          })
+          .catch(() => {
+            // on cancel
+          });
+      } else {
+        api.toast({ msg: "您什么都没有选取~" });
+      }
     }
-}
+  },
+  mounted() {
+    this.token = api.pageParam.token;
+    this.render();
+  }
+};
 </script>

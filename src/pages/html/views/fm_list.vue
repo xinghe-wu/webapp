@@ -1,82 +1,94 @@
 <template>
-    <div class="my-fm-list">
-        <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" @click-right="onClickRight" left-arrow title="播放列表">
-            <a v-show="!editable" class="header-button" slot="right">编辑</a>
+  <div class="my-fm-list">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      @click-right="onClickRight"
+      left-arrow
+      title="播放列表"
+    >
+      <a v-show="!editable" class="header-button" slot="right">编辑</a>
 
-            <a href="javascript:;" class="header-button2" slot="right" v-show="editable">
-                <img src="../../../assets/images/icon_add.png" alt="">
-            </a>
+      <a
+        href="javascript:;"
+        class="header-button2"
+        slot="right"
+        v-show="editable"
+      >
+        <img src="../../../assets/images/icon_add.png" alt="" />
+      </a>
+    </van-nav-bar>
 
-        </van-nav-bar>
-        <div class="edit-toolbar" v-show="editable">
-            <div class="circle" @click="onSelectAll">
-                <van-icon :name="selectAll?'checked':'check'"></van-icon>
-            </div>
-            <div class="btns">
-                <a href="javascript:;" class="btn-remove" @click="onRemove">
-                    <van-icon name="delete"></van-icon>
-                    删除</a>
-                <a href="javascript:;" @click="onSave" class="btn-ok">完成</a>
-            </div>
-        </div>
-        <!-- <div class="content">
-                <ul class="list">
-                    <li class="item" v-for="(l,index) in fm_list" @click="onSelect(l.id)" >
-                        <div class="index">
-                            <span v-show="!editable">{{index +1}}</span>
-                            <van-icon v-show="editable" :name="hasSelect(l.id)?'checked':'check'"></van-icon>
-                        </div>
-                        <div class="info">
-                            <h5>{{l.name}}</h5>
-                            <p>{{l.radio_name}}</p>
-                        </div>
-                        <div class="time">
-
-                            {{getTime(l.play_time)}}
-                        </div>
-                    </li>
-                </ul>
-        </div> -->
-
-        <!-- <pull-to :top-load-method="refresh"> -->
-        <div class="aui-content aui-margin-b-15 ">
-            <ul class="aui-list aui-media-list follow-list" v-for="(l,index) in fm_list" @click="onSelect(l.id)">
-
-                <li class="aui-list-item aui-list-item-middle">
-                    <div class="aui-media-list-item-inner">
-                        <span v-show="!editable">{{index +1}}</span>
-                        <van-icon v-show="editable" :name="hasSelect(l.id)?'checked':'check'"></van-icon>
-                        <div class="aui-list-item-media" style="width: 4rem;">
-                            <img :src="src + l.img" class="aui-img-round aui-list-img-sm anchor-head">
-                        </div>
-                        <div class="aui-list-item-inner all-ancho-list-inner">
-                            <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14 name">{{l.name}}</div>
-                                <div class="aui-list-item-right">
-                                    <div v-if="l.free===1" class="btn-follow">￥{{l.price}}</div>
-                                    <div v-else class=" btn" @click="compereFollow(d.id)">
-                                        <span>免费</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="aui-list-item-text cont">
-                                {{l.brief}}
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-            </ul>
-
-        </div>
-        <!-- </pull-to> -->
+    <div class="edit-toolbar" v-show="editable">
+      <div class="circle" @click="onSelectAll">
+        <van-icon :name="selectAll ? 'checked' : 'check'"></van-icon>
+      </div>
+      <div class="btns">
+        <a href="javascript:;" class="btn-remove" @click="onRemove">
+          <van-icon name="delete"></van-icon>
+          删除</a
+        >
+        <a href="javascript:;" @click="onSave" class="btn-ok">完成</a>
+      </div>
     </div>
+
+    <pull-to :bottom-load-method="refresh">
+      <div class="aui-row kong" v-if="fm_list1.length == 0">
+        <img class="img" src="../../../assets/images/my/kong@3x.png" />
+        <div class="title">
+          暂无私人台栏目
+        </div>
+      </div>
+
+      <div class="aui-content aui-margin-b-15 ">
+        <ul
+          class="aui-list aui-media-list follow-list"
+          v-for="(l, index) in fm_list1"
+          @click="onSelect(l.id)"
+        >
+          <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+              <span v-show="!editable" @click="sote(l.id)">{{
+                index + 1
+              }}</span>
+              <van-icon
+                v-show="editable"
+                :name="hasSelect(l.id) ? 'checked' : 'check'"
+              ></van-icon>
+              <div class="aui-list-item-media" style="width: 4rem;">
+                <img
+                  :src="src + l.img"
+                  class="aui-img-round aui-list-img-sm anchor-head"
+                />
+              </div>
+              <div class="aui-list-item-inner all-ancho-list-inner">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-14 name">
+                    {{ l.name }}
+                  </div>
+                  <div class="aui-list-item-right" v-if="l.free === 1">
+                    <div class="btn-follow">￥{{ l.money }}</div>
+                  </div>
+                </div>
+                <div class="aui-list-item-text cont">
+                  {{ l.brief }}
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </pull-to>
+  </div>
 </template>
 <style lang="scss" type="text/scss" >
 @import "../../../public/px2rem.scss";
 .my-fm-list {
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
+
+  padding-bottom: px2rem(90);
 
   .van-hairline--top-bottom::after {
     border-width: 0;
@@ -211,6 +223,20 @@
     }
   }
 
+  .kong {
+    padding-bottom: px2rem(50);
+    text-align: center;
+    .img {
+      width: px2rem(400);
+      height: px2rem(290);
+    }
+    .title {
+      color: #646261;
+      font-size: px2rem(28);
+      text-align: center;
+      font-weight: bold;
+    }
+  }
   .content {
     overflow-y: auto;
     padding-bottom: px2rem(188);
@@ -282,137 +308,159 @@
 }
 </style>
 <script>
-import { getVideo, src, delPrograms, getColumn, postcolumnDel, getColumnDel } from '../index/services';
-import { Toast, Dialog } from 'vant';
-import PullTo from 'vue-pull-to';
+import {
+  getVideo,
+  src,
+  delPrograms,
+  getColumn,
+  postcolumnDel,
+  getColumnDel,
+  getColumnLike,
+  postcolumnLikePostion,
+  getColumnParam
+} from "../index/services";
+import { Toast, Dialog } from "vant";
+import PullTo from "vue-pull-to";
 export default {
-    store: ['paddingTop', 'fm_list'],
-    data() {
-        return {
-            src: src,
-            select: [],
-            editable: false,
-            selectAll: false,
-            token: '',
-            query: {
-                token: "",
-                page: 1,
-                size: 10,
-                id: 1
-            }
+  store: ["paddingTop", "fm_list"],
+  data() {
+    return {
+      src: src,
+      select: [],
+      fm_list1: [],
+      editable: false,
+      selectAll: false,
+      token: "",
+      query: {
+        token: "",
+        page: 1,
+        size: 10,
+        id: 1
+      }
+    };
+  },
+  methods: {
+    refresh(loaded) {
+      setTimeout(() => {
+        loaded("done");
+      }, 2000);
+    },
+    onClickLeft() {
+      this.$router.replace("/index/fm");
+    },
+    hasSelect(id) {
+      return this.select.findIndex(s => s == id) > -1;
+    },
+    onSelect(id) {
+      if (this.editable) {
+        if (this.select.findIndex(s => s == id) == -1) {
+          this.select.push(id);
+        } else {
+          this.select = this.select.filter(s => s != id);
         }
+      }
+      this.selectAll = false;
     },
-    methods: {
-        refresh(loaded) {
-            setTimeout(() => {
-                loaded('done');
-            }, 2000)
-        },
-        onClickLeft() {
-            // api.closeWin();
-            window.history.back();
-        },
-        hasSelect(id) {
-            return this.select.findIndex(s => s == id) > -1;
-        },
-        onSelect(id) {
-            if (this.editable) {
-                if (this.select.findIndex(s => s == id) == -1) {
-                    this.select.push(id);
-                } else {
-                    this.select = this.select.filter(s => s != id);
-                }
-            }
-            this.selectAll = false;
-        },
-        onSelectAll() {
-            if (!this.selectAll) {
-                this.select = this.fm_list.map(l => l.id);
-            } else {
-                this.select = [];
-            }
-            this.selectAll = !this.selectAll;
-        },
-        render() {
-            Toast.loading();
-            this.select = [];
-            this.editable = false;
-            this.selectAll = false;
-            // getVideo({ token: this.token }).then((rep) => {
-            //     this.fm_list = rep;
-            //     Toast.clear();
-            // })
-            this.query.token = this.$ls.get('token')
-            getColumnDel(this.query).then(rep => {
-                this.fm_list = rep.data;
-                Toast.clear();
-            })
-
-
-        },
-        getColumnDel() {
-            getColumnDel(this.query).then(rep => {
-                // alert(JSON.stringify(rep))
-            })
-        },
-        getTime(time) {
-            return new Date(time * 1000).Format('mm:ss');
-        },
-        onSave() {
-            this.editable = false;
-        },
-        onClickRight() {
-            if (!this.editable) {
-                this.editable = true;
-            } else {
-                // this.$router.push('/openfm?type=select');
-
-                this.$router.push('/radio/tag');
-
-            }
-        },
-        onRemove() {
-            if (this.select.length > 0) {
-                Dialog.confirm({
-                    title: '提示',
-                    message: '确定删除您所选的节目吗？'
-                }).then(() => {
-
-                    Dialog.close();
-                    Toast.loading();
-
-                    // delPrograms({ token: this.token, programIds: this.select }).then(rep => {
-                    //     Toast.clear();
-                    //     api.toast({ msg: "删除成功~" });
-                    //     this.render();
-                    //     this.$ls.set("refresh", new Date().valueOf());
-                    // })
-
-
-                    postcolumnDel({ token: this.$ls.get('token'), coumnIds: this.select }).then(rep => {
-                        Toast.clear();
-                        api.toast({ msg: "删除成功~" });
-                        this.render();
-                        this.$ls.set("refresh", new Date().valueOf());
-                    })
-
-
-
-                }).catch(() => {
-                    // on cancel
-                });
-            } else {
-                api.toast({ msg: "您什么都没有选取~" });
-            }
-
-        }
+    onSelectAll() {
+      if (!this.selectAll) {
+        this.select = this.fm_list1.map(l => l.id);
+      } else {
+        this.select = [];
+      }
+      this.selectAll = !this.selectAll;
     },
-    components: {
-        PullTo
+    render() {
+      Toast.loading();
+      this.select = [];
+      this.editable = false;
+      this.selectAll = false;
+      // getVideo({ token: this.token }).then((rep) => {
+      //     this.fm_list = rep;
+      //     Toast.clear();
+      // })
+      this.query.token = this.$ls.get("token");
+      getColumnLike(this.query).then(rep => {
+        this.fm_list1 = rep.data;
+
+        getColumnParam({ token: this.$ls.get("token") }).then(rep => {
+          this.fm_list = rep;
+        });
+
+        Toast.clear();
+      });
     },
-    mounted() {
-        this.token = this.$ls.get('token')
+    getColumnDel() {
+      getColumnDel(this.query).then(rep => {
+        // alert(JSON.stringify(rep))
+      });
+    },
+    getTime(time) {
+      return new Date(time * 1000).Format("mm:ss");
+    },
+    onSave() {
+      this.editable = false;
+    },
+    onClickRight() {
+      if (!this.editable) {
+        this.editable = true;
+      } else {
+        // this.$router.push('/radio/tag');
+        this.$router.push("/fm-list-select");
+      }
+    },
+    sote(coumnId) {
+      postcolumnLikePostion({
+        token: this.$ls.get("token"),
+        coumnId: coumnId
+      }).then(rep => {
+        Toast.clear();
+        api.toast({ msg: "置顶成功~" });
         this.render();
+        this.$ls.set("refresh", new Date().valueOf());
+        this.render();
+      });
+    },
+    onRemove() {
+      if (this.select.length > 0) {
+        Dialog.confirm({
+          title: "提示",
+          message: "确定删除您所选的节目吗？"
+        })
+          .then(() => {
+            Dialog.close();
+            Toast.loading();
+
+            // delPrograms({ token: this.token, programIds: this.select }).then(rep => {
+            //     Toast.clear();
+            //     api.toast({ msg: "删除成功~" });
+            //     this.render();
+            //     this.$ls.set("refresh", new Date().valueOf());
+            // })
+
+            postcolumnDel({
+              token: this.$ls.get("token"),
+              coumnIds: this.select
+            }).then(rep => {
+              Toast.clear();
+              api.toast({ msg: "删除成功~" });
+              this.render();
+              this.$ls.set("refresh", new Date().valueOf());
+            });
+          })
+          .catch(() => {
+            // on cancel
+          });
+      } else {
+        api.toast({ msg: "您什么都没有选取~" });
+      }
     }
-}
+  },
+  components: {
+    PullTo
+  },
+  mounted() {
+    this.token = this.$ls.get("token");
+    this.render();
+  }
+};
 </script>

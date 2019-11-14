@@ -1,67 +1,71 @@
 <template>
-<div class="radio-tag-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="radio-tag-view">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+    >
+      <!-- <van-icon name="arrow-left" slot="left" style="color:#292726"/> -->
     </van-nav-bar>
 
-<div class="brief">
-       <div class="aui-row">
-         <div class="aui-col-xs-12 title">
-             挑选你感兴趣的标签
-       </div>
+    <div class="brief">
+      <div class="aui-row">
+        <div class="aui-col-xs-12 title">
+          挑选你感兴趣的标签
+        </div>
       </div>
 
       <div class="aui-row">
         <div class="aui-col-xs-12 cont">
-            我们将努力推荐你更感兴趣的内容
+          我们将努力推荐你更感兴趣的内容
+        </div>
       </div>
-     </div>
-</div>
+    </div>
 
-      <!-- <div class="aui-row">
+    <!-- <div class="aui-row">
             <div class="aui-col-xs-4" v-for="t in tags">
                <img :src="src + t.pic" class="img">
                 <div class="aui-grid-label cont"> {{t.key_word}}</div>
             </div>
        </div> -->
-            <div class="tags-block">
-                    <ul>
-                        <li :class="{active:hasSelect(t.id)}" v-for="t in tags">
-                            <a href="#" @click="onSelect(t.id)">
-                                <div>
-                                    <img :src="src + t.pic" alt="">
-                                    <i class="van-icon van-icon-success"></i>
-                                </div>
-                                <p>
-                                    {{t.key_word}}
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-              </div>
+    <div class="tags-block">
+      <ul>
+        <li :class="{ active: hasSelect(t.id) }" v-for="t in tags">
+          <a href="#" @click="onSelect(t.id)">
+            <div>
+              <img :src="src + t.pic" alt="" />
+              <i class="van-icon van-icon-success"></i>
+            </div>
+            <p>
+              {{ t.key_word }}
+            </p>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-      <div class="btn-block">
-      <div class="aui-btn aui-btn-block tag-open-btn" @click="onPost">开启私人电台</div>
+    <div class="btn-block">
+      <div class="aui-btn aui-btn-block tag-open-btn" @click="onPost">
+        开启私人电台
       </div>
-
-</div>
-  
+    </div>
+  </div>
 </template>
 
 <script>
-import { getTags, src, postTags } from '../../index/services';
-import { Toast } from 'vant';
+import { getTags, src, postTags } from "../../index/services";
+import { Toast } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
-      type: 'open',
+      type: "open",
       tags: [],
       src: src,
       selectTags: [],
       iPad: false
-    }
+    };
   },
   methods: {
     onClickLeft() {
@@ -83,7 +87,7 @@ export default {
     render() {
       getTags({ token: this.token }).then(rep => {
         this.tags = rep.data;
-      })
+      });
     },
     onPost() {
       if (this.selectTags.length == 0) {
@@ -94,21 +98,15 @@ export default {
         tags: this.selectTags,
         token: this.token
       }).then(rep => {
-
-
-        // this.$router.go(-1);
-
-
-        this.$router.replace("/fm-list");
-        Toast.success("设置成功")
-        // if(this.$route.query.type) {
-        //     this.$router.replace("/fm-list");
-        // }else{
-        //     this.$emit('change','fm');
+        Toast.success("设置成功");
+        this.$emit("change", "fm");
+        // this.$router.go(-2);
+        // if (this.$route.query.type) {
+        //   this.$router.replace("/fm-list");
+        // } else {
+        //   this.$emit("change", "fm");
         // }
-
-      })
-
+      });
     }
   },
   created() {
@@ -118,9 +116,9 @@ export default {
   },
   mounted() {
     this.render();
-    this.iPad = api.deviceModel.indexOf('iPad') > -1;
+    this.iPad = api.deviceModel.indexOf("iPad") > -1;
   }
-}
+};
 </script>
 
 

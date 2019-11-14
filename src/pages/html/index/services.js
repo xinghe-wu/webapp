@@ -2,8 +2,8 @@ import axios from 'axios';
 import {
     Toast
 } from 'vant';
-const ip = 'http://www.tingdaoapp.com';
-//const ip = 'http://192.168.1.103:8080'
+//const ip = 'http://www.tingdaoapp.com';
+const ip = 'http://192.168.0.103:8080'
 export const base = `${ip}/api`;
 export const src = `${ip}/static/upload/`;
 export const fmSrc = `${ip}/audio/`;
@@ -12,8 +12,10 @@ export const getPath = () => {
     if ('prod' == 'development') {
         return '';
     } else {
+        ˆˆ
         return api.wgtRootDir + '/dist';
     }
+    ˆ
 }
 
 var instance = axios.create({
@@ -38,10 +40,16 @@ export const login = (params) => instance.post(`/member/mobile/login`, params);
 export const loginByWx = (params) => instance.post(`/member/login`, params);
 export const getUserInfo = token => instance.get(`/member/${token}`);
 export const getUserMsg = token => instance.get(`/member/msg/${token}`);
+export const postUserMsgDel = (params) => instance.post(`/member/msg/del`, params);
+
 export const getSubscribes = token => instance.get(`/member/subscribe/${token}`);
 
 export const postSubscribes = (params) => instance.post(`/member/subscribe`, params);
 export const postcolumnDel = (params) => instance.post(`/member/columnDel`, params);
+export const postcolumnLike = (params) => instance.post(`/member/columnLike`, params);
+export const postcolumnLikePostion = (params) => instance.post(`/member/columnLike/postion
+`, params);
+
 export const getMsg = token => instance.get(`/member/getMsg/${token}`);
 
 export const getProgramListen = token => instance.get(`/member/programListen/${token}`);
@@ -50,11 +58,22 @@ export const postProgram = (params) => instance.post(`/member/programListen`, pa
 export const getVideo = (params) => instance.get(`/radio`, {
     params
 });
+export const getColumnParam = (params) => instance.get(`/column_param`, {
+    params
+});
+
+
+
 export const getRadioList = (params) => instance.get(`/radioList`, {
     params
 });
 export const getVideoDetail = (id) => instance.get(`/radio/${id}`);
 export const postVoice = params => instance.post('/radio/voice', params);
+
+export const getVoice = (id) => instance.get(`/radio/vote/${id}`);
+
+export const postInfo = params => instance.post('/radio/info', params);
+
 export const getPush = (id) => instance.get(`/radio/activity/${id}`);
 export const joinActivity = (params) => instance.post(`/radio/activity/join`, params);
 export const getMyActivity = (params) => instance.get(`/radio/activity/join`, {
@@ -67,9 +86,18 @@ export const getActivity = (params) => instance.get(`/radio/activity`, {
 export const getColumn = (params) => instance.get(`/radio/column`, {
     params
 });
+
+export const getColumnById = (params) => instance.get(`/radio/column/id`, {
+    params
+});
+
 export const getColumnDel = (params) => instance.get(`/radio/columnDel`, {
     params
 });
+export const getColumnLike = (params) => instance.get(`/radio/columnLike`, {
+    params
+});
+
 
 
 export const getProgram = (params) => instance.get(`/radio/program`, {
@@ -84,7 +112,7 @@ export const getCode = (params) => instance.get(`/member/code`, {
     params
 });
 
-export const postApplyAnchor = (params) => instance.post(`/radio/applyAnchor`, params);
+export const postmemberEdit = (params) => instance.post(`/radio/compereEdit`, params);
 
 
 export const getTags = (params) => instance.get(`/radio/tags`, {
@@ -146,8 +174,15 @@ export const getInfos = (params) => instance.get(`/radio/info`, {
     params
 });
 
+export const getMsgZan = (params) => instance.get(`/member/msgZan`, {
+    params
+});
+
 export const getInfoComment = (params) => instance.get(`/radio/infoComment`, {
     params
 });
 export const postInfoComment = (params) => instance.post(`/radio/infoComment`, params);
 export const postInfoZan = (params) => instance.post(`/radio/infoZan`, params);
+export const postInfoDel = (params) => instance.post(`/radio/infoDel`, params);
+
+export const getPayCreate = (params) => instance.post(`/radio/payCreate`, params);

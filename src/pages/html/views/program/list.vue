@@ -1,123 +1,85 @@
 <template>
   <div>
-
     <div class="header">
-
       <div class="aui-row title">
         <div class="aui-col-xs-1" @click="onClickLeft()">
-          <van-icon name="arrow-left" />
+          <van-icon name="arrow-left" style="margin-left: 12px;" />
         </div>
 
         <div class="aui-col-xs-9">
           &nbsp
         </div>
 
-        <div class="aui-col-xs-2">
-
-          <div class="btn" v-show="column.subscribe===1" @click="postSubscribes(column.id)">已订阅</div>
-          <div class="btn-follow" @click="postSubscribes(column.id)" v-show="column.subscribe===0">订阅</div>
+        <div class="aui-col-xs-2" v-show="column.free == 0">
+          <div
+            class="btn"
+            v-show="column.subscribe === 1"
+            @click="postSubscribes(column.id)"
+          >
+            已订阅
+          </div>
+          <div
+            class="btn-follow"
+            @click="postSubscribes(column.id)"
+            v-show="column.subscribe === 0"
+          >
+            订阅
+          </div>
         </div>
       </div>
 
       <div class="egret-flex-item musiclistprofile">
-
         <div class="egret-flex-item-shelf">
-          <div class="title">{{column.name}}</div>
-          <div class="cont">{{column.brief}}</div>
-
+          <div class="title">{{ column.name }}</div>
+          <div class="cont">{{ column.brief }}</div>
         </div>
       </div>
       <div class="userinfo">
-        <div class="userinfocol01 userinfocol br" tapmode="toolhover" @click="zan()" data-click="0">
-          <div class="info"><img src="../../../../assets/images/ico_like@3x.png" alt="" class="like-img"></div>
-          <div class="num">{{num}}</div>
-        </div>
-        <div class="userinfocol02 userinfocol br" tapmode="toolhover" @click="commentsClick">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclistcommet.png" alt=""></div>
-          <div class="num">{{column.comments}}</div>
-        </div>
-        <div class="userinfocol03 userinfocol br" tapmode="toolhover" @click="openShare">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclistshare.png" alt=""></div>
-          <div class="num">{{column.shares}}</div>
-        </div>
-        <div class="userinfocol03 userinfocol" tapmode="toolhover">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclistdown.png" alt=""></div>
-          <div class="num">下载</div>
-        </div>
-      </div>
-
-    </div>
-    <div v-if="freeShow">
-      <!-- 2 播放全部 -->
-      <div class="egret-flex-item isolateitem-bottom playall" tapmode="allplayhover">
-        <!-- <div class="egret-flex-item-logo">
-		<img src="../../../../assets/images/musiclist/musiclistplay.png" alt="" class="">
-	</div> -->
-        <div class="egret-flex-item-shelf">
-          <div class="egret-flex-item-shelf03">共{{num}}期
-            <span class="totalnum">已更新完成</span>
+        <div
+          class="userinfocol01 userinfocol br"
+          tapmode="toolhover"
+          @click="zan(column.id)"
+          data-click="0"
+        >
+          <div class="info">
+            <img
+              src="../../../../assets/images/ico_like@3x.png"
+              alt=""
+              class="like-img"
+            />
           </div>
+          <div class="num">{{ column.zans }}</div>
         </div>
-        <div class="egret-flex-item-arrow">
-          <img src="../../../../assets/images/musiclist/musiclistplayarrow.png" alt="" class="">
-          <span class="title">排序</span>
-        </div>
-      </div>
-
-      <!-- 3  -->
-
-      <div class="egret-flex-item musiclist-item" v-for="(p,index) in programList" :key="index">
-        <div class="egret-flex-item-logo">
-          {{p.count}}
-        </div>
-        <div class="egret-flex-item-abright" @click="playClick(p)">
-          <div class="egret-flex-item-shelf">
-            <div class="egret-flex-item-shelf01">{{p.name}}</div>
-
-            <div class="egret-flex-item-shelf02">
-
-              <van-tag plain type="primary" v-if="column.free==1" style="margin-right:10px">试听</van-tag>
-
-              <span class="title">{{formatDateTime(p.create_time)}}</span>
-              <img src="../../../../assets/images/radio/shijian@2x.png" alt="" class="shijian">
-              <span class="title">{{formatSeconds(p.play_time)}}</span>
-              <img src="../../../../assets/images/radio/bofang@2x.png" alt="" class="shijian">
-              <span class="title">{{p.play_count}}</span>
-            </div>
-            <!-- <div class="egret-flex-item-shelf02" style="display:inline">{{formatDateTime(p.create_time)}}</div> -->
+        <div
+          class="userinfocol02 userinfocol br"
+          tapmode="toolhover"
+          @click="commentsClick"
+        >
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclistcommet.png"
+              alt=""
+            />
           </div>
-          <div class="egret-flex-item-arrow">
-            <img src="../../../../assets/images/ico_more@3x.png" alt="" class="toobarimg" @click="expandlist(0, this)">
+          <div class="num">{{ column.comments }}</div>
+        </div>
+        <div
+          class="userinfocol03 userinfocol br"
+          tapmode="toolhover"
+          @click="openShare"
+        >
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclistshare.png"
+              alt=""
+            />
           </div>
+          <div class="num">{{ column.shares }}</div>
         </div>
       </div>
-      <div class="musiclist-item-tool" data-click='0'>
-        <div class="userinfocol" tapmode="toolhover" @click="">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
-          <div class="num">收藏</div>
-        </div>
-        <div class="userinfocol" tapmode="toolhover" @click="downloadMusic()">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool01.png" alt=""></div>
-          <div class="num">下载</div>
-        </div>
-        <div class="userinfocol" tapmode="toolhover" @click="openMusiclistshare()">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool03.png" alt=""></div>
-          <div class="num">分享</div>
-        </div>
-        <div class="userinfocol" tapmode="toolhover">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool04.png" alt=""></div>
-          <div class="num">歌手</div>
-        </div>
-        <div class="userinfocol" tapmode="toolhover">
-          <div class="info"><img src="../../../../assets/images/musiclist/musiclisttool05.png" alt=""></div>
-          <div class="num">专辑</div>
-        </div>
-
-      </div>
-
     </div>
 
-    <div v-else>
+    <div v-if="!freeShow">
       <div class="radius">
         <div class="listen">
           <div class="title">
@@ -134,22 +96,143 @@
             <div class="aui-col-xs-5 audition">
               <div class="aui-row ">
                 <div class="aui-col-xs-5" style="text-align:right">
-                  <img src="../../../../assets/images/radio/audition.png">
+                  <img src="../../../../assets/images/radio/audition.png" />
                 </div>
                 <div class="aui-col-xs-7 free-btn" @click="freeListen">
                   <div style="color:#FF5F53;">免费试听</div>
                 </div>
               </div>
             </div>
-            <div class="aui-col-xs-7 buy">
-              <span style="color:#fff">购买：{{column.price}}</span>
+            <div class="aui-col-xs-7 buy" @click="buy(column.id)">
+              <span style="color:#fff">购买：{{ column.money }}</span>
             </div>
           </div>
-
         </div>
+      </div>
+    </div>
 
+    <div v-if="freeShow">
+      <!-- 2 播放全部 -->
+      <div
+        class="egret-flex-item isolateitem-bottom playall"
+        tapmode="allplayhover"
+      >
+        <div class="egret-flex-item-shelf">
+          <div class="egret-flex-item-shelf03">
+            共{{ num }}期
+            <span class="totalnum">已更新完成</span>
+          </div>
+        </div>
+        <div class="egret-flex-item-arrow">
+          <!-- <img
+            src="../../../../assets/images/musiclist/musiclistplayarrow.png"
+            alt=""
+            class=""
+          /> -->
+          <!-- <span class="title">排序</span> -->
+        </div>
       </div>
 
+      <!-- 3  -->
+
+      <div
+        class="egret-flex-item musiclist-item"
+        v-for="(p, index) in programList"
+        :key="index"
+      >
+        <div class="egret-flex-item-logo">
+          {{ p.count }}
+        </div>
+        <div class="egret-flex-item-abright" @click="playClick(p)">
+          <div class="egret-flex-item-shelf">
+            <div class="egret-flex-item-shelf01">{{ p.name }}</div>
+
+            <div class="egret-flex-item-shelf02">
+              <van-tag
+                plain
+                type="primary"
+                v-if="column.free == 1"
+                style="margin-right:10px"
+                >试听</van-tag
+              >
+
+              <span class="title">{{ formatDateTime(p.create_time) }}</span>
+              <img
+                src="../../../../assets/images/radio/shijian@2x.png"
+                alt=""
+                class="shijian"
+              />
+              <span class="title">{{ formatSeconds(p.play_time) }}</span>
+              <img
+                src="../../../../assets/images/radio/bofang@2x.png"
+                alt=""
+                class="shijian"
+              />
+              <span class="title">{{ p.play_count }}</span>
+            </div>
+            <!-- <div class="egret-flex-item-shelf02" style="display:inline">{{formatDateTime(p.create_time)}}</div> -->
+          </div>
+          <div class="egret-flex-item-arrow">
+            <img
+              src="../../../../assets/images/ico_more@3x.png"
+              alt=""
+              class="toobarimg"
+              @click="expandlist(0, this)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="musiclist-item-tool" data-click="0">
+        <div class="userinfocol" tapmode="toolhover">
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclisttool01.png"
+              alt=""
+            />
+          </div>
+          <div class="num">收藏</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover" @click="downloadMusic()">
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclisttool01.png"
+              alt=""
+            />
+          </div>
+          <div class="num">下载</div>
+        </div>
+        <div
+          class="userinfocol"
+          tapmode="toolhover"
+          @click="openMusiclistshare()"
+        >
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclisttool03.png"
+              alt=""
+            />
+          </div>
+          <div class="num">分享</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover">
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclisttool04.png"
+              alt=""
+            />
+          </div>
+          <div class="num">歌手</div>
+        </div>
+        <div class="userinfocol" tapmode="toolhover">
+          <div class="info">
+            <img
+              src="../../../../assets/images/musiclist/musiclisttool05.png"
+              alt=""
+            />
+          </div>
+          <div class="num">专辑</div>
+        </div>
+      </div>
     </div>
 
     <div class="floatbox" v-show="isShow">
@@ -160,47 +243,51 @@
           <div class="swiper-slide">
             <table id="section02">
               <tr>
-                <td class=" ">
-                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div>
-                  <div class="section2title">微信</div>
+                <td class=" " @click="weixin('session')">
+                  <div class="section2ico">
+                    <img
+                      src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="section2title">微信好友</div>
                 </td>
                 <td class=" ">
-                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/logo.png" alt=""></div>
+                  <div class="section2ico" @click="weixin('timeline')">
+                    <img
+                      src="../../../../assets/images/frame04cover/cm2_mlogo2_weixin.png"
+                      alt=""
+                    />
+                  </div>
                   <div class="section2title">微信朋友圈</div>
                 </td>
-                <td class="">
-                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div>
-                  <div class="section2title">QQ好友</div>
-                </td>
-                <td class="">
-                  <div class="section2ico"><img src="../../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div>
-                  <div class="section2title">QQ空间</div>
-                </td>
-              </tr>
-              <tr>
-
+                <td class=" "></td>
               </tr>
             </table>
           </div>
-
         </div>
-
       </div>
       <div class="cancelbtn" tapmode="" @click="closeShare">取消</div>
     </div>
-
   </div>
 </template>
 <script>
-
-import { getProgram, src, postSubscribes, postProgramListen } from '../../index/services';
-import { Toast } from 'vant';
+import {
+  getProgram,
+  src,
+  postSubscribes,
+  postProgramListen,
+  postInfoZan,
+  getPayCreate,
+  getColumnById
+} from "../../index/services";
+import { Toast } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       isShow: false,
-      freeShow: false,
+      freeShow: true,
       column: {},
       num: 0,
       programList: [],
@@ -209,126 +296,135 @@ export default {
         size: 10,
         id: 0
       }
-    }
-
+    };
   },
   methods: {
     render(loaded) {
+      const id = this.$route.query.column;
 
-      // this.column = this.$route.query.column
-      this.column = this.$ls.get('column')
-
-      if (this.column.free == 1) {
-        this.freeShow = false
-      } else {
-        this.freeShow = true
-      }
-
-
-      postProgramListen({ token: this.$ls.get('token'), columnId: this.column.id }).then(rep => {
-        // alert(JSON.stringify(this.column.id))
-      })
-
-      this.query.id = this.column.id
-      getProgram(this.query).then(rep => {
-        this.programList = rep.data;
-        // alert(JSON.stringify(this.programList))
-        this.num = this.programList.length
-
-        this.isLoading = false;
-        if (loaded) {
-          loaded('done');
+      getColumnById({ token: this.$ls.get("token"), id: id }).then(rep => {
+        this.column = rep.data;
+        if (this.column.free == 1) {
+          this.freeShow = false;
+        } else {
+          this.freeShow = true;
         }
-      })
+
+        postProgramListen({
+          token: this.$ls.get("token"),
+          columnId: this.column.id
+        }).then(rep => {
+          // alert(JSON.stringify(this.column.id))
+        });
+
+        this.query.id = this.column.id;
+        getProgram(this.query).then(rep => {
+          this.programList = rep.data;
+          // alert(JSON.stringify(this.programList))
+          this.num = this.programList.length;
+
+          this.isLoading = false;
+          if (loaded) {
+            loaded("done");
+          }
+        });
+      });
     },
 
     openMusiclistshare() {
-      // alert(1)
-      this.isShow = true
+      this.isShow = true;
     },
     postSubscribes(id) {
-      postSubscribes({ token: this.$ls.get('token'), coumnId: id }).then(rep => {
-        // alert(JSON.stringify(rep))
-        Toast.success('订阅成功');
-        this.column.subscribe = 1;
-      })
+      postSubscribes({ token: this.$ls.get("token"), coumnId: id }).then(
+        rep => {
+          // alert(JSON.stringify(rep))
+          Toast.success("订阅成功");
+          this.column.subscribe = 1;
+        }
+      );
     },
 
     closeShare() {
-      // alert(2)
-      this.isShow = false
+      this.isShow = false;
     },
     onClickLeft() {
       this.$router.go(-1);
-
     },
     openShare() {
       this.isShow = true;
-
     },
-    zan() {
-      this.num++
+    zan(id) {
+      postInfoZan({ token: this.$ls.get("token"), type: 3, typeId: id }).then(
+        rep => {
+          this.render();
+        }
+      );
+    },
+
+    weixin(type) {
+      this.closeShare();
+
+      var wx = api.require("wx");
+      wx.shareWebpage(
+        {
+          apiKey: "",
+          scene: type,
+          title: this.column.name,
+          description: this.column.brief,
+          // thumb: "widget://a.jpg",
+          contentUrl: "http://www.tingdaoapp.com/static/down/index.html"
+        },
+        function(ret, err) {
+          if (ret.status) {
+            // alert("分享成功");
+          } else {
+            api.toast(err.code);
+          }
+        }
+      );
     },
     freeListen() {
-      this.freeShow = true
+      this.freeShow = true;
     },
     commentsClick() {
-      this.$router.push({ path: '/anchor/columnComment', query: { comment: this.column, type: 3 } })
+      this.$router.push({
+        path: "/anchor/columnComment",
+        query: { comment: this.column, type: 3, back: 1 }
+      });
     },
     playClick(p) {
-
-      this.$ls.set('programList', this.programList)
-      this.$ls.set('pId', p.id)
+      this.$ls.set("programList", this.programList);
+      this.$ls.set("pId", p.id);
       // this.$ls.set('column', this.column)
-      this.$router.push({ path: '/program/play', query: { programList: this.programList, id: p.id, column: this.column } })
+
+      this.$router.push({
+        path: "/program/play",
+        query: { programList: this.programList, id: p.id, column: this.column }
+      });
     },
-    expandlist(index, clickitem) {
-      var toolbarlist = document.getElementsByClassName('musiclist-item-tool');
-      var toolbarimg = document.getElementsByClassName('toobarimg');
-      var clicktoolitem = toolbarlist[index];
-      var click = clicktoolitem.getAttribute("data-click");
 
-      // 复原其他tool，一次只打开一个tool
-      for (var i = 0; i < toolbarlist.length; i++) {
-        toolbarlist[i].setAttribute("data-click", 0);
-        toolbarlist[i].style.display = 'none';
-        toolbarimg[i].src = "../../../../assets/images/musiclist/musiclistmore.png";
-      }
-
-      if (click == 0) {
-        // 点开
-        clicktoolitem.setAttribute("data-click", 1);
-        clickitem.src = "../../../../assets/images/musiclist/musiclistmore.png";
-        clicktoolitem.style.display = '-webkit-box';
-      } else {
-        // 关闭
-        clicktoolitem.setAttribute("data-click", 0);
-        clickitem.src = "../../../../assets/images/musiclist/musiclistmore.png";
-        clicktoolitem.style.display = 'none';
-      }
-
-    },
     formatDateTime(timeStamp) {
       var date = new Date();
       date.setTime(timeStamp * 1000);
       var y = date.getFullYear();
       var m = date.getMonth() + 1;
-      m = m < 10 ? ('0' + m) : m;
+      m = m < 10 ? "0" + m : m;
       var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
+      d = d < 10 ? "0" + d : d;
       var h = date.getHours();
-      h = h < 10 ? ('0' + h) : h;
+      h = h < 10 ? "0" + h : h;
       var minute = date.getMinutes();
       var second = date.getSeconds();
-      minute = minute < 10 ? ('0' + minute) : minute;
-      second = second < 10 ? ('0' + second) : second;
-      return m + '-' + d
+      minute = minute < 10 ? "0" + minute : minute;
+      second = second < 10 ? "0" + second : second;
+      return m + "-" + d;
     },
     formatSeconds(value) {
-      var secondTime = parseInt(value);// 秒
-      var minuteTime = 0;// 分
-      var hourTime = 0;// 小时
-      if (secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+      var secondTime = parseInt(value); // 秒
+      var minuteTime = 0; // 分
+      var hourTime = 0; // 小时
+      if (secondTime > 60) {
+        //如果秒数大于60，将秒数转换成整数
         //获取分钟，除以60取整数，得到整数分钟
         minuteTime = parseInt(secondTime / 60);
         //获取秒数，秒数取佘，得到整数秒数
@@ -349,13 +445,13 @@ export default {
       if (hourTime > 0) {
         result = "" + parseInt(hourTime) + ":" + result;
       }
-      return result
+      return result;
     }
   },
   created() {
-    this.render()
+    this.render();
   }
-}
+};
 </script>
 
 
@@ -629,11 +725,11 @@ export default {
 
 .header {
   background-image: url(../../../../assets/images/radio/music.jpg);
-  height: 270px;
+  height: px2rem(540);
 
   .title {
     padding-left: px2rem(10);
-    padding-top: px2rem(50);
+    padding-top: px2rem(80);
     font-size: px2rem(34);
     text-align: left;
     color: #fff;
@@ -643,7 +739,7 @@ export default {
   }
   .btn {
     text-align: center;
-    padding-top: px2rem(8);
+    padding-top: px2rem(12);
     background-color: #e3e8ee;
     color: #232323;
     width: px2rem(100);
@@ -653,7 +749,7 @@ export default {
   }
   .btn-follow {
     text-align: center;
-    padding-top: px2rem(8);
+    padding-top: px2rem(12);
     background-color: #ff5f53;
     color: #fff;
     width: px2rem(100);
@@ -818,7 +914,7 @@ export default {
   width: px2rem(30);
 }
 .userinfo .info .like-img {
-  width: px2rem(60);
+  width: px2rem(80);
 }
 .userinfo .userinfocol .num {
   font-size: px2rem(28);

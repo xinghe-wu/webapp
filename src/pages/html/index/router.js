@@ -14,6 +14,7 @@ import config from '../views/config.vue';
 import radio_live from '../views/radio_live.vue';
 import edit from '../views/edit.vue';
 import fm_list from '../views/fm_list.vue';
+import fm_list_select from '../views/fm_list_select.vue';
 import openfm from '../views/openfm.vue';
 import win from '../views/win.vue';
 
@@ -49,9 +50,15 @@ import program_test from '../views/program/test.vue'
 export default [{
         path: '/index',
         component: index,
+        meta: {
+            keepAlive: false, //此组件不需要被缓存
+        },
         children: [{
             path: '',
-            component: interact
+            component: interact,
+            meta: {
+                keepAlive: false, //此组件不需要被缓存
+            },
         }, {
             path: 'fm',
             component: fm,
@@ -69,11 +76,16 @@ export default [{
     },
     {
         path: '/login',
+        alias: '/',
         component: login
     },
     {
         path: '/textarea',
-        component: textarea
+        component: textarea,
+        meta: {
+            keepAlive: true, //此组件需要被缓存
+            isBack: false, //用于判断上一个页面是哪个
+        }
     },
     {
         path: '/my-activity',
@@ -106,6 +118,10 @@ export default [{
     {
         path: '/fm-list',
         component: fm_list
+    },
+    {
+        path: '/fm-list-select',
+        component: fm_list_select
     },
     {
         path: '/openfm',

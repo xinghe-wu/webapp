@@ -1,74 +1,128 @@
 <template>
   <div class="my-msg-view">
-    <van-nav-bar :style="{paddingTop:paddingTop}" id="header" @click-left="onClickLeft" right-text="" :title="title">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      :title="title"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <div class="content">
-
-      <div class="aui-row kong" v-show="list.length==0">
-        <img class="img" src="../../../../assets/images/my/kong@3x.png">
-        <div class="title">
-          暂无{{title}}
-        </div>
-
+      <div class="aui-row kong" v-show="list.length == 0">
+        <img class="img" src="../../../../assets/images/my/kong@3x.png" />
+        <div class="title">暂无{{ title }}</div>
       </div>
+      <pull-to :bottom-load-method="refresh">
+        <div class="aui-content aui-margin-b-15 ">
+          <ul class="aui-list aui-media-list msg-list" v-for="l in list">
+            <li class="aui-list-item aui-list-item-middle ">
+              <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width: 4rem;">
+                  <img
+                    v-if="l.head.substring(0, 4) == 'http'"
+                    :src="l.head"
+                    class="aui-img-round aui-list-img-sm img-head"
+                  />
 
-      <div class="aui-content aui-margin-b-15 ">
-        <ul class="aui-list aui-media-list msg-list" v-for="l in list">
-
-          <li class="aui-list-item aui-list-item-middle ">
-            <div class="aui-media-list-item-inner">
-              <div class="aui-list-item-media" style="width: 4rem;">
-                <img src="../../../../assets/images/radio/head3.png" class="aui-img-round aui-list-img-sm img-head">
-              </div>
-              <div class="aui-list-item-inner msg-list-inner">
-                <div class="aui-list-item-text">
-                  <div class="aui-list-item-title aui-font-size-14 msg-title">{{l.name}}</div>
-                  <div class="aui-list-item-right msg-time">
-                    08:12
+                  <img
+                    v-else
+                    :src="src + l.head"
+                    class="aui-img-round aui-list-img-sm img-head"
+                  />
+                </div>
+                <div class="aui-list-item-inner msg-list-inner">
+                  <div class="aui-list-item-text">
+                    <div class="aui-list-item-title aui-font-size-14 msg-title">
+                      {{ l.name }}
+                    </div>
+                    <div class="aui-list-item-right msg-time">
+                      {{ formatDateTime(l.time) }}
+                    </div>
+                  </div>
+                  <div class="aui-list-item-text msg-cont">
+                    【{{ l.type }}】 {{ l.title }}
                   </div>
                 </div>
-                <div class="aui-list-item-text msg-cont">
-
-                  您{{title}}的节目： {{l.title}}
-
-                </div>
               </div>
-            </div>
-          </li>
-        </ul>
-
-      </div>
+            </li>
+          </ul>
+        </div>
+      </pull-to>
     </div>
-
   </div>
-
 </template>
 
 <script>
-import { src } from '../../index/services';
+import PullTo from "vue-pull-to";
+import { src, getMsgZan } from "../../index/services";
 
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
+  components: {
+    PullTo
+  },
   data() {
     return {
       src: src,
-      title: '',
-      list: []
-    }
+      title: "",
+      list: [],
+      param: {
+        token: "",
+        page: 1,
+        size: 10
+      }
+    };
   },
   methods: {
     onClickLeft() {
       this.$router.go(-1);
+    },
+
+    refresh(loaded) {
+      this.param.page++;
+      this.getMsgZan(loaded);
+    },
+    getMsgZan(loaded) {
+      this.param.token = this.$ls.get("token");
+
+      getMsgZan(this.param).then(rep => {
+        const rs = rep.zanList;
+        for (const r of rs) {
+          this.list.push(r);
+        }
+      });
+
+      this.isLoading = false;
+      if (loaded) {
+        loaded("done");
+      }
+    },
+    formatDateTime(timeStamp) {
+      var date = new Date();
+      date.setTime(timeStamp * 1000);
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      var minute = date.getMinutes();
+      var second = date.getSeconds();
+      minute = minute < 10 ? "0" + minute : minute;
+      second = second < 10 ? "0" + second : second;
+      return m + "-" + d + " " + h + ":" + minute;
     }
   },
-  mounted() {
-    this.title = this.$route.query.title
-    this.list = this.$route.query.list
-  }
+  created() {
+    this.title = this.$route.query.title;
 
-}
+    this.getMsgZan();
+  }
+};
 </script>
 
 

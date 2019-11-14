@@ -3,11 +3,15 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-    <van-tabbar v-model="active" @change="onChangeTab" style="background-color:#fff;z-index:999">
+    <van-tabbar
+      v-model="active"
+      @change="onChangeTab"
+      style="background-color:#fff;z-index:999"
+    >
       <van-tabbar-item v-for="n in tabs" icon="shop">
-        <span>{{n.name}}</span>
+        <span>{{ n.name }}</span>
         <template slot="icon" slot-scope="props">
-          <img :src="props.active ? n.active:n.un_active" />
+          <img :src="props.active ? n.active : n.un_active" />
         </template>
       </van-tabbar-item>
     </van-tabbar>
@@ -190,57 +194,58 @@ body,
 
 <script>
 export default {
-  store: ['token', 'interact_status'],
+  store: ["token", "interact_status"],
   data() {
     return {
       tabs: [
         {
-          name: '互动',
-          url: '/index',
-          active: require('../../../assets/images/ico_toolbar_target_sel.png'),
-          un_active: require('../../../assets/images/ico_toolbar_target.png'),
+          name: "互动",
+          url: "/index",
+          active: require("../../../assets/images/ico_toolbar_target_sel.png"),
+          un_active: require("../../../assets/images/ico_toolbar_target.png")
         },
         {
-          name: '私人FM',
-          url: '/index/fm',
-          active: require('../../../assets/images/ico_toolbar_FM_sel.png'),
-          un_active: require('../../../assets/images/ico_toolbar_FM.png'),
+          name: "私人FM",
+          url: "/index/fm",
+          active: require("../../../assets/images/ico_toolbar_FM_sel.png"),
+          un_active: require("../../../assets/images/ico_toolbar_FM.png")
         },
         {
-          name: '主播',
-          url: '/index/live',
-          active: require('../../../assets/images/ico_toolbar_live_sel.png'),
-          un_active: require('../../../assets/images/ico_toolbar_live.png'),
+          name: "主播",
+          url: "/index/live",
+          active: require("../../../assets/images/ico_toolbar_live_sel.png"),
+          un_active: require("../../../assets/images/ico_toolbar_live.png")
         },
         {
-          name: '我的',
-          url: '/index/my',
-          active: require('../../../assets/images/ico_toolbar_my_sel.png'),
-          un_active: require('../../../assets/images/ico_toolbar_my.png'),
+          name: "我的",
+          url: "/index/my",
+          active: require("../../../assets/images/ico_toolbar_my_sel.png"),
+          un_active: require("../../../assets/images/ico_toolbar_my.png")
         }
       ],
       active: 0
-    }
+    };
   },
   methods: {
     onChangeTab(active) {
-      if ((active == 1) && !this.token || ((active == 2) && !this.token) || ((active == 3) && !this.token)) {
-        this.interact_status = 'play';
+      if (
+        (active == 1 && !this.token) ||
+        (active == 2 && !this.token) ||
+        (active == 3 && !this.token)
+      ) {
+        this.interact_status = "play";
         this.$nextTick(() => {
-
-          this.$router.push('/login');
-        })
+          this.$router.push("/login");
+        });
       } else {
-        this.$router.replace(this.tabs[active].url)
+        this.$router.replace(this.tabs[active].url);
       }
-
     }
   },
   created() {
     this.active = this.tabs.findIndex(item => {
       return item.url == this.$route.path;
     });
-
   }
-}
+};
 </script>

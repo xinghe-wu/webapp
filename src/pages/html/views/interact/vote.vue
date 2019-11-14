@@ -1,44 +1,49 @@
 <template>
-<div class="vote-body">
-    <van-nav-bar :style="{paddingTop:paddingTop}"  id="header" @click-left="onClickLeft" 
-            right-text=""   :title="voteType"  >
-               <van-icon name="arrow-left" slot="left" style="color:#292726"/>
+  <div class="vote-body">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      id="header"
+      @click-left="onClickLeft"
+      right-text=""
+      :title="voteType"
+    >
+      <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
-<div class="aui-row ">
-     <div class="title">
-     {{vote.title}}
-     </div>
+    <div class="aui-row ">
+      <div class="title">
+        {{ vote.title }}
+      </div>
 
- <img class="img" :src="src+vote.img" >
- <div class="cont">
-   {{vote.brief}}
- </div>
+      <img class="img" :src="src + vote.img" />
+      <div class="cont">
+        {{ vote.brief }}
+      </div>
 
-<div class="btn" v-show="vote.type==4">
- <div class="agree-btn"  @click="onVote(1)">赞成</div>
- <div class="agree-btn"  @click="onVote(2)">反对</div>
-</div>
-
-</div>
-
-</div>
-  
+      <div class="btn" v-show="vote.type == 4">
+        <div class="agree-btn" @click="onVote(1)">
+          {{ vote.blue }}（{{ voteCount.blue }}）
+        </div>
+        <div class="agree-btn" @click="onVote(2)">
+          {{ vote.red }}（{{ voteCount.red }}）
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-
-import { src, postVote } from '../../index/services';
-import { Toast } from 'vant';
+import { src, postVote, getVoice } from "../../index/services";
+import { Toast } from "vant";
 export default {
-
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       src: src,
+      voteCount: { red: "", blue: "" },
       vote: {},
-      voteType: ''
-    }
+      voteType: ""
+    };
   },
   methods: {
     onClickLeft() {
@@ -46,29 +51,36 @@ export default {
     },
     onVote(result) {
       Toast.loading();
-      postVote({ token: this.$ls.get('token'), 'ad_id': this.id, vote_result: result }).then(rep => {
+      postVote({
+        token: this.$ls.get("token"),
+        ad_id: this.vote.id,
+        vote_result: result
+      }).then(rep => {
         Toast.clear();
-        Toast.success('投票成功');
-        this.onClose();
-      })
-
+        Toast.success("投票成功");
+        this.getVote();
+      });
+    },
+    getVote() {
+      getVoice(this.vote.id).then(rep => {
+        this.voteCount = rep;
+      });
     }
   },
   mounted() {
-    this.vote = this.$route.query.vote
-
+    this.vote = this.$route.query.vote;
+    this.getVote();
     if (this.vote.type == 2) {
-      this.voteType = '报名'
+      this.voteType = "报名";
     }
     if (this.vote.type == 3) {
-      this.voteType = '图文'
+      this.voteType = "图文";
     }
     if (this.vote.type == 4) {
-      this.voteType = '投票'
+      this.voteType = "投票";
     }
   }
-
-}
+};
 </script>
 
 

@@ -1,126 +1,128 @@
 <template>
-    <div class="open-view " :class="{iPad:iPad}">
-        <transition name="zoomUp">
-            <div v-show="type == 'open'">
-                <div class="rectangle-1564 "></div>
-                <div class="logo-block">
-                    <img src="../../../assets/images/logo.png" alt="">
-                </div>
-                <div class="ellipse-1556"></div>
-                <h5>私人FM</h5>
+  <div class="open-view " :class="{ iPad: iPad }">
+    <transition name="zoomUp">
+      <div v-show="type == 'open'">
+        <div class="rectangle-1564 "></div>
+        <div class="logo-block">
+          <img src="../../../assets/images/logo.png" alt="" />
+        </div>
+        <div class="ellipse-1556"></div>
+        <h5>私人FM</h5>
 
-                <div class="btn-block">
-                    <button @click="changeType('select')"  v-ripple  class="rectangle-1247 ">
-                        立即开启
-                    </button>
-                </div>
-            </div>
-        </transition>
-        <transition name="fade">
-            <div v-show="type == 'select'">
+        <div class="btn-block">
+          <button
+            @click="changeType('select')"
+            v-ripple
+            class="rectangle-1247 "
+          >
+            立即开启
+          </button>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div v-show="type == 'select'">
+        <div class="rectangle-1565">
+          <p>
+            挑选感兴趣的标签
+          </p>
+          <h4>
+            开启我的私人电台
+          </h4>
+          <div>
+            <img src="../../../assets/images/logo.png" alt="" />
+          </div>
+        </div>
 
-                <div class="rectangle-1565">
-                    <p>
-                        挑选感兴趣的标签
-                    </p>
-                    <h4>
-                        开启我的私人电台
-                    </h4>
-                    <div>
-                        <img src="../../../assets/images/logo.png" alt="">
-                    </div>
+        <div class="tags-block">
+          <ul>
+            <li :class="{ active: hasSelect(t.id) }" v-for="t in tags">
+              <a href="#" @click="onSelect(t.id)">
+                <div>
+                  <img :src="src + t.pic" alt="" />
+                  <i class="van-icon van-icon-success"></i>
                 </div>
+                <p>
+                  {{ t.key_word }}
+                </p>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-                <div class="tags-block">
-                    <ul>
-                        <li :class="{active:hasSelect(t.id)}" v-for="t in tags">
-                            <a href="#" @click="onSelect(t.id)">
-                                <div>
-                                    <img :src="src + t.pic" alt="">
-                                    <i class="van-icon van-icon-success"></i>
-                                </div>
-                                <p>
-                                    {{t.key_word}}
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="btn-block">
-                    <button @click="onPost"  v-ripple class="rectangle-1247 ">
-                        完成选择
-                    </button>
-                </div>
-            </div>
-        </transition>
-
-    </div>
+        <div class="btn-block">
+          <button @click="onPost" v-ripple class="rectangle-1247 ">
+            完成选择
+          </button>
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
-import { getTags, src, postTags } from '../index/services';
-import { Toast } from 'vant';
+import { getTags, src, postTags } from "../index/services";
+import { Toast } from "vant";
 export default {
-    store: ['token'],
-    data() {
-        return {
-            type: 'open',
-            tags: [],
-            src: src,
-            selectTags: [],
-            iPad: false
-        }
+  store: ["token"],
+  data() {
+    return {
+      type: "open",
+      tags: [],
+      src: src,
+      selectTags: [],
+      iPad: false
+    };
+  },
+  methods: {
+    changeType(t) {
+      this.type = t;
     },
-    methods: {
-        changeType(t) {
-            this.type = t;
-        },
-        onSelect(id) {
-            if (this.selectTags.indexOf(id) > -1) {
-                this.selectTags = this.selectTags.filter(s => s != id);
-            } else {
-                this.selectTags.push(id);
-            }
-        },
-        hasSelect(id) {
-            return this.selectTags.indexOf(id) > -1;
-        },
-        render() {
-            getTags({ token: this.token }).then(rep => {
-                this.tags = rep.data;
-            })
-        },
-        onPost() {
-            if (this.selectTags.length == 0) {
-                return Toast.fail("请至少选择一个标签");
-            }
-            Toast.loading();
-            postTags({
-                tags: this.selectTags,
-                token: this.token
-            }).then(rep => {
-                Toast.clear();
-                this.$router.go(-1);
-                // if(this.$route.query.type) {
-                //     this.$router.replace("/fm-list");
-                // }else{
-                //     this.$emit('change','fm');
-                // }
+    onSelect(id) {
+      if (this.selectTags.indexOf(id) > -1) {
+        this.selectTags = this.selectTags.filter(s => s != id);
+      } else {
+        this.selectTags.push(id);
+      }
+    },
+    hasSelect(id) {
+      return this.selectTags.indexOf(id) > -1;
+    },
+    render() {
+      getTags({ token: this.token }).then(rep => {
+        this.tags = rep.data;
+      });
+    },
+    onPost() {
+      if (this.selectTags.length == 0) {
+        return Toast.fail("请至少选择一个标签");
+      }
+      Toast.loading();
+      postTags({
+        tags: this.selectTags,
+        token: this.token
+      }).then(rep => {
+        Toast.clear();
+        // this.$router.go(-1);
 
-            })
-
-        }
-    },
-    created() {
-        if (this.$route.query.type) {
-            this.type = this.$route.query.type;
-        }
-    },
-    mounted() {
-        this.render();
-        this.iPad = api.deviceModel.indexOf('iPad') > -1;
+        this.$router.replace("/index/fm");
+        // if (this.$route.query.type) {
+        //   this.$router.replace("/fm-list");
+        // } else {
+        //   this.$emit("change", "fm");
+        // }
+      });
     }
-}
+  },
+  created() {
+    if (this.$route.query.type) {
+      this.type = this.$route.query.type;
+    }
+  },
+  mounted() {
+    this.render();
+    this.iPad = api.deviceModel.indexOf("iPad") > -1;
+  }
+};
 </script>
 <style  lang="sass"  type="text/scss" >
     @import "../../../public/px2rem.scss";

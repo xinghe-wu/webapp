@@ -1,109 +1,167 @@
 <template>
-    <div id="view-my">
+  <div id="view-my" :style="{ paddingTop: paddingTop }">
+    <header class="aui-bar aui-bar-nav">
+      <div class="my-header">
+        <div class="aui-row">
+          <div class="aui-col-xs-1" @click="radio_list">
+            <img
+              src="../../../assets/images/radio/diantailiebiao@3x.png"
+              class="img"
+            />
+          </div>
+          <div class="aui-col-xs-8">
+            &nbsp
+          </div>
+          <div class="aui-col-xs-1" @click="msg">
+            <img src="../../../assets/images/radio/xiaoxi@3x.png" class="img" />
+            <div class="aui-badge " v-show="info.message > 0"></div>
+          </div>
+          <div class="aui-col-xs-2" @click="onLogout">
+            <img src="../../../assets/images/radio/shezhi@3x.png" class="img" />
+          </div>
+        </div>
+      </div>
+    </header>
 
-        <header class="aui-bar aui-bar-nav">
-
-            <div class="my-header">
-                <div class="aui-row">
-                    <div class="aui-col-xs-1" @click="radio_list">
-                        <img src="../../../assets/images/radio/diantailiebiao@3x.png" class="img">
-                    </div>
-                    <div class="aui-col-xs-8">
-                        &nbsp
-                    </div>
-                    <div class="aui-col-xs-1" @click="msg">
-                        <img src="../../../assets/images/radio/xiaoxi@3x.png" class="img">
-                        <div class="aui-badge " v-show="info.message>0"></div>
-                    </div>
-                    <div class="aui-col-xs-2" @click="onLogout">
-                        <img src="../../../assets/images/radio/shezhi@3x.png" class="img">
-                    </div>
+    <div class="head">
+      <ul class="aui-list aui-media-list ">
+        <li class="aui-list-item aui-list-item-middle">
+          <div class="aui-media-list-item-inner ">
+            <div class="aui-list-item-media head-media-list head-list-text">
+              <div v-if="info.head.substring(0, 4) == 'http'">
+                <img
+                  :src="info.head"
+                  class="aui-img-round aui-list-img-sm img"
+                />
+              </div>
+              <div v-else-if="info.head">
+                <img
+                  :src="src + info.head"
+                  class="aui-img-round aui-list-img-sm img"
+                />
+              </div>
+              <div v-else>
+                <img
+                  src="../../../assets/images/head.jpg"
+                  class="aui-img-round aui-list-img-sm img"
+                />
+              </div>
+            </div>
+            <div class="aui-list-item-inner ">
+              <div class="aui-list-item-text " style="margin-left">
+                <div
+                  class="aui-list-item-title aui-font-size-14 name"
+                  @click="config()"
+                >
+                  {{ info.nick_name }}
                 </div>
+                <div class="aui-list-item-right">
+                  <div
+                    v-show="info.compere_id > 0"
+                    class="btn-send"
+                    @click="send"
+                  >
+                    发布内容
+                  </div>
+                </div>
+
+                <img
+                  v-if="info.compere_id > 0"
+                  class="btn-gengduo"
+                  src="../../../assets/images/radio/gengduo.png"
+                />
+              </div>
+              <div class="aui-list-item-text title">
+                <div v-if="info.compere_id > 0" @click="anchor_detail()">
+                  查看个人主页
+                </div>
+              </div>
             </div>
-        </header>
+          </div>
+        </li>
+      </ul>
+    </div>
 
-        <div class="head">
-            <ul class="aui-list aui-media-list ">
-                <li class="aui-list-item aui-list-item-middle">
-                    <div class="aui-media-list-item-inner ">
-                        <div class="aui-list-item-media head-media-list head-list-text">
-                            <img :src="src+info.head" class="aui-img-round aui-list-img-sm img">
-                        </div>
-                        <div class="aui-list-item-inner ">
-                            <div class="aui-list-item-text " style="margin-left">
-                                <div class="aui-list-item-title aui-font-size-14 name">{{info.nick_name}}</div>
-                                <!-- <div class="aui-list-item-right">08:00</div> -->
-                                <div v-if="info.compere_id==0" class="btn" @click="reg">成为主播</div>
-                                <img v-if="info.compere_id>0" class="btn-gengduo" src="../../../assets/images/radio/gengduo.png">
+    <div class="my-listen" v-if="programListShow">
+      <div class="interval"></div>
+      <div class="title">
+        <img
+          class="img-icon"
+          src="../../../assets/images/radio/zuijinshpouting@3x.png"
+        />
+        最近收听
+      </div>
 
-                            </div>
-                            <div class="aui-list-item-text title">
-                                查看个人主页
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="my-listen">
-            <div class="title">
-                <img class="img-icon" src="../../../assets/images/radio/zuijinshpouting@3x.png"> 最近收听
+      <div class="listen-swiper">
+        <swiper :options="swiperOption" style="background-color:#fff">
+          <swiper-slide v-for="p in programList">
+            <div class="aui-card-list">
+              <div class="aui-card-list-content">
+                <div style="position: relative;">
+                  <div style="position: absolute;">
+                    <img
+                      src="../../../assets/images/radio/play@2x.png"
+                      class="paly-btn"
+                      @click="fmClick(p)"
+                    />
+                  </div>
+                  <img :src="src + p.img" class="img" />
+                </div>
+              </div>
+              <div class="swiper-title">{{ p.name }}</div>
             </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </div>
 
-            <div class="listen-swiper" v-if="programListShow">
-                <swiper :options="swiperOption" style="background-color:#fff">
+    <div class="interval"></div>
 
-                    <swiper-slide v-for="p in programList">
-                        <div class="aui-card-list">
-                            <div class="aui-card-list-content">
-                                <div style="position: relative;">
-                                    <div style="position: absolute;">
-                                        <img src="../../../assets/images/radio/play@2x.png" class="paly-btn" @click="fmClick(p)">
-                                    </div>
-                                    <img :src="src+p.img" class="img">
-                                </div>
-                            </div>
-                            <div class="swiper-title">{{p.name}}</div>
-
-                        </div>
-                    </swiper-slide>
-                </swiper>
+    <div class="my">
+      <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+          <li class="aui-list-item list" @click="subscribe">
+            <div class="aui-list-item-label-icon">
+              <img
+                class="img"
+                src="../../../assets/images/radio/gengduo@3x.png"
+              />
             </div>
-        </div>
-
-        <div class="my">
-            <div class="aui-content aui-margin-b-15">
-                <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item list" @click="subscribe">
-                        <div class="aui-list-item-label-icon">
-                            <img class="img" src="../../../assets/images/radio/gengduo@3x.png">
-                        </div>
-                        <div class="aui-list-item-inner title">
-                            我的订阅
-                        </div>
-                    </li>
-                    <li class="aui-list-item list" @click="buy">
-                        <div class="aui-list-item-label-icon">
-                            <img class="img" src="../../../assets/images/radio/wodegoumia@3x.png">
-                        </div>
-                        <div class="aui-list-item-inner title">
-                            我的购买
-                        </div>
-                    </li>
-                    <li class="aui-list-item  list" @click="wallet()">
-                        <div class="aui-list-item-label-icon">
-                            <img class="img" src="../../../assets/images/radio/wodeqianbao@3x.png">
-                        </div>
-                        <div class="aui-list-item-inner title">
-                            我的钱包
-                        </div>
-                    </li>
-                </ul>
+            <div class="aui-list-item-inner title">
+              我的订阅
             </div>
-        </div>
+          </li>
+          <li class="aui-list-item list" @click="buy">
+            <div class="aui-list-item-label-icon">
+              <img
+                class="img"
+                src="../../../assets/images/radio/wodegoumia@3x.png"
+              />
+            </div>
+            <div class="aui-list-item-inner title">
+              VIP栏目
+            </div>
+          </li>
+          <!-- <li
+            class="aui-list-item  list"
+            @click="wallet()"
+            v-if="info.compere_id > 0"
+          >
+            <div class="aui-list-item-label-icon">
+              <img
+                class="img"
+                src="../../../assets/images/radio/wodeqianbao@3x.png"
+              />
+            </div>
+            <div class="aui-list-item-inner title">
+              我的钱包
+            </div>
+          </li> -->
+        </ul>
+      </div>
+    </div>
 
-        <!-- <van-nav-bar  :style="{paddingTop:paddingTop}" @click-right="onConfig" title="我的" >
+    <!-- <van-nav-bar  :style="{paddingTop:paddingTop}" @click-right="onConfig" title="我的" >
             <van-icon slot="right" name="setting" />
         </van-nav-bar>
         <div class="container">
@@ -153,16 +211,16 @@
                 <button v-ripple @click="onLogin" v-else>登录</button>
             </section>
         </div>    -->
-    </div>
+  </div>
 </template>
 <style lang="scss"  type="text/scss" >
 @import "../../../public/px2rem.scss";
 #view-my {
-  background-color: #f2f4f5;
+  background-color: #fff;
   margin-bottom: 55px;
   height: 100%;
   .my-header {
-    padding: px2rem(40);
+    padding: px2rem(10);
     background-color: #fff;
     height: px2rem(108);
     overflow-y: auto;
@@ -181,24 +239,28 @@
     }
   }
 
+  .interval {
+    background-color: #f2f4f5;
+    height: px2rem(30);
+  }
+
   .head {
     color: #292726;
     .head-media-list {
-      padding-top: px2rem(50);
-      padding-bottom: px2rem(50);
-
+      // padding-bottom: px2rem(50);
       .head-media-list-inner {
         margin-left: px2rem(-60);
       }
     }
-    .btn {
-      margin-top: px2rem(36);
+    .btn-send {
+      margin-left: px2rem(165);
+      margin-top: px2rem(25);
       text-align: center;
-      padding-top: px2rem(8);
+      padding-top: px2rem(18);
       background-color: #ff5f53;
       color: #fff;
       width: px2rem(160);
-      height: px2rem(56);
+      height: px2rem(70);
       font-size: px2rem(26);
       border-radius: 15px;
     }
@@ -210,13 +272,14 @@
     }
     img {
       width: px2rem(120);
+      height: px2rem(120);
     }
     .name {
       font-size: px2rem(36);
       font-weight: bold;
     }
     .title {
-      margin-top: px2rem(-20);
+      margin-top: px2rem(-0);
       font-size: px2rem(26);
     }
   }
@@ -239,8 +302,7 @@
   }
   .my-listen {
     background-color: #fff;
-    margin-top: px2rem(30);
-    margin-bottom: px2rem(30);
+
     .title {
       font-size: px2rem(30);
       font-weight: bold;
@@ -397,224 +459,243 @@
 }
 </style>
 <script>
-import { Dialog } from 'vant';
-import { getUserInfo, src, getPath, getProgramListen, getColumnListen } from '../index/services';
-import { Toast } from 'vant';
-const head = require('../../../assets/images/head.jpg')
+import { Dialog } from "vant";
+import {
+  getUserInfo,
+  src,
+  getPath,
+  getProgramListen,
+  getColumnListen
+} from "../index/services";
+import { Toast } from "vant";
+const head = require("../../../assets/images/head.jpg");
 export default {
-    store: ['view', 'token', 'paddingTop', 'interact_status', 'fm_playing'],
-    data() {
-        return {
-            programListShow: false,
-            swiperOption: {
-                slidesPerView: 4,
-                slidesOffsetBefore: 20,
-                spaceBetween: 40,
-            },
-            isLoading: false,
-            src: src,
-            info: {
-                nick_name: '',
-                activity: 0,
-                head: '',
-                radio_name: ''
-            },
-            time: '',
-            ios: false,
-            programList: []
-        }
+  store: ["view", "token", "paddingTop", "interact_status", "fm_playing"],
+  data() {
+    return {
+      programListShow: false,
+      swiperOption: {
+        slidesPerView: 4,
+        slidesOffsetBefore: 20,
+        spaceBetween: 40
+      },
+      isLoading: false,
+      src: src,
+      info: {
+        nick_name: "",
+        activity: 0,
+        head: "",
+        radio_name: ""
+      },
+      time: "",
+      ios: false,
+      programList: []
+    };
+  },
+  methods: {
+    onLogout() {
+      Dialog.confirm({
+        title: "提示",
+        message: "确定要退出当前登录用户吗？"
+      })
+        .then(() => {
+          this.$ls.set("token", null);
+          //this.token = null;
+          this.fm_playing = false;
+          this.interact_status = "play";
+          // alert(JSON.stringify(this.$ls.get("token")));
+
+          this.$nextTick(() => {
+            this.$router.replace("/login");
+          });
+          // api.closeWidget({
+          //   silent: true
+          // });
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
-    methods: {
-        onLogout() {
-            Dialog.confirm({
-                title: '提示',
-                message: '确定要退出当前登录用户吗？'
-            }).then(() => {
-                this.$ls.set("token", "");
-                this.token = null;
-                this.fm_playing = false;
-                this.interact_status = 'play';
-                this.$nextTick(() => {
-                    this.$router.push('/login');
-                })
-            }).catch(() => {
-                // on cancel
-            });
-        },
 
-        getProgramListen() {
-            // getProgramListen(this.$ls.get('token')).then(rep => {
-            //     this.programList = rep;
-            // })
-            getColumnListen({ 'token': this.$ls.get('token'), 'id': 1 }).then(rep => {
-                this.programList = rep.data;
-                if (this.programList.length > 0) {
-                    this.programListShow = true
-                }
-            })
-        },
-        reg() {
-            this.$router.push('/anchor/reg');
-        },
-        subscribe() {
-            this.$router.push('/my/subscribe');
-        },
-        msg() {
-            this.$router.push('/my/msg');
-        },
-        wallet() {
-            this.$router.push('/my/wallet');
-        },
-        buy() {
-            this.$router.push('/my/buy');
-        },
-        radio_list() {
-            this.$router.push('/radio/radio_list');
-        },
-        open_fm() {
-            this.$router.push('/radio/tag');
-        },
-        fmClick(data) {
-            // alert(JSON.stringify(data))
-            this.$router.push('/index/fm');
-        },
-        render() {
-            if (this.token) {
-                Toast.loading();
-                getUserInfo(this.token).then(rep => {
-
-                    this.info = rep;
-                    Toast.clear();
-                })
-            }
-        },
-        onMyActivity(v) {
-            if (v) {
-                if (this.token) {
-                    api.openWin({
-                        name: 'my-activity',
-                        url: getPath() + '/html/index.html?path=my-activity'
-                    });
-                } else {
-                    this.onLogin();
-                }
-
-            }
-        },
-        onMyFm() {
-            if (this.token) {
-                api.openWin({
-                    name: 'my-fm',
-                    url: getPath() + '/html/index.html?path=list',
-                    pageParam: {
-                        name: 'test'
-                    }
-                });
-            } else {
-                this.onLogin();
-            }
-
-        },
-        onMyTime() {
-            api.openWin({
-                name: 'my-time',
-                url: getPath() + '/html/index.html?path=my-time',
-                pageParam: {
-                    name: 'test'
-                }
-            });
-        },
-        closeTime(v) {
-            if (v == 0 && this.timer) {
-                clearInterval(this.timer);
-            }
-            if (this.timer) {
-                clearInterval(this.timer);
-            }
-            this.time = v * 60;
-            this.timer = setInterval(() => {
-                this.time = this.time - 1;
-                if (this.time == 0) {
-                    api.closeWidget();
-                }
-            }, 1000);
-        },
-        getTime(t) {
-            if (t == 0) {
-                return '不开启';
-            }
-            return new Date(t * 1000).Format('mm:ss');
-        },
-        onConfig() {
-
-            if (this.token) {
-                api.openWin({
-                    name: 'config',
-                    url: getPath() + '/html/index.html?path=config',
-                });
-            } else {
-                this.onLogin();
-            }
-
-        },
-        onShowWallet() {
-            if (this.token) {
-                api.openWin({
-                    name: 'config',
-                    url: getPath() + '/html/index.html?path=wallet',
-                });
-            } else {
-                this.onLogin();
-            }
-
-        },
-        onShowWin() {
-            if (this.token) {
-                api.openWin({
-                    name: 'config',
-                    url: getPath() + '/html/index.html?path=win',
-                });
-            } else {
-                this.onLogin();
-            }
-
-        },
-        getSrc() {
-            if (this.token) {
-                if (this.info.head.indexOf('http') > -1) {
-                    return this.info.head
-                } else {
-                    return this.src + this.info.head;
-                }
-            } else {
-                return head;
-            }
-
-
-        },
-        onLogin() {
-            this.interact_status = 'play';
-            this.$nextTick(() => {
-                this.$router.push('/login')
-            })
-        }
+    anchor_detail() {
+      this.$router.push({
+        path: "/anchor/detail",
+        query: { compereId: this.info.compere_id, type: 1 }
+      });
     },
-    mounted() {
-        this.render();
-        this.$ls.on('close-time', this.closeTime)
 
-        this.ios = api.systemType == 'ios';
-        this.getProgramListen()
-    },
-    watch: {
-        isLoading(b) {
-            if (this.isLoading) {
-                setTimeout(() => {
-                    this.isLoading = false;
-                    this.count++;
-                }, 500);
-            }
+    getProgramListen() {
+      // getProgramListen(this.$ls.get('token')).then(rep => {
+      //     this.programList = rep;
+      // })
+      getColumnListen({ token: this.$ls.get("token"), id: 1 }).then(rep => {
+        this.programList = rep.data;
+
+        if (this.programList.length > 0) {
+          this.programListShow = true;
         }
+      });
+    },
+    reg() {
+      this.$router.push("/anchor/reg");
+    },
+    send() {
+      this.$router.push({ path: "/textarea", query: { type: 1 } });
+    },
+    subscribe() {
+      this.$router.push("/my/subscribe");
+    },
+    config() {
+      this.$router.push("/config");
+    },
+    msg() {
+      this.$router.push("/my/msg");
+    },
+    wallet() {
+      this.$router.push("/my/wallet");
+    },
+    buy() {
+      this.$router.push("/my/buy");
+    },
+    radio_list() {
+      this.$router.push("/radio/radio_list");
+    },
+    open_fm() {
+      this.$router.push("/radio/tag");
+    },
+    fmClick(data) {
+      // alert(JSON.stringify(data))
+      this.$router.push("/index/fm");
+    },
+    render() {
+      if (this.token) {
+        Toast.loading();
+        getUserInfo(this.token).then(rep => {
+          this.info = rep;
+
+          Toast.clear();
+        });
+      }
+    },
+    onMyActivity(v) {
+      if (v) {
+        if (this.token) {
+          api.openWin({
+            name: "my-activity",
+            url: getPath() + "/html/index.html?path=my-activity"
+          });
+        } else {
+          this.onLogin();
+        }
+      }
+    },
+    onMyFm() {
+      if (this.token) {
+        api.openWin({
+          name: "my-fm",
+          url: getPath() + "/html/index.html?path=list",
+          pageParam: {
+            name: "test"
+          }
+        });
+      } else {
+        this.onLogin();
+      }
+    },
+    onMyTime() {
+      api.openWin({
+        name: "my-time",
+        url: getPath() + "/html/index.html?path=my-time",
+        pageParam: {
+          name: "test"
+        }
+      });
+    },
+    closeTime(v) {
+      if (v == 0 && this.timer) {
+        clearInterval(this.timer);
+      }
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      this.time = v * 60;
+      this.timer = setInterval(() => {
+        this.time = this.time - 1;
+        if (this.time == 0) {
+          api.closeWidget();
+        }
+      }, 1000);
+    },
+    getTime(t) {
+      if (t == 0) {
+        return "不开启";
+      }
+      return new Date(t * 1000).Format("mm:ss");
+    },
+    onConfig() {
+      if (this.token) {
+        api.openWin({
+          name: "config",
+          url: getPath() + "/html/index.html?path=config"
+        });
+      } else {
+        this.onLogin();
+      }
+    },
+    onShowWallet() {
+      if (this.token) {
+        api.openWin({
+          name: "config",
+          url: getPath() + "/html/index.html?path=wallet"
+        });
+      } else {
+        this.onLogin();
+      }
+    },
+    onShowWin() {
+      if (this.token) {
+        api.openWin({
+          name: "config",
+          url: getPath() + "/html/index.html?path=win"
+        });
+      } else {
+        this.onLogin();
+      }
+    },
+    getSrc() {
+      if (this.token) {
+        if (this.info.head.indexOf("http") > -1) {
+          return this.info.head;
+        } else {
+          return this.src + this.info.head;
+        }
+      } else {
+        return head;
+      }
+    },
+    onLogin() {
+      this.interact_status = "play";
+      this.$nextTick(() => {
+        this.$router.push("/login");
+      });
     }
-}
+  },
+  mounted() {
+    this.render();
+    this.$ls.on("close-time", this.closeTime);
+
+    this.ios = api.systemType == "ios";
+    this.getProgramListen();
+  },
+  watch: {
+    isLoading(b) {
+      if (this.isLoading) {
+        setTimeout(() => {
+          this.isLoading = false;
+          this.count++;
+        }, 500);
+      }
+    }
+  }
+};
 </script>

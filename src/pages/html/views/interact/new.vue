@@ -1,52 +1,56 @@
 <template>
   <div class="new-body">
-    <van-nav-bar :style="{paddingTop:paddingTop}" @click-left="onClickLeft" right-text="" title="资讯">
+    <van-nav-bar
+      :style="{ paddingTop: paddingTop }"
+      @click-left="onClickLeft"
+      right-text=""
+      title="资讯"
+    >
       <van-icon name="arrow-left" slot="left" style="color:#292726" />
     </van-nav-bar>
 
     <!-- 资讯内容     -->
-    <pull-to :bottom-load-method="refresh">
+    <pull-to :top-load-method="refresh">
       <div class="news-cont">
         <div class="title">
-          {{news.title}}
+          {{ news.title }}
         </div>
 
         <div class="aui-row brief">
           <div class="aui-col-xs-3">
-            {{news.radio_name}}
+            {{ news.radio_name }}
           </div>
 
           <div class="aui-col-xs-3">
-            {{formatDateTime(news.time)}}
+            {{ formatDateTime(news.time) }}
           </div>
         </div>
 
-        <div class="introduction">
+        <div class="introduction" id="introduction">
           <p v-html="news.cont"></p>
         </div>
       </div>
 
       <!-- 推荐资讯 -->
-      <div class="news">
+      <div class="news" v-show="newList.length > 0">
         <div class="title">
           推荐资讯
         </div>
       </div>
       <div class="aui-content aui-margin-b-15 ">
-
         <ul class="aui-list aui-media-list new_list">
           <li class="aui-list-item" v-for="n in newList">
             <div class="aui-media-list-item-inner info-list">
               <div class="aui-list-item-inner">
-                <div class="aui-list-item-title cont">{{n.title}}</div>
+                <div class="aui-list-item-title cont">{{ n.title }}</div>
                 <div class="aui-list-item-text">
-                  <span class="brief_title">{{n.radio_name}}</span>
-                  <span class="brief">{{n.comments}}评论</span>
-                  <span class="brief">{{getDateDiff(n.time)}}</span>
+                  <span class="brief_title">{{ n.radio_name }}</span>
+                  <span class="brief">{{ n.comments }}评论</span>
+                  <span class="brief">{{ getDateDiff(n.time) }}</span>
                 </div>
               </div>
               <div class="aui-list-item-media">
-                <img :src="src + n.img" alt="" class="img">
+                <img :src="src + n.img" alt="" class="img" />
               </div>
             </div>
           </li>
@@ -55,120 +59,126 @@
 
       <!-- 评论 -->
       <div class="comment">
-        <div class="title">
-          评论{{news.comments}}
-        </div>
+        <div class="title">评论({{ news.comments }})</div>
 
         <div class="aui-content aui-margin-b-15 ">
           <ul class="aui-list aui-media-list " v-for="c in commentList">
             <li class="aui-list-item">
               <div class="aui-media-list-item-inner">
                 <div class="aui-list-item-media" style="width: 2rem;">
-                  <!-- <img :src="src+c.head" style="width:60px" alt="" > -->
-                  <img :src="src + c.head" class="aui-img-round aui-list-img-sm">
-
+                  <img
+                    v-if="c.head.substring(0, 4) == 'http'"
+                    :src="c.head"
+                    class="aui-img-round aui-list-img-sm img-head"
+                  />
+                  <img
+                    v-else
+                    :src="src + c.head + '?t=' + getTime()"
+                    class="aui-img-round aui-list-img-sm img-head"
+                  />
                 </div>
                 <div class="aui-list-item-inner">
                   <div class="aui-list-item-text">
                     <div class="aui-list-item-title">
-                      <p class="name">{{c.name}}</p>
-                      <p class="time">{{formatDateTime(c.time)}}</p>
+                      <p class="name">{{ c.name }}</p>
+                      <p class="time">{{ formatDateTime(c.time) }}</p>
                     </div>
-                    <div class="aui-list-item-right" @click='postZan(c.id)'>
-                      <img src="../../../../assets/images/radio/x.png" class="zan-img">
-                      <span class="count">{{c.zan}}</span>
+                    <div class="aui-list-item-right" @click="postZan(c.id)">
+                      <img
+                        src="../../../../assets/images/radio/x.png"
+                        class="zan-img"
+                      />
+                      <span class="count">{{ c.zan }}</span>
                     </div>
                   </div>
                   <!-- <div class="aui-list-item-text cont">
                       @颜渊:生命的意义在于坚持，有一些人往往离成功只差一步，却没有坚持下来，你行的，加油！
                   </div> -->
                   <div class="aui-info aui-margin-t-5 reply" style="padding:0">
-                    {{c.content}}
+                    {{ c.content }}
                   </div>
                 </div>
               </div>
             </li>
           </ul>
         </div>
-
       </div>
-
     </pull-to>
 
     <div class="sumbit footer">
       <div class="aui-row row">
         <div class="aui-col-xs-10">
           <div class="aui-searchbar-input aui-border-radius input-class">
-            <input type="text" placeholder="快和大家一起讨论吧" v-model="content" />
+            <input
+              type="text"
+              placeholder="快和大家一起讨论吧"
+              v-model="content"
+            />
           </div>
         </div>
         <div class="aui-col-xs-2" @click="postComment">
-          <img src="../../../../assets/images/radio/send.png" class="send-btn">
+          <img
+            src="../../../../assets/images/radio/send.png"
+            class="send-btn"
+          />
         </div>
-
-        <!-- 
- <div class="aui-card-list-footer aui-border-t">
-   <div class="aui-searchbar-input aui-border-radius input-class" />
-   <input type="text"  >
-   </div>
-     <div><van-icon name="like-o"/> 66</div>
-     <div><i class="aui-iconfont aui-icon-comment"></i> 88</div>
-     <div><i class="aui-iconfont aui-icon-forward"></i> </div>
- </div> -->
-
       </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
-import { getNews, src, getNewsComment, postNewsComment, postNewsZan } from '../../index/services';
-import { Toast } from 'vant';
+import $ from "jquery";
+
+import PullTo from "vue-pull-to";
+import {
+  getNews,
+  src,
+  getNewsComment,
+  postNewsComment,
+  postNewsZan
+} from "../../index/services";
+import { Toast } from "vant";
 export default {
-  store: ['paddingTop', 'token'],
+  store: ["paddingTop", "token"],
   data() {
     return {
       news: {},
       newList: [],
       commentList: [],
       src: src,
-      content: '',
+      content: "",
       param: {
-        'id': 1,
-        'type': 1,
-        'page': 0,
-        'size': 2
+        id: 1,
+        type: 1,
+        page: 0,
+        size: 2
       },
       paramComment: {
-        'type': 1,
-        'typeId': 0,
-        'page': 0,
-        'size': 10
+        type: 1,
+        typeId: 0,
+        page: 0,
+        size: 10
       },
       postParamComment: {
-        'token': '',
-        'type': 1,
-        'typeId': 0,
-        'content': ''
+        token: "",
+        type: 1,
+        typeId: 0,
+        content: ""
       }
-    }
+    };
   },
   methods: {
     render(loaded) {
       this.isLoading = true;
-      this.paramComment.typeId = this.news.id
+      this.paramComment.typeId = this.news.id;
       getNewsComment(this.paramComment).then(rep => {
         this.data = rep.data;
         this.isLoading = false;
         if (loaded) {
-          loaded('done');
+          loaded("done");
         }
-      })
-
+      });
     },
     onClickLeft() {
       this.$router.go(-1);
@@ -178,48 +188,54 @@ export default {
     },
     getNews() {
       getNews(this.param).then(rep => {
-        this.newList = rep.data
+        this.newList = rep.data;
       });
     },
     getComment() {
-      this.paramComment.typeId = this.news.id
+      this.paramComment.typeId = this.news.id;
       getNewsComment(this.paramComment).then(rep => {
-        this.commentList = rep.data
+        this.commentList = rep.data;
       });
     },
     postComment() {
       if (this.content.length == 0) {
-        Toast.fail('请输入评论内容');
-
+        Toast.fail("请输入评论内容");
       } else {
         Toast.loading();
-        postNewsComment({ 'token': this.$ls.get('token'), 'type': 1, 'typeId': this.news.id, 'content': this.content }).then(rep => {
+        postNewsComment({
+          token: this.$ls.get("token"),
+          type: 1,
+          typeId: this.news.id,
+          content: this.content
+        }).then(rep => {
           Toast.clear();
-          Toast.success('评论成功');
+          Toast.success("评论成功");
           this.getComment();
-        })
+        });
       }
     },
     postZan(id) {
-      postNewsZan({ 'token': this.$ls.get('token'), 'type': 2, 'typeId': id }).then(rep => {
-        this.getComment();
-      })
+      postNewsZan({ token: this.$ls.get("token"), type: 2, typeId: id }).then(
+        rep => {
+          this.getComment();
+        }
+      );
     },
     formatDateTime(timeStamp) {
       var date = new Date();
       date.setTime(timeStamp * 1000);
       var y = date.getFullYear();
       var m = date.getMonth() + 1;
-      m = m < 10 ? ('0' + m) : m;
+      m = m < 10 ? "0" + m : m;
       var d = date.getDate();
-      d = d < 10 ? ('0' + d) : d;
+      d = d < 10 ? "0" + d : d;
       var h = date.getHours();
-      h = h < 10 ? ('0' + h) : h;
+      h = h < 10 ? "0" + h : h;
       var minute = date.getMinutes();
       var second = date.getSeconds();
-      minute = minute < 10 ? ('0' + minute) : minute;
-      second = second < 10 ? ('0' + second) : second;
-      return m + '-' + d + ' ' + h + ':' + minute
+      minute = minute < 10 ? "0" + minute : minute;
+      second = second < 10 ? "0" + second : second;
+      return m + "-" + d + " " + h + ":" + minute;
     },
     getDateDiff(dateTimeStamp) {
       var result;
@@ -240,47 +256,77 @@ export default {
       var hourC = diffValue / hour;
       var minC = diffValue / minute;
       if (monthC >= 1) {
-        if (monthC <= 12)
-          result = "" + parseInt(monthC) + "月前";
+        if (monthC <= 12) result = "" + parseInt(monthC) + "月前";
         else {
           result = "" + parseInt(monthC / 12) + "年前";
         }
-      }
-      else if (weekC >= 1) {
+      } else if (weekC >= 1) {
         result = "" + parseInt(weekC) + "周前";
-      }
-      else if (dayC >= 1) {
+      } else if (dayC >= 1) {
         result = "" + parseInt(dayC) + "天前";
-      }
-      else if (hourC >= 1) {
+      } else if (hourC >= 1) {
         result = "" + parseInt(hourC) + "小时前";
-      }
-      else if (minC >= 1) {
+      } else if (minC >= 1) {
         result = "" + parseInt(minC) + "分钟前";
       } else {
         result = "刚刚";
       }
       return result;
-    }
+    },
+    img() {
+      $(".introduction  img").each(function() {
+        var img_url = $(this).attr("src");
 
+        var imgstart = "";
+        if (img_url.length > 2) {
+          imgstart = img_url.substring(0, 2);
+          if (imgstart == "..") {
+            img_url =
+              "http://www.tingdaoapp.com/" +
+              img_url.substring(2, img_url.length);
+          }
+        }
+
+        $(this).attr("src", img_url);
+      });
+    }
   },
   components: {
     PullTo
   },
   mounted() {
+    this.news = this.$route.query.new;
 
-    this.news = this.$route.query.new
-    this.getNews()
-    this.getComment()
+    this.getNews();
+    this.getComment();
 
+    setTimeout(this.img, 100); //延迟1秒
 
+    $("#introduction").delegate("a", "click", function(e) {
+      e.preventDefault();
+      var href = $(this).attr("href");
+
+      var browser = api.require("webBrowser");
+      browser.open({
+        url: href
+      });
+    });
   }
-
-}
+};
 </script>
 
 <style lang="scss" type="text/scss">
 @import "../../../../public/px2rem.scss";
+@keyframes flutter {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+    top: -30px;
+  }
+}
 .new-body {
   height: 100%;
   overflow-y: auto;
@@ -311,7 +357,7 @@ export default {
 
   .news-cont {
     margin-top: px2rem(126);
-
+    margin-bottom: px2rem(30);
     background-color: #fff;
     padding: px2rem(30) px2rem(30) 0 px2rem(30);
     .title {
@@ -326,7 +372,6 @@ export default {
   }
 
   .cont {
-    padding-top: px2rem(30);
     padding-bottom: px2rem(30);
     color: #454647;
     font-weight: bold;
@@ -385,9 +430,14 @@ export default {
   }
   .footer {
     position: absolute;
-    bottom: 0;
+    bottom: px2rem(0);
     width: 100%;
-    height: px2rem(80);
+    height: px2rem(120);
+  }
+
+  .img-head {
+    width: px2rem(80);
+    height: px2rem(58);
   }
 
   .comment {
@@ -426,6 +476,20 @@ export default {
     }
     .count {
       font-size: px2rem(26);
+    }
+    .jy {
+      font-size: 25px;
+      font-weight: normal;
+      color: red;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      opacity: 0;
+    }
+    .jy1 {
+      -webkit-animation: flutter 1s ease-in-out;
+      animation: flutter 1s ease-in-out;
+      /* ease-in-out：动画以低速开始和结束 */
     }
   }
 

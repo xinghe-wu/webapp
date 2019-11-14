@@ -1,6 +1,6 @@
 <template>
   <div class="view-live">
-    <ul class="tab" id="live-tab" :style="{paddingTop:paddingTop}">
+    <ul class="tab" id="live-tab" :style="{ paddingTop: paddingTop }">
       <li @click="recommeClick()">
         <span :class="recomme_status">推荐</span>
       </li>
@@ -10,126 +10,121 @@
     </ul>
 
     <!-- 推荐 -->
-    <div class="recomme" v-show='recommeShow'>
-      <div class="title">
-        为你推荐
-      </div>
-      <section class="aui-grid aui-margin-b-15">
-        <div class="aui-row list">
-          <div class="aui-col-xs-6" @click="column">
-            <div class="lanmu">
-              <span class="title">听到栏目</span>
-            </div>
+    <div class="content">
+      <pull-to :bottom-load-method="refresh">
+        <div class="recomme" v-show="recommeShow">
+          <div class="title">
+            为你推荐
           </div>
-          <div class="aui-col-xs-6" @click="anchor">
-            <div class="zhubo">
-              <span class="title">听到主播</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- 已关注 -->
-    <div class="follow-list" v-show='followShow'>
-      <div>
-        <swiper :options="swiperOption" class="follow-list-swiper" v-show="recomList.length>0">
-          <swiper-slide>
-            <div class="aui-card-list" @click="followList">
-              <div class="aui-card-list-content">
-                <img src="../../../assets/images/radio/all.png" class="img">
+          <section class="aui-grid aui-margin-b-15">
+            <div class="aui-row list">
+              <div class="aui-col-xs-6" @click="column">
+                <div class="lanmu">
+                  <span class="title">听到栏目</span>
+                </div>
               </div>
-              <div class="swiper-title">查看全部</div>
-            </div>
-          </swiper-slide>
-          <swiper-slide v-for="r in recomList">
-            <div class="aui-card-list">
-              <div class="aui-card-list-content" @click="anchor_detail(r.id)">
-                <img :src="src + r.head" class="aui-img-round aui-list-img-sm anchor-head img">
+              <div class="aui-col-xs-6" @click="anchor">
+                <div class="zhubo">
+                  <span class="title">听到主播</span>
+                </div>
               </div>
-              <div class="swiper-title">{{r.name}}</div>
             </div>
-          </swiper-slide>
-        </swiper>
-      </div>
-    </div>
-
-    <div class="anchor">
-      <div class="aui-card-list" v-for="i in infoList">
-        <div class="aui-card-list-header aui-card-list-user aui-border-b">
-
-          <div class="aui-card-list-user-avatar">
-            <img :src="src+i.head" class="aui-img-round" @click="anchor_detail(i.compereId)" />
-          </div>
-          <div class="aui-card-list-user-name">
-            <div class="name">{{i.name}}</div>
-            <div v-if="i.follow" class="aui-btn btn">已关注</div>
-            <div v-else class="aui-btn btn-follow" @click="compereFollow(i.compereId)">关注</div>
-          </div>
-          <div class="aui-card-list-user-info time">11-25 09:12</div>
+          </section>
         </div>
 
-        <!-- anchor_detail -->
-        <div class="aui-card-list-content-padded" @click="commentClick(i)">
-
-          <p class="cont">{{i.cont}}</p>
-          <img :src="src+i.img" class="anchor-cont-img" />
-        </div>
-        <div class="aui-card-list-footer aui-border-t footer-list">
-          <div @click='postZan(i.id)'> <img class="img" src="../../../assets/images/radio/like.png" />
-            <span class="title-check"> {{i.zans}}</span>
+        <!-- 已关注 -->
+        <div class="follow-list" v-show="followShow">
+          <div>
+            <swiper
+              :options="swiperOption"
+              class="follow-list-swiper"
+              v-show="recomList.length > 0"
+            >
+              <swiper-slide>
+                <div class="aui-card-list" @click="followList">
+                  <div class="aui-card-list-content">
+                    <img
+                      src="../../../assets/images/radio/all.png"
+                      class="img"
+                    />
+                  </div>
+                  <div class="swiper-title">查看全部</div>
+                </div>
+              </swiper-slide>
+              <swiper-slide v-for="r in recomList">
+                <div class="aui-card-list">
+                  <div
+                    class="aui-card-list-content"
+                    @click="anchor_detail(r.id)"
+                  >
+                    <img
+                      :src="src + r.head"
+                      class="aui-img-round aui-list-img-sm anchor-head img"
+                    />
+                  </div>
+                  <div class="swiper-title">{{ r.name }}</div>
+                </div>
+              </swiper-slide>
+            </swiper>
           </div>
-          <div @click="commentClick(i)"> <img class="img" src="../../../assets/images/radio/comment.png" />
-            <span class="title">{{i.comments}}</span>
-          </div>
-          <div> <img class="img" @click="openShare" src="../../../assets/images/radio/forward.png" />
-            <span class="title"></span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="floatbox" v-show="isShow">
-
-      <div class="title">分享到
-        <span @click="closeShare" style="position:absolute;right:10px;font-size:14px">关闭</span>
-
-      </div>
-
-      <div class="swiper-container">
-        <div class="swiper-wrapper">
-          <!--First Slide-->
-          <div class="swiper-slide">
-            <table id="section02">
-              <tr>
-                <td class=" ">
-                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_weixin.png" alt=""></div>
-                  <div class="section2title">微信</div>
-                </td>
-                <td class=" ">
-                  <div class="section2ico"><img src="../../../assets/images/frame04cover/logo.png" alt=""></div>
-                  <div class="section2title">微信朋友圈</div>
-                </td>
-                <td class="">
-                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_sina.png" alt=""></div>
-                  <div class="section2title">QQ好友</div>
-                </td>
-                <td class="">
-                  <div class="section2ico"><img src="../../../assets/images/frame04cover/cm2_mlogo2_tencent.png" alt=""></div>
-                  <div class="section2title">QQ空间</div>
-                </td>
-              </tr>
-              <tr>
-
-              </tr>
-            </table>
-          </div>
-
         </div>
 
-      </div>
-      <div class="cancelbtn" tapmode="" @click="closeShare">取消</div>
+        <div class="anchor">
+          <div class="aui-card-list" v-for="i in infoList">
+            <div class="list-hight" style=" background-color: #f2f4f5;"></div>
+            <div class="aui-card-list-header aui-card-list-user aui-border-b">
+              <div class="aui-card-list-user-avatar">
+                <img
+                  :src="src + i.head"
+                  class="aui-img-round anchor-head"
+                  @click="anchor_detail(i.compereId)"
+                />
+              </div>
+              <div class="aui-card-list-user-name">
+                <div class="name">{{ i.name }}</div>
+                <div v-if="i.follow" class="aui-btn btn">已关注</div>
+                <div
+                  v-else
+                  class="aui-btn btn-follow"
+                  @click="compereFollow(i.compereId)"
+                >
+                  关注
+                </div>
+              </div>
+              <div class="aui-card-list-user-info time">
+                {{ formatDateTime(i.time) }}
+              </div>
+            </div>
+
+            <!-- anchor_detail -->
+            <div class="aui-card-list-content-padded" @click="commentClick(i)">
+              <p class="cont">{{ i.cont }}</p>
+              <img v-if="i.img" :src="src + i.img" class="anchor-cont-img" />
+            </div>
+            <div class="aui-card-list-footer aui-border-t footer-list">
+              <div @click="postZan(i.id)">
+                <img class="img" src="../../../assets/images/radio/like.png" />
+                <span class="title-check"> {{ i.zans }}</span>
+              </div>
+              <div @click="commentClick(i)">
+                <img
+                  class="img"
+                  src="../../../assets/images/radio/comment.png"
+                />
+                <span class="title">{{ i.comments }}</span>
+              </div>
+              <div>
+                <img
+                  class="img"
+                  @click="openShare(i)"
+                  src="../../../assets/images/radio/forward.png"
+                />
+                <span class="title"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </pull-to>
     </div>
 
     <!-- 
@@ -146,25 +141,78 @@
             </ul>
             </pull-to>
         </div> -->
+
+    <div class="floatbox" v-show="isShow">
+      <div class="title">
+        分享到
+        <span
+          @click="closeShare"
+          style="position:absolute;right:10px;font-size:14px"
+          >关闭</span
+        >
+      </div>
+
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <!--First Slide-->
+          <div class="swiper-slide">
+            <table id="section02">
+              <tr>
+                <td class=" " @click="weixin('session')">
+                  <div class="section2ico">
+                    <img
+                      src="../../../assets/images/frame04cover/cm2_mlogo2_weixin.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="section2title">微信好友</div>
+                </td>
+                <td class=" ">
+                  <div class="section2ico" @click="weixin('timeline')">
+                    <img
+                      src="../../../assets/images/frame04cover/cm2_mlogo2_weixin.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="section2title">微信朋友圈</div>
+                </td>
+                <td class=" "></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import PullTo from 'vue-pull-to';
-import { Toast } from 'vant';
-import { getLive, src, getPath, getCompere, getCompereRecom, getInfos, postInfoZan, postCompereFollow } from '../index/services';
+import PullTo from "vue-pull-to";
+import { Toast } from "vant";
+import {
+  getLive,
+  src,
+  getPath,
+  getCompere,
+  getCompereRecom,
+  getInfos,
+  postInfoZan,
+  postCompereFollow
+} from "../index/services";
+
 export default {
-  store: ['paddingTop', 'interact_status', 'fm_playing'],
+  store: ["paddingTop", "interact_status", "fm_playing"],
   data() {
     return {
       swiperOption: {
         slidesPerView: 5,
         slidesOffsetBefore: 20,
-        spaceBetween: 20,
+        spaceBetween: 20
       },
+      shareText: {},
       isShow: false,
-      recomme_status: 'title-active',
-      follow_status: 'title',
+      recomme_status: "title-active",
+      follow_status: "title",
       isLoading: false,
       recommeShow: true,
       followShow: false,
@@ -174,96 +222,134 @@ export default {
       recomList: [],
       page: 1,
       query: {
-        token: '',
+        token: "",
         page: 1,
-        size: 10,
+        size: 2,
         id: 1
       },
       param: {
-        token: '',
+        token: "",
         id: 1,
         type: 1,
-        page: 0,
-        size: 10
+        page: 1,
+        size: 5
       },
-      iconLink: ''
-    }
+      iconLink: ""
+    };
   },
   methods: {
     render(loaded) {
-      this.query.token = this.$ls.get('token')
-      getCompere(this.query).then(rep => {
+      this.query.token = this.$ls.get("token");
 
+      getCompere(this.query).then(rep => {
         this.data = rep.data;
+
         this.isLoading = false;
         if (loaded) {
-          loaded('done');
+          loaded("done");
         }
-      })
+      });
     },
     refresh(loaded) {
-      this.render(loaded);
+      this.param.page++;
+
+      this.getInfos(loaded);
     },
     compereRecom() {
-
-      getCompereRecom({ 'token': this.$ls.get('token'), 'id': 1 }).then(rep => {
-        this.recomList = rep.data
-      })
+      getCompereRecom({ token: this.$ls.get("token"), id: 1 }).then(rep => {
+        this.recomList = rep.data;
+      });
+    },
+    imgMax(data) {
+      alert(JSON.stringify(data));
     },
     anchor_detail(id) {
-      this.$router.push({ path: '/anchor/detail', query: { compereId: id } })
+      this.$router.push({
+        path: "/anchor/detail",
+        query: { compereId: id, type: 0 }
+      });
     },
     recommeClick() {
-      this.recomme_status = 'title-active',
-        this.follow_status = 'title',
-        this.recommeShow = true;
+      (this.recomme_status = "title-active"),
+        (this.follow_status = "title"),
+        (this.recommeShow = true);
       this.followShow = false;
     },
+
     compereFollow(id) {
       //alert(JSON.stringify(id))
       Toast.loading();
-      postCompereFollow({ 'token': this.$ls.get('token'), 'compereId': id }).then(rep => {
-        Toast.clear();
+      postCompereFollow({ token: this.$ls.get("token"), compereId: id }).then(
+        rep => {
+          Toast.clear();
 
-        Toast.success('关注成功');
-        this.getInfos()
-      })
+          Toast.success("关注成功");
+          this.getInfos();
+        }
+      );
     },
     followClick() {
-      this.recomme_status = 'title',
-        this.follow_status = 'title-active',
-        this.recommeShow = false;
+      (this.recomme_status = "title"),
+        (this.follow_status = "title-active"),
+        (this.recommeShow = false);
       this.followShow = true;
     },
-    getInfos() {
-      this.param.token = this.$ls.get('token')
+    getInfos(loaded) {
+      this.param.token = this.$ls.get("token");
       getInfos(this.param).then(rep => {
-        this.infoList = rep.data
+        const rs = rep.data;
+        for (const r of rs) {
+          this.infoList.push(r);
+        }
       });
 
+      this.isLoading = false;
+      if (loaded) {
+        loaded("done");
+      }
     },
     postZan(id) {
-      postInfoZan({ 'token': this.$ls.get('token'), 'type': 1, 'typeId': id }).then(rep => {
-
-        this.getInfos();
-      })
+      postInfoZan({ token: this.$ls.get("token"), type: 1, typeId: id }).then(
+        rep => {
+          this.getInfos();
+        }
+      );
     },
     anchor_detail(d) {
       // alert(JSON.stringify(d))
-      this.$router.push({ path: '/anchor/detail', query: { compereId: d } })
+      this.$router.push({ path: "/anchor/detail", query: { compereId: d } });
     },
     column() {
-      this.$router.push('/anchor/column');
+      this.$router.push("/anchor/column");
     },
     anchor() {
-      this.$router.push('/anchor/anchor');
+      this.$router.push("/anchor/anchor");
     },
     followList() {
-      this.$router.push('/anchor/columnFollow');
+      this.$router.push("/anchor/columnFollow");
     },
     commentClick(data) {
       // alert(JSON.stringify(data))
-      this.$router.push({ path: '/anchor/columnComment', query: { comment: data, type: 1 } })
+      this.$router.push({
+        path: "/anchor/columnComment",
+        query: { comment: data, type: 1 }
+      });
+    },
+    formatDateTime(timeStamp) {
+      var date = new Date();
+      date.setTime(timeStamp * 1000);
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      var minute = date.getMinutes();
+      var second = date.getSeconds();
+      minute = minute < 10 ? "0" + minute : minute;
+      second = second < 10 ? "0" + second : second;
+      return m + "-" + d + " " + h + ":" + minute;
     },
 
     onOpenLive(room) {
@@ -286,29 +372,77 @@ export default {
       //                    Toast.loading();
       //                alert(JSON.stringify(room))
       api.openWin({
-        name: 'test',
-        url: getPath() + '/html/index.html?path=radio-live',
+        name: "test",
+        url: getPath() + "/html/index.html?path=radio-live",
         pageParam: {
           session: room
         },
         slidBackEnabled: false
       });
     },
+
     stateChange(state) {
-      if (state === 'pull' || state === 'trigger') {
-        this.iconLink = '#icon-arrow-bottom';
-      } else if (state === 'loading') {
-        this.iconLink = '#icon-loading';
-      } else if (state === 'loaded-done') {
-        this.iconLink = '#icon-finish';
+      if (state === "pull" || state === "trigger") {
+        this.iconLink = "#icon-arrow-bottom";
+      } else if (state === "loading") {
+        this.iconLink = "#icon-loading";
+      } else if (state === "loaded-done") {
+        this.iconLink = "#icon-finish";
       }
     },
     closeShare() {
-      this.isShow = false
+      this.isShow = false;
     },
-    openShare() {
-      this.isShow = true
+    openShare(data) {
+      this.shareText = data;
+      this.isShow = true;
     },
+    weixin(type, data) {
+      var wx = api.require("wx");
+      const img = this.shareText.img;
+      api.download(
+        {
+          url: this.src + img,
+
+          savePath: "fs://" + img,
+          report: true,
+          cache: true,
+          allowResume: true
+        },
+        function(ret, err) {
+          wx.shareImage(
+            {
+              apiKey: "",
+              scene: type,
+
+              contentUrl: "fs://" + img
+            },
+            function(ret, err) {
+              if (ret.status) {
+                // alert("分享成功");
+              } else {
+                api.toast({ msg: "请安装微信" });
+              }
+            }
+          );
+        }
+      );
+
+      // wx.shareText(
+      //   {
+      //     apiKey: "",
+      //     scene: type,
+      //     text: this.shareText.cont
+      //   },
+      //   function(ret, err) {
+      //     if (ret.status) {
+      //       // alert("分享成功");
+      //     } else {
+      //       api.toast({ msg: "请安装微信" });
+      //     }
+      //   }
+      // );
+    }
   },
   components: {
     PullTo
@@ -319,10 +453,11 @@ export default {
     // document.getElementById("live-content").style.top = parseInt(pd) + tab.clientHeight + 'px';
 
     // this.render();
+
     this.compereRecom();
     this.getInfos();
   }
-}
+};
 </script>
 
 <style lang="scss" type="text/scss" >
@@ -352,6 +487,92 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+
+.content {
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: px2rem(160);
+  .van-pull-refresh__track {
+    height: 100%;
+  }
+  .anchor-head {
+    width: px2rem(88);
+    height: px2rem(88);
+  }
+  .hot-column {
+    background-color: #fff;
+    .title {
+      font-size: px2rem(30);
+      font-weight: bold;
+      padding: px2rem(30);
+    }
+    .img {
+      width: px2rem(460);
+      height: px2rem(258);
+    }
+    .img-head {
+      margin-left: px2rem(-10);
+      vertical-align: middle;
+      width: px2rem(40);
+      height: px2rem(40);
+    }
+    .swiper-title {
+      padding-top: px2rem(10);
+      font-size: px2rem(28);
+      font-weight: bold;
+    }
+    .swiper-cont {
+      color: #646261;
+      font-size: px2rem(24);
+    }
+    .hot-column-swiper {
+      background-color: #fff;
+      height: px2rem(370);
+    }
+  }
+
+  .all-column {
+    // margin-top: px2rem(30);
+    background-color: #fff;
+    .title {
+      font-size: px2rem(30);
+      font-weight: bold;
+      padding: px2rem(30);
+    }
+
+    .ad_anchor {
+      padding-top: px2rem(10);
+      font-size: px2rem(26);
+      color: #646261;
+    }
+
+    .ad_list {
+      margin-top: -1px;
+    }
+    .ad-list-cont {
+      padding-top: px2rem(10);
+      padding-bottom: px2rem(10);
+      .anchor-head {
+        width: px2rem(160);
+        height: px2rem(140);
+      }
+      .ad_title {
+        color: #292726;
+        font-size: px2rem(30);
+        font-weight: bold;
+      }
+      .ad_cont {
+        font-size: px2rem(26);
+        color: #646261;
+      }
+    }
+  }
+}
+
+.list-hight {
+  background-color: #f2f4f5;
+  height: px2rem(16);
 }
 
 .view-live {
@@ -475,12 +696,13 @@ export default {
     }
     .anchor-cont-img {
       width: px2rem(520);
-      height: px2rem(520);
+      // height: px2rem(520);
     }
 
     .footer-list {
       padding-left: px2rem(80);
       padding-right: px2rem(80);
+      margin-bottom: px2rem(-35);
 
       .img {
         vertical-align: middle;
@@ -496,6 +718,47 @@ export default {
         color: #646261;
         font-size: px2rem(28);
       }
+    }
+  }
+
+  .floatbox {
+    position: absolute;
+    background: #fff;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    overflow-y: auto;
+
+    .title {
+      .img-title {
+        vertical-align: middle;
+        padding-left: px2rem(20);
+        width: px2rem(60);
+      }
+      .name {
+        padding-left: px2rem(10);
+        vertical-align: middle;
+        color: #292726;
+        font-size: px2rem(28);
+      }
+    }
+
+    .name {
+      color: #292726;
+      font-size: px2rem(30);
+    }
+    .name-activie {
+      padding-left: px2rem(10);
+      vertical-align: middle;
+      color: #ff5f53;
+      font-size: px2rem(30);
+    }
+    .cancelbtn {
+      background-color: #fff;
+      height: px2rem(80);
+      line-height: px2rem(80);
+      font-size: px2rem(36);
+      text-align: center;
     }
   }
 
@@ -518,7 +781,7 @@ export default {
     width: 100%;
     min-height: px2rem(128);
     height: px2rem(128);
-    line-height: px2rem(88);
+    // line-height: px2rem(88);
     display: flex;
     justify-content: center;
     .title-active {
