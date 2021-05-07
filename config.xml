@@ -1,4 +1,4 @@
-<widget id="A6054705849500"  version="0.0.1">
+<widget id="A6164064257597"  version="0.0.1">
 
 	<name>听到</name>
 
@@ -14,7 +14,7 @@
 
 	</author>
 
-	<content src="http://192.168.3.28:8010/html/index.html" />
+	<content src="http://192.168.0.50:8010/html/index.html" />
 <!-- <content src="https://720yun.com" /> -->
 
    <!-- <content src="dist/html/index.html?path=login" /> -->

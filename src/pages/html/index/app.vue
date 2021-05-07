@@ -12,7 +12,7 @@
 
     <!-- 这里是不被缓存的视图组件，比如 page3 -->
     <router-view v-if="$route.path != '/index'"> </router-view>
-    <div>ssdasd</div>
+    <div></div>
   </div>
 </template>
 <style lang="scss" type="text/scss">
