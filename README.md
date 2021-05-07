@@ -52,7 +52,7 @@ window.apiready = function(){}
 原因是，apicloud通过全局的方式调用apiready方法，而使用webpack模块化打包的方法，是不注册全局函数的，故需要手动将apiready声明在window对象下。
 
 使用vue等项目的话，在app.js中apiready之后再实例化vue，这样确保在.vue单文件组件中直接使用api对象下的接口是正常的。
-```javascript
+```javascript 
 window.apiready = function(){
     new Vue({
         el: '#app',

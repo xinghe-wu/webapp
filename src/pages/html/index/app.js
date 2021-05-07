@@ -53,7 +53,6 @@ router.beforeEach((to, from, next) => {
     return next();
 });
 
-
 // import vuex from 'vuex'
 // Vue.use(vuex);
 
@@ -68,7 +67,6 @@ router.beforeEach((to, from, next) => {
 //     }
 // })
 
-
 function GetQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
@@ -79,6 +77,8 @@ function GetQueryString(name) {
 
 
 window.apiready = function () {
+    console.log('this',new Vue)
+   
     new Vue({
         router,
         el: '#app',
@@ -98,65 +98,62 @@ window.apiready = function () {
             if (this.$ls.get("token")) {
                 this.store.token = this.$ls.get("token");
             }
-
-
             api.setStatusBarStyle({
                 style: 'dark',
                 color: '#000'
             });
-
-            // var ci = 0;
-            // var time1, time2;
-            // var self = this;
-            // api.addEventListener({
-            //     name: 'keyback'
-            // }, function (ret, err) {
-            //     const url = self.$route.path;
-            //     if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my' || url == '/login') {
-            //         time1 = new Date().getTime();
-            //         if (ci == 0) {
-            //             ci = 1;
-            //             api.toast({
-            //                 msg: '再按一次返回键退出1'
-            //             })
-            //
-            //         } else if (ci == 1) {
-            //             time2 = new Date().getTime();
-            //             if (time2 - time1 < 3000) {
-            //                 var audioPlayer = api.require('audioStreamer');
-            //                 audioPlayer.stop();
-            //                 api.closeWidget({
-            //                     id: api.appId,
-            //                     retData: {
-            //                         name: 'closeWidget'
-            //                     },
-            //                     silent: true
-            //                 });
-            //             } else {
-            //                 ci = 0;
-            //
-            //                 api.toast({
-            //                     msg: '再按一次返回键退出2'
-            //                 });
-            //             }
-            //         }
-            //     } else {
-            //         self.$router.go(-1) //返回
-            //     }
-            // })
-
+    
+            var ci = 0;
+            var time1, time2;
+            var self = this;
+            api.addEventListener({
+                name: 'keyback'
+            }, function (ret, err) {
+                const url = self.$route.path;
+                if (url == '/index' || url == '/index/fm' || url == '/index/live' || url == '/index/my' || url == '/login') {
+                    time1 = new Date().getTime();
+                    if (ci == 0) {
+                        ci = 1;
+                        api.toast({
+                            msg: '再按一次返回键退出1'
+                        })
+            
+                    } else if (ci == 1) {
+                        time2 = new Date().getTime();
+                        if (time2 - time1 < 3000) {
+                            var audioPlayer = api.require('audioStreamer');
+                            audioPlayer.stop();
+                            api.closeWidget({
+                                id: api.appId,
+                                retData: {
+                                    name: 'closeWidget'
+                                },
+                                silent: true
+                            });
+                        } else {
+                            ci = 0;
+            
+                            api.toast({
+                                msg: '再按一次返回键退出2'
+                            });
+                        }
+                    }
+                } else {
+                    self.$router.go(-1) //返回
+                }
+            })
+    
             const perms = ['camera', 'location', 'microphone', 'storage']
             api.requestPermission({
                 list: perms,
                 code: 100001
             }, function (ret, err) {
-
+    
             });
-
-
+    
+    
         }
     })
-
 
 }
 

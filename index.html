@@ -12,6 +12,7 @@
 <body style="background-color: #fff">
     <script>
         apiready = function () {
+            console.log(111)
             api.setStatusBarStyle({
                 style: 'dark',
                 color: '#000'
@@ -19,7 +20,7 @@
             api.openFrame({
                 name: 'index',
                 //url: 'dist/html/index.html?path=login',
-                //url: 'http://192.168.3.32:8010/html/index.html?path=login', //调试时使用
+                url: 'http://192.168.0.50:8010/html/index.html?path=login', //调试时使用
                 rect: {
                     x: 0,
                     y: 0,

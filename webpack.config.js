@@ -65,7 +65,7 @@ let config = {
             {
                 test: /\.js$/,
                 use: 'babel-loader',
-                exclude: /node_modules/
+                exclude: /node_modules/,
             },
             {
                 test: /\.css$/,
@@ -208,11 +208,11 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false
+        //     }
+        // }),
 
 
         new webpack.ProvidePlugin({
