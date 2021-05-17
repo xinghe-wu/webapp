@@ -1,27 +1,27 @@
-<widget id="A6164064257597"  version="0.0.1">
+ <widget id="A6176777977669"  version="0.0.1">
 
-	<name>听到</name>
+    <name>凌听电台01</name>
 
-	<description>
 
-		Example For APICloud.
+    <description>
 
-	</description>
+        Example For APICloud.
 
-	<author email="developer@apicloud.com" href="http://www.apicloud.com">
+    </description>
 
-		Developer
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
 
-	</author>
+        Developer
 
-	<content src="http://192.168.0.50:8010/html/index.html" />
-<!-- <content src="https://720yun.com" /> -->
+    </author>
 
-   <!-- <content src="dist/html/index.html?path=login" /> -->
-    <!-- <content src="html/index.html"/>  -->
-	<access origin="*" />
+	<preference name="avm" value="true"/>
 
-	<preference name="pageBounce" value="false"/>
+     <content src="dist/html/index.html?path=login" /> 
+
+    <access origin="*" />
+
+   	<preference name="pageBounce" value="false"/>
 
 	<preference name="appBackground" value="#fff"/>
 
@@ -62,8 +62,6 @@
 	<permission name="bootCompleted" />
 
 	<permission name="hardware" />
-
-
 	<feature name="wx">
 		<param name="urlScheme" value="wx520fa80833292ddc"/>
 		<param name="apiKey" value="wx520fa80833292ddc"/>
@@ -74,7 +72,5 @@
     <param name="appKey" value="cbe8ec67869e4900a829938dad4f6ba4"/>
     <param name="accessSecret" value="b021e521cee042da87db417cbc11d578"/>
   </feature>
-
-
-
 </widget>
+

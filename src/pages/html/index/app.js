@@ -12,6 +12,10 @@ import login from '../views/login.vue'
 
 require('vue2-animate/dist/vue2-animate.min.css')
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+   return originalPush.call(this, location).catch(err => err)
+}
 
 import vueTouch from 'vue-plugin-touch';
 Vue.use(vueTouch);
